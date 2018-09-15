@@ -1,8 +1,8 @@
-TODO PaymentSystem
-TODO Gefaengnis
-TODO Beschwerdesystem
-TODO Lizenzen Portale, Extraitems etc
-TODO Autogeld fuer Farming etc
-TODO Jobsystem fuer verschiedene Aufgaben
-TODO Am anfang ein Hotelzimmer oder was aehnliches
-TODO Grundstueck kann man spaeter mit Geld erweitern+
+TODO PaymentSystem (Abgie)
+TODO Gefaengnis (?)
+TODO Beschwerdesystem (Alice)
+TODO Lizenzen Portale, Extraitems etc (?)
+TODO Autogeld fuer Farming etc (Downloaden)
+TODO Jobsystem fuer verschiedene Aufgaben (?)
+TODO Am anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
+TODO Grundstueck kann man spaeter mit Geld erweitern (Pas)
