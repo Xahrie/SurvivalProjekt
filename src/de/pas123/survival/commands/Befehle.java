@@ -1,4 +1,4 @@
-package de.PAS123.Survival.Befehle;
+package de.pas123.survival.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +21,10 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 import de.PAS123.Group.Group.Group;
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+import de.pas123.survival.Survival;
+import de.pas123.survival.util.Events;
+import de.pas123.survival.util.Regions;
+import de.pas123.survival.util.UUIDFetcher;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 

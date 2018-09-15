@@ -1,4 +1,4 @@
-package de.test;
+package de.pas123.survival;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.PAS123.Survival.dynmap.DynmapWorldGuardPlugin_1_13;
+import de.pas123.survival.dynmap.DynmapWorldGuardPlugin_1_13;
 import de.pas123.survival.commands.Befehle;
 import de.pas123.survival.util.AsyncMySQL;
 import de.pas123.survival.util.Events;

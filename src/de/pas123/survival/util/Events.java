@@ -1,4 +1,4 @@
-package de.PAS123.Survival.util;
+package de.pas123.survival.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,9 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.vexsoftware.votifier.model.Vote;
 
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
-import de.PAS123.Survival.vote.VotifierPlugin;
+import de.pas123.survival.Survival;
+import de.pas123.survival.commands.Befehle;
+import de.pas123.survival.vote.VotifierPlugin;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 

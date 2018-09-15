@@ -1,4 +1,4 @@
-package de.PAS123.Survival.vote;
+package de.pas123.survival.vote;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +13,9 @@ import org.bukkit.event.Listener;
 
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
+
+import de.pas123.survival.Survival;
+import de.pas123.survival.util.ItemManager;
 
 
 public class VotifierPlugin implements Listener {

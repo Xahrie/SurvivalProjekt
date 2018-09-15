@@ -1,4 +1,4 @@
-package de.PAS123.Survival.util;
+package de.pas123.survival.util;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

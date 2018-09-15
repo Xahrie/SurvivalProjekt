@@ -1,4 +1,4 @@
-package de.PAS123.Survival.util;
+package de.pas123.survival.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

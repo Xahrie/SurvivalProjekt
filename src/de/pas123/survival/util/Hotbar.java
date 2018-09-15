@@ -1,4 +1,4 @@
-package de.PAS123.Survival.util;
+package de.pas123.survival.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
