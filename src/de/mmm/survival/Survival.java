@@ -11,10 +11,15 @@ import de.mmm.survival.commands.Vote;
 import de.mmm.survival.commands.Zone;
 import de.mmm.survival.config.Config;
 import de.mmm.survival.dynmap.DynmapWorldGuardPlugin_1_13;
+import de.mmm.survival.events.ChatEvents;
+import de.mmm.survival.events.DeathEvents;
+import de.mmm.survival.events.EntityEvents;
+import de.mmm.survival.events.InteractEvents;
+import de.mmm.survival.events.LocationChangeEvents;
+import de.mmm.survival.events.PlayerConnectionEvents;
 import de.mmm.survival.mysql.AsyncMySQL;
+import de.mmm.survival.player.Hotbar;
 import de.mmm.survival.player.SurvivalPlayer;
-import de.mmm.survival.util.Events;
-import de.mmm.survival.util.Hotbar;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -24,10 +29,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Main-Klasse
@@ -38,7 +45,7 @@ public class Survival extends JavaPlugin implements Listener {
 
   public AsyncMySQL async;
   public DynmapWorldGuardPlugin_1_13 dynmap;
-  public List<SurvivalPlayer> playerList = new ArrayList<>();
+  public Map<UUID, SurvivalPlayer> players = new HashMap<>();
   public HashMap<String, Location> spawns;
 
   /**
@@ -78,18 +85,35 @@ public class Survival extends JavaPlugin implements Listener {
       async.getMySQL().createTables();
     }
 
-    Bukkit.getPluginManager().registerEvents(new Events(), this);
-    loadCommands();
+    registerEvents();
+    registerCommands();
 
     dynmap = new DynmapWorldGuardPlugin_1_13(this);
 
-    this.playerList = loadPlayers();
+    this.players = loadPlayers();
   }
 
   /**
-   * Commands werden geladen
+   * Wird bei der Deaktivierung des Servers durchgefuehrt
    */
-  private void loadCommands() {
+  public void onDisable() {
+    storePlayers();
+  }
+
+  /**
+   * Events werden registriert
+   */
+  private void registerEvents() {
+    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new PlayerConnectionEvents(), new DeathEvents(),
+            new EntityEvents(), new InteractEvents(), new LocationChangeEvents());
+
+    listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
+  }
+
+  /**
+   * Commands werden registriert
+   */
+  private void registerCommands() {
     getCommand("zone").setExecutor(new Zone());
     getCommand("home").setExecutor(new Home());
     getCommand("sethome").setExecutor(new SetHome());
@@ -154,11 +178,22 @@ public class Survival extends JavaPlugin implements Listener {
    *
    * @return Liste mit den angemeldeten Spielern
    */
-  private List<SurvivalPlayer> loadPlayers() {
+  private Map<UUID, SurvivalPlayer> loadPlayers() {
     final AsyncMySQL sql = new AsyncMySQL(AsyncMySQL.PLAYER_HOST, AsyncMySQL.PLAYER_PORT, AsyncMySQL.PLAYER_USER,
             AsyncMySQL.PLAYER_PASSWORT, AsyncMySQL.PLAYER_DATABASE);
 
     return sql.getPlayers();
+  }
+
+  /**
+   * Speichere Spieler in der Datenbank
+   */
+  private void storePlayers() {
+    final AsyncMySQL sql = new AsyncMySQL(AsyncMySQL.PLAYER_HOST, AsyncMySQL.PLAYER_PORT, AsyncMySQL.PLAYER_USER,
+            AsyncMySQL.PLAYER_PASSWORT, AsyncMySQL.PLAYER_DATABASE);
+
+    sql.storePlayers();
+
   }
 
 }

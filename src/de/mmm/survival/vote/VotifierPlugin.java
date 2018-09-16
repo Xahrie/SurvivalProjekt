@@ -1,13 +1,14 @@
 package de.mmm.survival.vote;
 
-import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import de.mmm.survival.Survival;
 import de.mmm.survival.player.SurvivalPlayer;
+import de.mmm.survival.util.Cache;
 import de.mmm.survival.util.ItemManager;
 import de.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -19,11 +20,11 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Inplementiert die Vote-Funktion
+ * Implementiert die Vote-Funktion
  */
 public class VotifierPlugin implements Listener {
 
-  public static Map<String, List<Vote>> votes = new HashMap<>();
+  public static Map<String, List<com.vexsoftware.votifier.model.Vote>> votes = new HashMap<>();
 
   public static void vote(final UUID uuid, final String website) {
     Survival.getInstance().async.addVote(uuid, website);
@@ -36,23 +37,22 @@ public class VotifierPlugin implements Listener {
    */
   @EventHandler
   public void onVote(final VotifierEvent e) {
-    if (Bukkit.getPlayer(e.getVote().getUsername()) != null) {
-      vote(Bukkit.getPlayer(e.getVote().getUsername()).getUniqueId(), e.getVote().getServiceName());
-      Bukkit.getPlayer(e.getVote().getUsername()).sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotet hast" +
-              ". §8[§e" + e.getVote().getServiceName() + "§8]");
+    final Player player = Bukkit.getPlayer(e.getVote().getUsername());
+    if (player != null) {
+      vote(player.getUniqueId(), e.getVote().getServiceName());
+      player.sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotet hast. §8[§e" + e.getVote().getServiceName
+              () + "§8]");
 
-      if (Survival.getInstance().playerList.stream().anyMatch(player -> player.getUuid().equals(Bukkit.getPlayer(e
-              .getVote().getUsername()).getUniqueId()))) {
-        final SurvivalPlayer survivalPlayer = Survival.getInstance().playerList.stream().filter(player -> player.getUuid()
-                .equals(Bukkit.getPlayer(e.getVote().getUsername()).getUniqueId())).findFirst().get();
-        survivalPlayer.setMoney(survivalPlayer.getMoney() + 1);
+      SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+      if (survivalPlayer != null) {
+        survivalPlayer.setMoney(survivalPlayer.getMoney() + Cache.VOTE_REWARD);
       } else {
-        final SurvivalPlayer survivalPlayer = new SurvivalPlayer(Bukkit.getPlayer(e.getVote().getUsername())
-                .getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 1);
-        Survival.getInstance().playerList.add(survivalPlayer);
+        survivalPlayer = new SurvivalPlayer(player.getUniqueId(), Cache.VOTE_REWARD, new ArrayList<>(), new
+                ArrayList<>(), (short) 1);
+        Survival.getInstance().players.put(player.getUniqueId(), survivalPlayer);
       }
 
-      Bukkit.getPlayer(e.getVote().getUsername()).getInventory().addItem(ItemManager.build(Material.IRON_NUGGET,
+      player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET,
               "§cMünze", Collections.singletonList("§7§oDu kannst diese Münzen beim Markt eintauschen.")));
     } else {
       votes.put(e.getVote().getUsername().toLowerCase(), votes.containsKey(e.getVote().getUsername().toLowerCase()) ?
@@ -62,7 +62,15 @@ public class VotifierPlugin implements Listener {
 
   }
 
-  private List<Vote> add(final List<Vote> list, final Vote add) {
+  /**
+   * Vote hinzufuegen
+   *
+   * @param list Liste mit Votes
+   * @param add  Vote, der hinzukommen soll
+   * @return Liste mit Votes
+   */
+  private List<com.vexsoftware.votifier.model.Vote> add(final List<com.vexsoftware.votifier.model.Vote> list,
+                                                        final com.vexsoftware.votifier.model.Vote add) {
     list.add(add);
     return list;
   }

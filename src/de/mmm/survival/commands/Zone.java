@@ -2,7 +2,7 @@ package de.mmm.survival.commands;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import de.mmm.survival.Survival;
-import de.mmm.survival.util.Events;
+import de.mmm.survival.player.SurvivalPlayer;
 import de.mmm.survival.util.Messages;
 import de.mmm.survival.util.Regions;
 import de.mmm.survival.util.UUIDFetcher;
@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class Zone implements CommandExecutor {
 
@@ -77,25 +76,29 @@ public class Zone implements CommandExecutor {
   }
 
   private void create(final Player p) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+
     if (Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, p.getUniqueId().toString(), false) != null) {
       p.sendMessage(Messages.PREFIX + " §7Du hast bereits eine Zone.");
     } else {
-      if (Events.zonenedit.contains(p)) {
-        Events.zonenedit.remove(p);
-      } else {
-        Events.zonenedit.add(p);
+      if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
+        survivalPlayer.setZonenedit(false);
+      } else if (survivalPlayer != null) {
+        survivalPlayer.setZonenedit(true);
         p.sendMessage(Messages.PREFIX + " §7Klicke mit einem Stock auf die erste Ecke deiner Zone, danach klicke auf die gegenüber liegende Ecke.");
       }
     }
   }
 
   private void search(final Player p) {
-    if (Events.zonensearch.contains(p)) {
-      Events.zonensearch.remove(p);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+
+    if (survivalPlayer.isZonensearch()) {
+      survivalPlayer.setZonensearch(false);
       p.sendMessage(Messages.PREFIX + " §7Du hast den Zonen-Suchmodus §cverlassen§7.");
     } else {
       p.sendMessage(Messages.PREFIX + " §7Zonen-Suchmodus §abetreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.");
-      Events.zonensearch.add(p);
+      survivalPlayer.setZonensearch(true);
     }
   }
 
@@ -112,27 +115,22 @@ public class Zone implements CommandExecutor {
   private void info(final Player p) {
     final ProtectedRegion region = Regions.checkRegionLocationIn(Survival.getInstance().dynmap.rg, p.getLocation());
     if (region != null) {
-      UUIDFetcher.getName(UUID.fromString(region.getId()), new Consumer<String>() {
+      UUIDFetcher.getName(UUID.fromString(region.getId()), name -> {
+        p.sendMessage(" ");
+        p.sendMessage(Messages.PREFIX + " §7Besitzer§8: " + name);
 
-        @Override
-        public void accept(final String name) {
-          p.sendMessage(" ");
-          p.sendMessage(Messages.PREFIX + " §7Besitzer§8: " + name);
-
-          StringBuilder member = null;
-          for (final UUID uuid : region.getOwners().getUniqueIds()) {
-            if (member == null) {
-              member = new StringBuilder(Survival.getInstance().async.getMySQL().getName(uuid));
-            } else {
-              member.append(", ").append(Survival.getInstance().async.getMySQL().getName(uuid));
-            }
+        StringBuilder member = null;
+        for (final UUID uuid : region.getOwners().getUniqueIds()) {
+          if (member == null) {
+            member = new StringBuilder(Survival.getInstance().async.getMySQL().getName(uuid));
+          } else {
+            member.append(", ").append(Survival.getInstance().async.getMySQL().getName(uuid));
           }
-          p.sendMessage(Messages.PREFIX + " §7Mitglieder§8: " + member);
-
-
-          p.sendMessage(" ");
         }
+        p.sendMessage(Messages.PREFIX + " §7Mitglieder§8: " + member);
 
+
+        p.sendMessage(" ");
       });
 
     } else {
@@ -154,26 +152,16 @@ public class Zone implements CommandExecutor {
         }
       } else {
         try {
-          UUIDFetcher.getUUID(args[1], new Consumer<UUID>() {
-
-            @Override
-            public void accept(final UUID uuid) {
-              UUIDFetcher.getName(uuid, new Consumer<String>() {
-
-                @Override
-                public void accept(final String name) {
-                  final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false);
-                  if (region != null && !region.getMembers().contains(uuid)) {
-                    region.getMembers().addPlayer(Bukkit.getPlayer(args[1]).getUniqueId());
-                    p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
-                  } else {
-                    p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist bereits Mitglied deiner Zone.");
-                  }
-                }
-
-              });
-            }
-          });
+          UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid,
+                  name -> {
+                    final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false);
+                    if (region != null && !region.getMembers().contains(uuid)) {
+                      region.getMembers().addPlayer(Bukkit.getPlayer(args[1]).getUniqueId());
+                      p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
+                    } else {
+                      p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist bereits Mitglied deiner Zone.");
+                    }
+                  }));
         } catch (final Exception ex) {
           p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
         }
@@ -188,7 +176,8 @@ public class Zone implements CommandExecutor {
       if (Bukkit.getPlayer(args[1]) != null) {
         final Player player = Bukkit.getPlayer(args[1]);
         final UUID uuid = player.getUniqueId();
-        final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false);
+        final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(),
+                false);
         if (region != null && region.getMembers().contains(uuid)) {
           region.getMembers().removePlayer(uuid);
           p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getName() + " von deiner Zone entfernt.");
@@ -197,27 +186,18 @@ public class Zone implements CommandExecutor {
         }
       } else {
         try {
-          UUIDFetcher.getUUID(args[1], new Consumer<UUID>() {
+          UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid,
+                  name -> {
+                    final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid
+                            .toString(), false);
+                    if (region != null && region.getMembers().contains(uuid)) {
+                      region.getMembers().removePlayer(uuid);
+                      p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " von deiner Zone entfernt.");
+                    } else {
+                      p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist kein Mitglied deiner Zone.");
+                    }
+                  }));
 
-            @Override
-            public void accept(final UUID uuid) {
-              UUIDFetcher.getName(uuid, new Consumer<String>() {
-
-                @Override
-                public void accept(final String name) {
-                  final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false);
-                  if (region != null && region.getMembers().contains(uuid)) {
-                    region.getMembers().removePlayer(uuid);
-                    p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " von deiner Zone entfernt.");
-                  } else {
-                    p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist kein Mitglied deiner Zone.");
-                  }
-                }
-
-              });
-            }
-
-          });
         } catch (final Exception ex) {
           p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
         }
@@ -254,6 +234,7 @@ public class Zone implements CommandExecutor {
               p.sendMessage(" ");
             }
           });
+
         } catch (final Exception ex) {
           p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
         }
@@ -266,31 +247,25 @@ public class Zone implements CommandExecutor {
     if (p.isOp()) {
       try {
         final Integer max = Integer.valueOf(args[2]);
+
         if (Bukkit.getPlayer(args[1]) != null) {
-          Events.maxzone.put(Bukkit.getPlayer(args[1]).getUniqueId(), max);
+          final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+          survivalPlayer.setMaxzone(max);
         } else {
           try {
-            UUIDFetcher.getUUID(args[1], new Consumer<UUID>() {
+            UUIDFetcher.getUUID(args[1], uuid -> {
+              final SurvivalPlayer survivalPlayer = Survival.getInstance().players.get(uuid);
 
-              @Override
-              public void accept(final UUID uuid) {
-                Events.maxzone.put(uuid, max);
-                UUIDFetcher.getName(uuid, new Consumer<String>() {
-
-                  @Override
-                  public void accept(final String name) {
-                    p.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen.");
-                  }
-
-                });
-              }
-
+              survivalPlayer.setMaxzone(max);
+              UUIDFetcher.getName(uuid, name -> p.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone" +
+                      " mit der Länge §c" + max + " §7erstellen."));
             });
+
           } catch (final Exception ex) {
             p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
           }
         }
-      } catch (final Exception ex) {
+      } catch (final NumberFormatException ex) {
         p.sendMessage(Messages.PREFIX + " §cDu musst eine Zahl angeben.");
       }
     } else {

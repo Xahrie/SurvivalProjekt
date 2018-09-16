@@ -51,7 +51,7 @@ public class UUIDFetcher {
    * @param name The name
    * @return The uuid
    */
-  public static UUID getUUID(final String name) {
+  private static UUID getUUID(final String name) {
     return getUUIDAt(name, System.currentTimeMillis());
   }
 
@@ -114,9 +114,11 @@ public class UUIDFetcher {
       return nameCache.get(uuid);
     }
     try {
-      final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
+      final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter
+              .fromUUID(uuid))).openConnection();
       connection.setReadTimeout(5000);
-      final UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
+      final UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection
+              .getInputStream())), UUIDFetcher[].class);
       final UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
 
       uuidCache.put(currentNameData.name.toLowerCase(), uuid);
@@ -129,5 +131,5 @@ public class UUIDFetcher {
 
     return null;
   }
-}
 
+}

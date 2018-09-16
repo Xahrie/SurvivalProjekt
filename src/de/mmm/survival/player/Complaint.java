@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Beschwerde
+ * Complaint speichert ueber eine Beschwerde Grund der Beschwerde, Operator und Datum
  */
 public class Complaint {
   private String reason, operator, date;
@@ -16,7 +16,7 @@ public class Complaint {
    * @param operator Beschwerender
    * @param date     Datum (bereits formatiert)
    */
-  public Complaint(String reason, String operator, String date) {
+  public Complaint(final String reason, final String operator, final String date) {
     this.reason = reason;
     this.operator = operator;
     this.date = date;
@@ -28,7 +28,7 @@ public class Complaint {
    * @return Datum als Zeichenkette
    */
   private String calcDate() {
-    return new SimpleDateFormat("EEEE', 'dd. MMMM yyyy hh:mm").format(new Date());
+    return new SimpleDateFormat("dd. MMMM yyyy hh:mm").format(new Date());
     //yyy-MM-dd hh:mm:ss = Mysql
   }
 

@@ -1,5 +1,7 @@
 package de.mmm.survival.util;
 
+// Package-Stil ???
+
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,13 +10,13 @@ import org.bukkit.scoreboard.Scoreboard;
 /**
  * Scoreboards setzt die Scoreboards der Spieler
  */
-class Scoreboards {
+public class Scoreboards {
   /**
    * Setzt fuer einen spezifischen Spieler <code>p</code> das Scoreboard
    *
    * @param p Owner des Scoreboards
    */
-  static void setScoreboard(final Player p) {
+  public static void setScoreboard(final Player p) {
     final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
 
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();

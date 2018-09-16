@@ -1,4 +1,4 @@
-package de.mmm.survival.util;
+package de.mmm.survival.player;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,7 +58,7 @@ public class Hotbar {
    *
    * @param p Spieler
    */
-  static void send(final Player p) {
+  public static void send(final Player p) {
     try {
       final Object icb = chatmessageConstructor.newInstance("§7Du hast erfolgreich deine Zone erstellt.", new
               Object[0]);

@@ -1,5 +1,6 @@
 package de.mmm.survival.mysql;
 
+import de.mmm.survival.Survival;
 import de.mmm.survival.player.Complaint;
 import de.mmm.survival.player.Licence;
 import de.mmm.survival.player.SurvivalPlayer;
@@ -9,9 +10,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +57,6 @@ public class AsyncMySQL {
       sql = new MySQL(host, port, user, password, database);
       executor = Executors.newCachedThreadPool();
 
-
     } catch (final SQLException | ClassNotFoundException ex) {
       ex.printStackTrace();
     }
@@ -84,8 +87,8 @@ public class AsyncMySQL {
    *
    * @return Playerliste
    */
-  public List<SurvivalPlayer> getPlayers() {
-    final List<SurvivalPlayer> players = new ArrayList<>();
+  public Map<UUID, SurvivalPlayer> getPlayers() {
+    final Map<UUID, SurvivalPlayer> players = new HashMap<>();
 
     try {
       final String query = "SELECT (uuid, money, complaints, licences, votes) FROM SurvivalPlayer";
@@ -110,14 +113,53 @@ public class AsyncMySQL {
 
         final SurvivalPlayer survivalPlayer = new SurvivalPlayer(uuid, money, complaints, licences, (short) votes);
 
-        players.add(survivalPlayer);
+        players.put(uuid, survivalPlayer);
       }
 
-    } catch (final Exception e) {
-      e.printStackTrace();
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
     }
 
     return players;
+  }
+
+  /**
+   * Speicherung von Spielern
+   */
+  public void storePlayers() {
+    final List<SurvivalPlayer> players = new ArrayList<>();
+    Survival.getInstance().players.keySet().forEach(uuid -> players.add(Survival.getInstance().players.get(uuid)));
+
+    getMySQL().query("DELETE FROM SurvivalPlayer");
+
+    try (final PreparedStatement statement = sql.conn.prepareStatement("INSERT INTO SurvivalPlayer (uuid, money, " +
+            "complaints, licences, votes) VALUES (?, ?, ?, ?, ?)")) {
+
+      for (final SurvivalPlayer survivalPlayer : players) {
+        final StringBuilder complaints = new StringBuilder();
+        survivalPlayer.getComplaints().forEach(complaints::append);
+        complaints.deleteCharAt(complaints.length()-1);
+
+        final StringBuilder licences = new StringBuilder();
+        survivalPlayer.getLicences().forEach(licence -> licences.append(licence.toString()).append(","));
+        licences.deleteCharAt(licences.length()-1);
+
+        try {
+          statement.setString(1, survivalPlayer.getUuid().toString());
+          statement.setInt(2, survivalPlayer.getMoney());
+          statement.setString(3, complaints.toString());
+          statement.setString(4, licences.toString());
+          statement.setInt(5, survivalPlayer.getVotes());
+          statement.executeUpdate();
+        } catch (final SQLException ex) {
+          ex.printStackTrace();
+        }
+      }
+
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
   }
 
   /**

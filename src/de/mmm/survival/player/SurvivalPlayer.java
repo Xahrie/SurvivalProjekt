@@ -1,5 +1,6 @@
 package de.mmm.survival.player;
 
+import de.mmm.survival.Survival;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -12,12 +13,19 @@ import java.util.UUID;
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer {
+  //TODO (Abgie): Warum Liste aus Spielern in SurvivalPlayer fuer move?
   public static final List<Player> move = new ArrayList<>();
+
+  private boolean zonenedit, zonensearch, tamed;
+  private int maxzone;
+
+  //<editor-fold desc="mysql parameter">
   private UUID uuid;
   private short votes;
   private int money;
   private List<Complaint> complaints;
   private List<Licence> licences;
+  //</editor-fold>
 
   /**
    * Konstruktor
@@ -35,6 +43,23 @@ public class SurvivalPlayer {
     this.complaints = complaints;
     this.licences = licences;
     this.votes = votes;
+
+    this.zonenedit = false;
+    this.zonensearch = false;
+    this.tamed = false;
+    this.maxzone = 100;
+  }
+
+  /**
+   * Ermittle den SurvivalPlayer aus dem SpielerCache
+   *
+   * @param player Spieler
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
+   */
+  public static SurvivalPlayer findSurvivalPlayer(final Player player) {
+    final UUID uuid = player.getUniqueId();
+
+    return Survival.getInstance().players.get(uuid);
   }
 
   //<editor-fold desc="getter and setter">
@@ -82,5 +107,37 @@ public class SurvivalPlayer {
     return move;
   }
 
+  public boolean isZonenedit() {
+    return zonenedit;
+  }
+
+  public void setZonenedit(final boolean zonenedit) {
+    this.zonenedit = zonenedit;
+  }
+
+  public boolean isZonensearch() {
+    return zonensearch;
+  }
+
+  public void setZonensearch(final boolean zonensearch) {
+    this.zonensearch = zonensearch;
+  }
+
+  public boolean isTamed() {
+    return tamed;
+  }
+
+  public void setTamed(final boolean tamed) {
+    this.tamed = tamed;
+  }
+
+  public int getMaxzone() {
+    return maxzone;
+  }
+
+  public void setMaxzone(final int maxzone) {
+    this.maxzone = maxzone;
+  }
   //</editor-fold>
+
 }

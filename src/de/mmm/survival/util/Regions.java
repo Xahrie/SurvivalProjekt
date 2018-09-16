@@ -32,6 +32,7 @@ public class Regions {
    * @param id            ID
    * @param allowGlobal   Ist Globaler Zugriff moeglich
    * @return Geschuetzte Region
+   * @see com.sk89q.worldguard.protection.managers.RegionManager
    */
   public static ProtectedRegion checkExistingRegion(final RegionManager regionManager, final String id, final boolean allowGlobal) {
     try {
@@ -48,15 +49,17 @@ public class Regions {
       }
       return null;
     }
+
     return region;
   }
 
   /**
-   * Prueft ob die Region an einer gewissen Position ist+
+   * Prueft ob die Region an einer gewissen Position ist
    *
    * @param regionManager Regionenmanager
    * @param loc           Position
    * @return Geschuetzte Region
+   * @see com.sk89q.worldguard.protection.managers.RegionManager
    */
   public static ProtectedRegion checkRegionLocationIn(final RegionManager regionManager, final Location loc) {
     final ApplicableRegionSet set = regionManager.getApplicableRegions(new Vector(loc.getX(), loc.getY(), loc.getZ()));
@@ -66,12 +69,18 @@ public class Regions {
     }
     //mehr als eine Region ausgewaehlt
     if (set.size() > 1) {
-      warnungMehrereRegionen(set);
+      warningMoreRegionsSelected(set);
     }
     return set.iterator().next();
   }
 
-  private static void warnungMehrereRegionen(final ApplicableRegionSet set) {
+  /**
+   * Es wurden mehrere Regionen ausgewaehlt
+   *
+   * @param set ApplicableRegionSet
+   * @see com.sk89q.worldguard.protection.ApplicableRegionSet
+   */
+  private static void warningMoreRegionsSelected(final ApplicableRegionSet set) {
     final StringBuilder builder = new StringBuilder();
     boolean first = true;
 
