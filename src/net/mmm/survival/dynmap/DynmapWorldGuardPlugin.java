@@ -22,7 +22,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
@@ -71,7 +71,6 @@ public class DynmapWorldGuardPlugin {
   public DynmapWorldGuardPlugin(final JavaPlugin plugin) {
     this.plugin = plugin;
     rg = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld("world")));
-    onEnable();
   }
 
   /**
@@ -107,8 +106,8 @@ public class DynmapWorldGuardPlugin {
 
       StringBuilder owner = null;
       for (final UUID uuid : region.getOwners().getUniqueIds()) {
-        owner = (owner == null) ? new StringBuilder(Survival.getInstance().async.getMySQL().getName(uuid)) : owner
-            .append(", ").append(Survival.getInstance().async.getMySQL().getName(uuid));
+        owner = (owner == null) ? new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid)) : owner
+            .append(", ").append(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid));
       }
 
       v = v.replace("%d", "<br />Projektleiter:<br /><span style=\"font-weight:bold;\">" + owner + "</span>");
@@ -116,12 +115,12 @@ public class DynmapWorldGuardPlugin {
       v = v.replace("%a", m.getLabel());
       v = v.replace("%c", "<center>Server-Zone</center>");
     } else {
-      v = v.replace("%a", Survival.getInstance().async.getMySQL().getName(UUID.fromString(m.getLabel().toLowerCase())));
+      v = v.replace("%a", SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(UUID.fromString(m.getLabel().toLowerCase())));
 
       StringBuilder owner = null;
       for (final UUID uuid : region.getOwners().getUniqueIds()) {
-        owner = (owner == null) ? new StringBuilder(Survival.getInstance().async.getMySQL().getName(uuid)) : owner
-            .append(", ").append(Survival.getInstance().async.getMySQL().getName(uuid));
+        owner = (owner == null) ? new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid)) : owner
+            .append(", ").append(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid));
       }
 
       v = v.replace("%b", "Owner: ");
@@ -199,7 +198,7 @@ public class DynmapWorldGuardPlugin {
           }
           if (as == null) {
             for (final UUID uuid : pd.getUniqueIds()) {
-              final String p = Survival.getInstance().async.getMySQL().getName(uuid);
+              final String p = SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid);
               if (p != null) {
                 as = ownerstyle.get(p.toLowerCase());
                 if (as != null) break;
@@ -325,7 +324,7 @@ public class DynmapWorldGuardPlugin {
   /**
    * Wird bei der Aktivierung des Servers durchgefuehrt
    */
-  private void onEnable() {
+  public void enable() {
     final PluginManager pm = plugin.getServer().getPluginManager();
     /* Get dynmap */
     dynmap = pm.getPlugin("dynmap");

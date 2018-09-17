@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.Licence;
 import net.mmm.survival.player.SurvivalPlayer;
@@ -130,8 +131,7 @@ public class AsyncMySQL {
    * Speicherung von Spielern
    */
   public void storePlayers() {
-    final List<SurvivalPlayer> players = new ArrayList<>();
-    Survival.getInstance().players.keySet().forEach(uuid -> players.add(Survival.getInstance().players.get(uuid)));
+    final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.conn
         .prepareStatement("UPDATE SurvivalPlayer SET money=?, complaints=?, licences=?, votes=?, maxzone=?, home=? WHERE uuid=?")) {

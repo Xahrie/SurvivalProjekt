@@ -2,6 +2,7 @@ package net.mmm.survival.commands;
 
 import de.PAS123.Group.Group.Group;
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,65 +17,97 @@ import org.bukkit.entity.Player;
 public class Gamemode implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (sender instanceof Player) {
+    if (CommandUtils.checkPlayer(sender)) {
       final Player p = (Player) sender;
       final Group group = BungeeGroupManager.getGroupManager().getGroup(p);
-      if (p.isOp() || group.equals(Group.OWNER) || group.equals(Group.MANAGER) || group.equals(Group.ADMIN)) {
+
+      if (CommandUtils.isOperator(p, group) && checkArguments(args, p)) {
         if (args.length == 1) {
-          spielmodusSetzen(args, p);
+          evaluateOneArgument(args, p);
         } else if (args.length == 2) {
-          spielmodusAndererSpielerSetzen(args, p);
-        } else {
-          p.sendMessage(Messages.PREFIX + " §c/gm <0|1|2|3>");
-          p.sendMessage(Messages.PREFIX + " §c/gm <0|1|2|3> <Spieler>");
+          evaluateTwoArguments(args, p);
         }
-      } else {
-        p.sendMessage(Messages.PREFIX + " §cDu hast nicht die benötigten Rechte dafür.");
       }
     }
+
     return false;
   }
 
-  private void spielmodusAndererSpielerSetzen(final String[] args, final Player p) {
-    if (Bukkit.getPlayer(args[1]) != null) {
-      final Player player = Bukkit.getPlayer(args[1]);
-      final String sSpielmodus = args[0];
-      if (sSpielmodus.equalsIgnoreCase("0") || sSpielmodus.equalsIgnoreCase("s") || sSpielmodus.equalsIgnoreCase("survival")) {
-        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.");
-        player.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.");
-        player.setGameMode(GameMode.SURVIVAL);
-      } else if (sSpielmodus.equalsIgnoreCase("1") || sSpielmodus.equalsIgnoreCase("c") || sSpielmodus.equalsIgnoreCase("creativ")) {
-        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.");
-        player.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.");
-        player.setGameMode(GameMode.CREATIVE);
-      } else if (sSpielmodus.equalsIgnoreCase("2") || sSpielmodus.equalsIgnoreCase("a") || sSpielmodus.equalsIgnoreCase("adventure")) {
-        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.");
-        player.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.");
-        player.setGameMode(GameMode.ADVENTURE);
-      } else if (sSpielmodus.equalsIgnoreCase("3") || sSpielmodus.equalsIgnoreCase("spec") || sSpielmodus.equalsIgnoreCase("spectator")) {
-        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.");
-        player.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.");
-        player.setGameMode(GameMode.SPECTATOR);
-      }
-    } else {
-      p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
+  /**
+   * Erlaubtes Format verwendet: 1 oder 2 Argumente
+   *
+   * @param strings Argumente des Commands
+   * @param player Spieler
+   * @return boolean
+   */
+  private boolean checkArguments(final String[] strings, final Player player) {
+    if (!(strings.length == 1 || strings.length == 2)) {
+      player.sendMessage(Messages.USAGE_GAMEMODE_COMMAND);
+      return false;
     }
+
+    return true;
   }
 
-  private void spielmodusSetzen(final String[] args, final Player p) {
-    final String sSpielmodus = args[0];
-    if (sSpielmodus.equalsIgnoreCase("0") || sSpielmodus.equalsIgnoreCase("s") || sSpielmodus.equalsIgnoreCase("survival")) {
-      p.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.");
+  /**
+   * setzt den GameMode
+   *
+   * @param args Argumente des Commands
+   * @param p Spieler
+   */
+  private void evaluateOneArgument(final String[] args, final Player p) {
+    final String mode = args[0];
+    if (mode.equalsIgnoreCase("0") || mode.equalsIgnoreCase("s") || mode.equalsIgnoreCase("survival")) {
+      p.sendMessage(Messages.GAMEMODE_SURVIVAL);
       p.setGameMode(GameMode.SURVIVAL);
-    } else if (sSpielmodus.equalsIgnoreCase("1") || sSpielmodus.equalsIgnoreCase("c") || sSpielmodus.equalsIgnoreCase("creativ")) {
-      p.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.");
+    } else if (mode.equalsIgnoreCase("1") || mode.equalsIgnoreCase("c") || mode.equalsIgnoreCase("creativ")) {
+      p.sendMessage(Messages.GAMEMODE_CREATIVE);
       p.setGameMode(GameMode.CREATIVE);
-    } else if (sSpielmodus.equalsIgnoreCase("2") || sSpielmodus.equalsIgnoreCase("a") || sSpielmodus.equalsIgnoreCase("adventure")) {
-      p.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.");
+    } else if (mode.equalsIgnoreCase("2") || mode.equalsIgnoreCase("a") || mode.equalsIgnoreCase("adventure")) {
+      p.sendMessage(Messages.GAMEMODE_ADVENTURE);
       p.setGameMode(GameMode.ADVENTURE);
-    } else if (sSpielmodus.equalsIgnoreCase("3") || sSpielmodus.equalsIgnoreCase("spec") || sSpielmodus.equalsIgnoreCase("spectator")) {
-      p.sendMessage(Messages.PREFIX + " §7Du wurdest in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.");
+    } else if (mode.equalsIgnoreCase("3") || mode.equalsIgnoreCase("spec") || mode.equalsIgnoreCase("spectator")) {
+      p.sendMessage(Messages.GAMEMODE_SPECTATOR);
       p.setGameMode(GameMode.SPECTATOR);
+    } else {
+      //TODO (Abgie) 17.09.2018: Fehlermeldung
     }
+
   }
+
+  /**
+   * setzt den GameMode anderer Spieler
+   *
+   * @param args Argumente des Commands
+   * @param p Spieler
+   */
+  private void evaluateTwoArguments(final String[] args, final Player p) {
+    if (Bukkit.getPlayer(args[1]) != null) {
+      final Player player = Bukkit.getPlayer(args[1]);
+      final String mode = args[0];
+      if (mode.equalsIgnoreCase("0") || mode.equalsIgnoreCase("s") || mode.equalsIgnoreCase("survival")) {
+        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.");
+        player.sendMessage(Messages.GAMEMODE_SURVIVAL);
+        player.setGameMode(GameMode.SURVIVAL);
+      } else if (mode.equalsIgnoreCase("1") || mode.equalsIgnoreCase("c") || mode.equalsIgnoreCase("creativ")) {
+        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.");
+        player.sendMessage(Messages.GAMEMODE_CREATIVE);
+        player.setGameMode(GameMode.CREATIVE);
+      } else if (mode.equalsIgnoreCase("2") || mode.equalsIgnoreCase("a") || mode.equalsIgnoreCase("adventure")) {
+        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.");
+        player.sendMessage(Messages.GAMEMODE_ADVENTURE);
+        player.setGameMode(GameMode.ADVENTURE);
+      } else if (mode.equalsIgnoreCase("3") || mode.equalsIgnoreCase("spec") || mode.equalsIgnoreCase("spectator")) {
+        p.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.");
+        player.sendMessage(Messages.GAMEMODE_SPECTATOR);
+        player.setGameMode(GameMode.SPECTATOR);
+      } else {
+        //TODO (Abgie) 17.09.2018: Hier auch ;)
+      }
+    } else {
+      p.sendMessage(Messages.PLAYER_NOT_FOUND);
+    }
+
+  }
+
 }

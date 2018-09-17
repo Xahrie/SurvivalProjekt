@@ -3,14 +3,14 @@ package net.mmm.survival.util;
 /**
  * Speicher fuer Konstanten
  */
-public final class Cache {
+public final class Konst {
 
   public static final int VOTE_REWARD = 1;
 
   /**
    * Instanz
    */
-  private Cache() {
+  private Konst() {
     //Util
   }
 

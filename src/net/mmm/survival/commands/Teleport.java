@@ -22,6 +22,8 @@ public class Teleport {
   void teleport(final Player p, final Location loc) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
 
+    survivalPlayer.setTeleport(true);
+
     new BukkitRunnable() {
 
       int i = 3;

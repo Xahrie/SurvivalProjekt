@@ -1,10 +1,7 @@
 package net.mmm.survival;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import net.mmm.survival.commands.Gamemode;
 import net.mmm.survival.commands.Home;
@@ -25,7 +22,6 @@ import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.Hotbar;
-import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
@@ -43,41 +39,31 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 
 public class Survival extends JavaPlugin {
+  private static Survival server = null;
 
-  private static Survival system;
-
-  public AsyncMySQL async;
-  public DynmapWorldGuardPlugin dynmap;
-  public Map<UUID, SurvivalPlayer> players = new HashMap<>();
-
-  /**
-   * Konstruktor
-   *
-   * @return Instanz von Survival
-   */
   public static Survival getInstance() {
-    return system;
+    return server;
   }
 
   /**
    * Wird bei der Aktivierung des Servers durchgefuehrt
    */
   public void onEnable() {
-    system = this;
-    Hotbar.setup();
-    async = new AsyncMySQL();
-    async.getMySQL().createTables();
+    server = this;
+    final SurvivalData survivalData = SurvivalData.getInstance();
 
+    //Tabellen erzeugen
+    survivalData.getAsyncMySQL().getMySQL().createTables();
+
+    Hotbar.setup();
     registerEvents();
     registerCommands();
+    registerDynmap(survivalData);
 
+    //Farmwelt ggf. erzeugen
     if (Bukkit.getWorlds().contains(Bukkit.getWorld("farmwelt"))) {
       Bukkit.createWorld(new WorldCreator("farmwelt"));
     }
-
-    this.players = loadPlayers();
-
-    dynmap = new DynmapWorldGuardPlugin(this);
   }
 
   /**
@@ -109,14 +95,14 @@ public class Survival extends JavaPlugin {
   }
 
   /**
-   * Lade Spieler aus der Datenbank
+   * Dynmap wird registriert
    *
-   * @return Liste mit den angemeldeten Spielern
+   * @param survivalData Speicher
    */
-  private Map<UUID, SurvivalPlayer> loadPlayers() {
-    final AsyncMySQL sql = new AsyncMySQL();
-
-    return sql.getPlayers();
+  private void registerDynmap(SurvivalData survivalData) {
+    final DynmapWorldGuardPlugin dynmap = new DynmapWorldGuardPlugin(this);
+    dynmap.enable();
+    survivalData.setDynmap(dynmap);
   }
 
   /**

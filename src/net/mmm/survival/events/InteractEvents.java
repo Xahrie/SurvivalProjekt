@@ -19,6 +19,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Hotbar;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Messages;
@@ -62,7 +63,7 @@ public class InteractEvents implements Listener {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
 
     new Thread(() -> {
-      RegionManager manager = Survival.getInstance().dynmap.rg;
+      RegionManager manager = SurvivalData.getInstance().getDynmap().rg;
       ProtectedCuboidRegion pr = new ProtectedCuboidRegion(p.getUniqueId().toString(), loc1.get(p), loc2.get(p));
 
       int x1 = pr.getMinimumPoint().getBlockX();
@@ -278,8 +279,8 @@ public class InteractEvents implements Listener {
 
   private void zoneGefunden(final Player p, final PlayerInteractEvent e) {
     new Thread(() -> {
-      if (Regions.checkRegionLocationIn(Survival.getInstance().dynmap.rg, e.getClickedBlock().getLocation()) != null) {
-        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(Survival.getInstance().dynmap.rg,
+      if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg, e.getClickedBlock().getLocation()) != null) {
+        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg,
             e.getClickedBlock().getLocation())).getId();
         UUID uuid = UUID.fromString(name);
         UUIDFetcher.getName(uuid, name1 -> p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" +

@@ -10,8 +10,8 @@ import java.util.UUID;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import net.mmm.survival.Survival;
 import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.Cache;
 import net.mmm.survival.util.ItemManager;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -46,9 +46,9 @@ public class VotifierPlugin implements Listener {
       SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
       if (survivalPlayer != null) {
         survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
-        survivalPlayer.setMoney(survivalPlayer.getMoney() + Cache.VOTE_REWARD);
+        survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
       } else {
-        survivalPlayer = new SurvivalPlayer(player.getUniqueId(), Cache.VOTE_REWARD, new ArrayList<>(), new
+        survivalPlayer = new SurvivalPlayer(player.getUniqueId(), Konst.VOTE_REWARD, new ArrayList<>(), new
             ArrayList<>(), (short) 1, 100, null);
         Survival.getInstance().async.createPlayer(survivalPlayer);
 

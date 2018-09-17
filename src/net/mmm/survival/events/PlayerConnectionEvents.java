@@ -3,10 +3,10 @@ package net.mmm.survival.events;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.Cache;
 import net.mmm.survival.util.ItemManager;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Scoreboards;
 import net.mmm.survival.vote.VotifierPlugin;
@@ -36,9 +36,9 @@ public class PlayerConnectionEvents implements Listener {
     if (survivalPlayer == null) { // First-Join
       survivalPlayer = new SurvivalPlayer(e.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
           (short) 0, 100, null);
-      Survival.getInstance().async.createPlayer(survivalPlayer);
+      SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
 
-      Survival.getInstance().players.put(e.getPlayer().getUniqueId(), survivalPlayer);
+      SurvivalData.getInstance().getPlayers().put(e.getPlayer().getUniqueId(), survivalPlayer);
     }
 
 
@@ -53,7 +53,7 @@ public class PlayerConnectionEvents implements Listener {
             .getServiceName() + "§8]");
 
         //wenn Player-UUID in Players
-        finalSurvivalPlayer.setMoney(finalSurvivalPlayer.getMoney() + Cache.VOTE_REWARD);
+        finalSurvivalPlayer.setMoney(finalSurvivalPlayer.getMoney() + Konst.VOTE_REWARD);
 
         VotifierPlugin.vote(e.getPlayer().getUniqueId(), vote.getServiceName());
         e.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections
