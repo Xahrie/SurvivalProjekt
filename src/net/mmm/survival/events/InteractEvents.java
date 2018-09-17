@@ -142,9 +142,9 @@ public class InteractEvents implements Listener {
     if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.STICK)) {
       //Keine Zone vorhanden
       if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
-        createZone(p, e);
+        editZone(p, e);
       } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
-        zoneGefunden(p, e);
+        searchZone(p, e);
       }
     }
 
@@ -232,7 +232,7 @@ public class InteractEvents implements Listener {
    * @see org.bukkit.event.player.PlayerInteractEvent
    */
   @SuppressWarnings("deprecation")
-  private void createZone(final Player p, final PlayerInteractEvent e) {
+  private void editZone(final Player p, final PlayerInteractEvent e) {
     final Location loc = e.getClickedBlock().getLocation();
 
     loc.setY(loc1.containsKey(p) ? 256 : 0);
@@ -277,7 +277,7 @@ public class InteractEvents implements Listener {
     }
   }
 
-  private void zoneGefunden(final Player p, final PlayerInteractEvent e) {
+  private void searchZone(final Player p, final PlayerInteractEvent e) {
     new Thread(() -> {
       if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg, e.getClickedBlock().getLocation()) != null) {
         String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg,

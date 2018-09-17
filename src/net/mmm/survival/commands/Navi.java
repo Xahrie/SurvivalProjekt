@@ -63,6 +63,8 @@ public class Navi implements CommandExecutor {
           p.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
           p.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),
               region.getMinimumPoint().getBlockY(), region.getMinimumPoint().getBlockZ()));
+        } else {
+          p.sendMessage(Messages.ZONE_UNGUELTIG);
         }
       }));
     } catch (final Exception ex) {

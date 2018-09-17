@@ -95,6 +95,7 @@ public class AsyncMySQL {
 
         final UUID uuid = UUID.fromString(uuidString);
 
+        //Reason/Operator/Datum,Reason2/Operator2/Datum2
         final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
         final List<Complaint> complaints = new ArrayList<>();
         complaintsList.stream().filter(complaint -> complaint.contains("/"))
@@ -348,6 +349,16 @@ public class AsyncMySQL {
       Class.forName("com.mysql.jdbc.Driver");
       this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database,
           this.user, this.password);
+    }
+
+    public void closeConnection() {
+      if (conn != null) {
+        try {
+          conn.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      }
     }
 
   }

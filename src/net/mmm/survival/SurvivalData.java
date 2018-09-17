@@ -11,8 +11,8 @@ public class SurvivalData {
 
   private static SurvivalData survivalData;
 
-  private AsyncMySQL async = new AsyncMySQL();
-  private Map<UUID, SurvivalPlayer> players;
+  private final AsyncMySQL async = new AsyncMySQL();
+  private final Map<UUID, SurvivalPlayer> players;
   private DynmapWorldGuardPlugin dynmap;
 
   public SurvivalData() {
@@ -43,7 +43,7 @@ public class SurvivalData {
     return dynmap;
   }
 
-  public void setDynmap(DynmapWorldGuardPlugin dynmap) {
+  public void setDynmap(final DynmapWorldGuardPlugin dynmap) {
     this.dynmap = dynmap;
   }
 }

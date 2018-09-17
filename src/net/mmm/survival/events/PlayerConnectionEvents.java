@@ -33,27 +33,31 @@ public class PlayerConnectionEvents implements Listener {
   @EventHandler
   public void onJoin(final PlayerJoinEvent e) {
     SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
-    if (survivalPlayer == null) { // First-Join
+
+    // First-Join
+    if (survivalPlayer == null) {
       survivalPlayer = new SurvivalPlayer(e.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
           (short) 0, 100, null);
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
-
       SurvivalData.getInstance().getPlayers().put(e.getPlayer().getUniqueId(), survivalPlayer);
     }
-
-
     e.setJoinMessage(null);
+
+    //Scoreboard initialisieren
     Scoreboards.setScoreboard(e.getPlayer());
 
     //Vote-Plugin
+    verarbeiteVotes(e, survivalPlayer);
+  }
+
+  private void verarbeiteVotes(final PlayerJoinEvent e, final SurvivalPlayer survivalPlayer) {
     if (VotifierPlugin.votes.containsKey(e.getPlayer().getName().toLowerCase())) {
-      final SurvivalPlayer finalSurvivalPlayer = survivalPlayer;
       VotifierPlugin.votes.get(e.getPlayer().getName().toLowerCase()).forEach(vote -> {
         e.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" + vote
             .getServiceName() + "§8]");
 
         //wenn Player-UUID in Players
-        finalSurvivalPlayer.setMoney(finalSurvivalPlayer.getMoney() + Konst.VOTE_REWARD);
+        survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
 
         VotifierPlugin.vote(e.getPlayer().getUniqueId(), vote.getServiceName());
         e.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections
@@ -62,7 +66,6 @@ public class PlayerConnectionEvents implements Listener {
 
       VotifierPlugin.votes.remove(e.getPlayer().getName().toLowerCase());
     }
-
   }
 
   /**

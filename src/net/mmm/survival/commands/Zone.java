@@ -52,9 +52,9 @@ public class Zone implements CommandExecutor {
    */
   private void evaluateOneArgument(final Player p, final String[] args) {
     if (args[0].equalsIgnoreCase("create")) {
-      create(p);
+      createZone(SurvivalPlayer.findSurvivalPlayer(p));
     } else if (args[0].equalsIgnoreCase("search")) {
-      search(p);
+      searchZone(SurvivalPlayer.findSurvivalPlayer(p));
     } else if (args[0].equalsIgnoreCase("delete")) {
       delete(p);
     } else if (args[0].equalsIgnoreCase("info")) {
@@ -94,28 +94,6 @@ public class Zone implements CommandExecutor {
     } else {
       sendHelp(p);
     }
-  }
-
-  /**
-   * erstelle eigene Region
-   *
-   * @param p Spieler
-   */
-  private void create(final Player p) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
-
-    createZone(survivalPlayer);
-  }
-
-  /**
-   * finde bestimmte Region
-   *
-   * @param p Spieler
-   */
-  private void search(final Player p) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
-
-    searchZone(survivalPlayer);
   }
 
   /**

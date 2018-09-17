@@ -70,7 +70,7 @@ public class Gamemode implements CommandExecutor {
       p.sendMessage(Messages.GAMEMODE_SPECTATOR);
       p.setGameMode(GameMode.SPECTATOR);
     } else {
-      //TODO (Abgie) 17.09.2018: Fehlermeldung
+      p.sendMessage(Messages.GAMEMODE_UNGUELTIG);
     }
 
   }
@@ -102,7 +102,7 @@ public class Gamemode implements CommandExecutor {
         player.sendMessage(Messages.GAMEMODE_SPECTATOR);
         player.setGameMode(GameMode.SPECTATOR);
       } else {
-        //TODO (Abgie) 17.09.2018: Hier auch ;)
+        p.sendMessage(Messages.GAMEMODE_UNGUELTIG);
       }
     } else {
       p.sendMessage(Messages.PLAYER_NOT_FOUND);

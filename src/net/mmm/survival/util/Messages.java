@@ -14,6 +14,8 @@ public final class Messages {
   public static final String GAMEMODE_CREATIVE = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.";
   public static final String GAMEMODE_SPECTATOR = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) " +
       "§7gesetzt.";
+  public static final String GAMEMODE_UNGUELTIG = "§4┃ Der eingegebene Spielmodus ist ungueltig";
+
   public static final String HOME_SET = "§8┃ §eSurvival §7» Du hast deinen Home-Punkt gesetzt.";
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
@@ -41,6 +43,8 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um " +
       "nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§8┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
+  public static final String ZONE_UNGUELTIG = "§4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
+
 
   /**
    * Instanz

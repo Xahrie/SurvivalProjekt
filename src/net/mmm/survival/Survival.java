@@ -20,7 +20,6 @@ import net.mmm.survival.events.EntityEvents;
 import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
-import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.Hotbar;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
@@ -70,7 +69,12 @@ public class Survival extends JavaPlugin {
    * Wird bei der Deaktivierung des Servers durchgefuehrt
    */
   public void onDisable() {
-    storePlayers();
+    //Spielerdaten speichern
+    SurvivalData.getInstance().getAsyncMySQL().storePlayers();
+
+    //Datenbankverbindung schliessen
+    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection();
+
     Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet."));
   }
 
@@ -99,19 +103,10 @@ public class Survival extends JavaPlugin {
    *
    * @param survivalData Speicher
    */
-  private void registerDynmap(SurvivalData survivalData) {
+  private void registerDynmap(final SurvivalData survivalData) {
     final DynmapWorldGuardPlugin dynmap = new DynmapWorldGuardPlugin(this);
     dynmap.enable();
     survivalData.setDynmap(dynmap);
-  }
-
-  /**
-   * Speichere Spieler in der Datenbank
-   */
-  private void storePlayers() {
-    final AsyncMySQL sql = new AsyncMySQL();
-
-    sql.storePlayers();
   }
 
 }
