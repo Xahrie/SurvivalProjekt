@@ -3,7 +3,7 @@ package net.mmm.survival.player;
 import java.util.List;
 import java.util.UUID;
 
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -62,7 +62,7 @@ public class SurvivalPlayer {
   public static SurvivalPlayer findSurvivalPlayer(final Player player) {
     final UUID uuid = player.getUniqueId();
 
-    return Survival.getInstance().players.get(uuid);
+    return SurvivalData.getInstance().getPlayers().get(uuid);
   }
 
   public Player getPlayer() {

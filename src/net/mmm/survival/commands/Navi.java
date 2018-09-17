@@ -3,7 +3,7 @@ package net.mmm.survival.commands;
 import java.util.Objects;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Regions;
@@ -57,8 +57,8 @@ public class Navi implements CommandExecutor {
   private void findRegion(final String args, final Player p) {
     try {
       UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, name -> {
-        if (Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false) != null) {
-          final ProtectedRegion region = Regions.checkExistingRegion(Survival.getInstance().dynmap.rg, uuid.toString(), false);
+        if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid.toString(), false) != null) {
+          final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid.toString(), false);
 
           p.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
           p.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),

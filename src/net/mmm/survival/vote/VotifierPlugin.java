@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.vexsoftware.votifier.model.VotifierEvent;
-import net.mmm.survival.Survival;
+import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
@@ -27,7 +27,7 @@ public class VotifierPlugin implements Listener {
   public static Map<String, List<com.vexsoftware.votifier.model.Vote>> votes = new HashMap<>();
 
   public static void vote(final UUID uuid, final String website) {
-    Survival.getInstance().async.addVote(uuid, website);
+    SurvivalData.getInstance().getAsyncMySQL().addVote(uuid, website);
   }
 
   /**
@@ -50,9 +50,9 @@ public class VotifierPlugin implements Listener {
       } else {
         survivalPlayer = new SurvivalPlayer(player.getUniqueId(), Konst.VOTE_REWARD, new ArrayList<>(), new
             ArrayList<>(), (short) 1, 100, null);
-        Survival.getInstance().async.createPlayer(survivalPlayer);
+        SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
 
-        Survival.getInstance().players.put(player.getUniqueId(), survivalPlayer);
+        SurvivalData.getInstance().getPlayers().put(player.getUniqueId(), survivalPlayer);
       }
 
       player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET,
