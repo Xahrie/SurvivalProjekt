@@ -1,0 +1,20 @@
+name: Survival
+version: 2.0.32
+author: PAS123, Alice and Abgie
+api-version: 1.13
+
+main: net.mmm.survival.Survival
+
+commands:
+  gamemode:
+    aliases: [gm]
+  home:
+  info:
+  navi:
+    aliases: [navigation]
+  sethome:
+  setspawn:
+  spawn:
+  tame:
+  vote:
+  zone:
