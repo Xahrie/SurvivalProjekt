@@ -296,8 +296,8 @@ public class Zone implements CommandExecutor {
 
         StringBuilder member = null;
         for (final UUID uuid : region.getOwners().getUniqueIds()) {
-          member = (member == null) ? new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid)) : member.append(", ")
-              .append(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid));
+          member = (member == null) ? new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)) : member.append(", ")
+              .append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid));
         }
         player.sendMessage(Messages.PREFIX + " §7Mitglieder§8: " + member + "\n");
       });

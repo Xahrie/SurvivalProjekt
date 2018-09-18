@@ -27,12 +27,11 @@ public class LocationChangeEvents implements Listener {
     if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
       e.setCancelled(true);
       e.useTravelAgent(false);
+
       if (e.getFrom().getWorld().getName().equals("world")) {
-        e.getPlayer().teleport(Bukkit.getWorld("world_nether").getSpawnLocation(), PlayerTeleportEvent.TeleportCause
-            .NETHER_PORTAL);
+        e.getPlayer().teleport(Bukkit.getWorld("world_nether").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
       } else {
-        e.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation(), PlayerTeleportEvent.TeleportCause
-            .NETHER_PORTAL);
+        e.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
       }
     }
 
@@ -47,6 +46,7 @@ public class LocationChangeEvents implements Listener {
   @EventHandler
   public void onMove(final PlayerMoveEvent e) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
+
     survivalPlayer.setTeleport(false);
   }
 

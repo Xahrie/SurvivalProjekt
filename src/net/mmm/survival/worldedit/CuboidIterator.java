@@ -9,11 +9,9 @@ import org.bukkit.block.Block;
  * Der CuboitIterator berechnet Regionen fuer WorldGuard mithilfe von WorldEdit
  */
 public class CuboidIterator implements Iterator<Block> {
-
-  private final World w;
-  private final int baseX, baseY, baseZ;
-  private final int sizeX, sizeY, sizeZ;
+  private final int baseX, baseY, baseZ, sizeX, sizeY, sizeZ;
   private int x, y, z;
+  private final World w;
 
   /**
    * Konstruktor
@@ -37,10 +35,12 @@ public class CuboidIterator implements Iterator<Block> {
     this.x = this.y = this.z = 0;
   }
 
+  @Override
   public boolean hasNext() {
     return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
   }
 
+  @Override
   public Block next() {
     final Block b = this.w.getBlockAt(this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
     if (++x >= this.sizeX) {
@@ -51,9 +51,6 @@ public class CuboidIterator implements Iterator<Block> {
       }
     }
     return b;
-  }
-
-  public void remove() {
   }
 
 }

@@ -30,11 +30,11 @@ import org.bukkit.Location;
 public class AsyncMySQL {
 
   //Verbindungsdaten
-  private static final String HOST = "sql430.your-server.de";
   private static final int PORT = 3306;
-  private static final String USER = "mcmysql_nick";
-  private static final String PASSWORD = "gxI9C2t8i2z6Sf7a";
   private static final String DATABASE = "mcmysql_1_nick";
+  private static final String HOST = "sql430.your-server.de";
+  private static final String PASSWORD = "gxI9C2t8i2z6Sf7a";
+  private static final String USER = "mcmysql_nick";
 
   private ExecutorService executor;
   private MySQL sql;
@@ -46,19 +46,27 @@ public class AsyncMySQL {
     try {
       sql = new MySQL(HOST, PORT, USER, PASSWORD, DATABASE);
       executor = Executors.newCachedThreadPool();
-
     } catch (final SQLException | ClassNotFoundException ex) {
       ex.printStackTrace();
     }
   }
 
   /**
-   * Updatet die SQL mit einem Statement
+   * Spielername aus einer UUID
    *
-   * @param statement Query des Statements
+   * @param uuid einzigartiger Identifier
+   * @return Name des Spielers
    */
-  private void update(final String statement) {
-    executor.execute(() -> sql.queryUpdate(statement));
+  public String getName(final UUID uuid) {
+    try (final ResultSet rs = getMySQL().query("SELECT name FROM Playerstatus where UUID = " + uuid + "")) {
+      if (rs.next()) {
+        return rs.getString("name");
+      }
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
+    return null;
   }
 
   /**
@@ -68,8 +76,7 @@ public class AsyncMySQL {
    * @param website Webseite
    */
   public void addVote(final UUID uuid, final String website) {
-    update("INSERT INTO `" + getMySQL().database + "`.`Votes` (`UUID`, `Time`, `Website`) VALUES ('" + uuid + "', '"
-        + System.currentTimeMillis() + "', '" + website + "');");
+    sql.update("INSERT INTO `Votes` (UUID, Time, Website) VALUES (" + uuid + ", " + System.currentTimeMillis() + ", " + website + ")");
   }
 
   /**
@@ -80,9 +87,9 @@ public class AsyncMySQL {
   public Map<UUID, SurvivalPlayer> getPlayers() {
     final Map<UUID, SurvivalPlayer> players = new HashMap<>();
 
-    try (final Statement statement = getMySQL().conn.createStatement()) {
-      final ResultSet resultSet = statement
-          .executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer");
+    try (final Statement statement = getMySQL().conn.createStatement();
+         final ResultSet resultSet = statement
+             .executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer")) {
 
       while (resultSet.next()) {
         final String uuidString = resultSet.getString(1);
@@ -191,18 +198,20 @@ public class AsyncMySQL {
     }
   }
 
-  /**
-   * @return Instanz
-   */
+  //<editor-fold desc="getter and setter">
   public MySQL getMySQL() {
     return sql;
   }
+  //</editor-fold>
 
-  public static class MySQL {
+  /**
+   * MySQL-Infos
+   */
+  public class MySQL {
 
     private final int port;
-    String host, user, password, database;
     private Connection conn;
+    String database, host, password, user;
 
     /**
      * Konstruktor
@@ -227,24 +236,6 @@ public class AsyncMySQL {
     }
 
     /**
-     * Spielername aus einer UUID
-     *
-     * @param uuid einzigartiger Identifier
-     * @return Name des Spielers
-     */
-    public String getName(final UUID uuid) {
-      String name = null;
-      try {
-        final ResultSet rs = query("SELECT `name` FROM `Playerstatus` where UUID = '" + uuid + "';");
-        while (rs.next()) {
-          name = rs.getString("name");
-        }
-      } catch (final SQLException ignored) {
-      }
-      return name;
-    }
-
-    /**
      * Erstellung einer Query eines Strings
      *
      * @param query Query als String
@@ -262,11 +253,9 @@ public class AsyncMySQL {
      * Erstellung einer Tabelle
      */
     public void createTables() {
-      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`Votes` (  `UUID` VARCHAR(40) NOT NULL,  `Time` " +
-          "VARCHAR(10) NOT NULL,  `Website` VARCHAR(40) NOT NULL);");
-      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`SurvivalPlayer` (  `uuid` VARCHAR(40) NOT NULL, " +
-          "`money` int(11), `complaints` varchar(10000), `licences` varchar(10000), `votes` int(11), `maxzone` " +
-          "int(11), `home` varchar(64))");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID VARCHAR(40) NOT NULL, Time VARCHAR(10) NOT NULL, Website VARCHAR(40) NOT NULL);" +
+          "CREATE TABLE IF NOT EXISTS SurvivalPlayer (uuid VARCHAR(40) NOT NULL, money int(11), complaints varchar(10000), licences " +
+          "varchar(10000), votes int(11), maxzone int(11), home varchar(64));");
     }
 
     /**
@@ -277,16 +266,11 @@ public class AsyncMySQL {
      */
     void queryUpdate(final PreparedStatement statement) {
       checkConnection();
-      try {
-        statement.executeUpdate();
+
+      try (final PreparedStatement preparedStatement = statement) {
+        preparedStatement.executeUpdate();
       } catch (final SQLException ex) {
         ex.printStackTrace();
-      } finally {
-        try {
-          statement.close();
-        } catch (final SQLException ex) {
-          ex.printStackTrace();
-        }
       }
     }
 
@@ -317,18 +301,16 @@ public class AsyncMySQL {
      */
     ResultSet query(final PreparedStatement statement) {
       checkConnection();
-      try {
-        statement.executeUpdate();
-        return statement.getGeneratedKeys();
+      try (final PreparedStatement preparedStatement = statement) {
+        preparedStatement.executeUpdate();
+
+        return preparedStatement.getGeneratedKeys();
       } catch (final SQLException ex) {
         ex.printStackTrace();
       }
       return null;
     }
 
-    /**
-     * Pruefe Verbindung
-     */
     private void checkConnection() {
       try {
         if (this.conn == null || !this.conn.isValid(10) || this.conn.isClosed()) {
@@ -351,6 +333,11 @@ public class AsyncMySQL {
           this.user, this.password);
     }
 
+    /**
+     * Schliessen einer Connection
+     * <p>
+     * !!! WICHTIG
+     */
     public void closeConnection() {
       if (conn != null) {
         try {
@@ -359,6 +346,10 @@ public class AsyncMySQL {
           e.printStackTrace();
         }
       }
+    }
+
+    private void update(final String statement) {
+      executor.execute(() -> sql.queryUpdate(statement));
     }
 
   }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -49,83 +50,8 @@ import org.bukkit.material.Button;
  * @see org.bukkit.event.player.PlayerInteractEvent
  */
 public class InteractEvents implements Listener {
-
-  private static final Map<Player, BlockVector> loc1 = new HashMap<>();
-  private static final Map<Player, BlockVector> loc2 = new HashMap<>();
+  private static final Map<Player, BlockVector> loc1 = new HashMap<>(), loc2 = new HashMap<>();
   private static final Map<Player, List<Block>> show = new HashMap<>();
-
-  /**
-   * Erstellen einer Region
-   *
-   * @param p Spieler
-   */
-  private static void createRegion(final Player p) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
-
-    new Thread(() -> {
-      RegionManager manager = SurvivalData.getInstance().getDynmap().getRegion();
-      ProtectedCuboidRegion pr = new ProtectedCuboidRegion(p.getUniqueId().toString(), loc1.get(p), loc2.get(p));
-
-      int x1 = pr.getMinimumPoint().getBlockX();
-      int y1 = pr.getMinimumPoint().getBlockY();
-      int z1 = pr.getMinimumPoint().getBlockZ();
-      int x2 = pr.getMaximumPoint().getBlockX();
-      int y2 = pr.getMaximumPoint().getBlockY();
-      int z2 = pr.getMaximumPoint().getBlockZ();
-      int a = x1 - x2;
-
-      a = a < 0 ? a * -1 : a;
-      int b = z1 - z2;
-
-      b = b < 0 ? b * -1 : b;
-      int max = survivalPlayer.getMaxzone();
-
-      if (a >= 20 && a <= max && b >= 20 && b <= max) {
-        CuboidIterator blocks = new CuboidIterator(Bukkit.getWorld("world"), x1, y1, z1, x2, y2, z2);
-        boolean found = false;
-        while (blocks.hasNext()) {
-          Block block = (Block) ((Iterator<?>) blocks).next();
-          if (Regions.checkRegionLocationIn(manager, block.getLocation()) != null) {
-            found = true;
-            System.out.println(Objects.requireNonNull(Regions.checkRegionLocationIn(manager, block.getLocation())).getId());
-
-            p.sendMessage(Messages.PREFIX + " §cDu kannst keine Zone in einer bereits bestehenden Zone erstellen.");
-            break;
-          }
-        }
-
-        loc1.remove(p);
-        loc2.remove(p);
-        survivalPlayer.setZonenedit(false);
-        show.get(p).forEach(block -> p.sendBlockChange(block.getLocation(), block.getBlockData()));
-        if (!found) {
-          survivalPlayer.setMaxzone(100);
-          DefaultDomain dd = new DefaultDomain();
-          dd.addPlayer(p.getUniqueId());
-          pr.setOwners(dd);
-          pr.setPriority(100);
-          Map<Flag<?>, Object> flags = new HashMap<>();
-
-          flags.put(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
-          flags.put(Flags.POTION_SPLASH, StateFlag.State.DENY);
-          flags.put(Flags.FIRE_SPREAD, StateFlag.State.DENY);
-          flags.put(Flags.LAVA_FIRE, StateFlag.State.DENY);
-          pr.setFlags(flags);
-          manager.addRegion(pr);
-          try {
-            manager.save();
-          } catch (StorageException ignored) {
-          }
-          Hotbar.send(p);
-        }
-      } else {
-        p.sendMessage(Messages.PREFIX + " §cDeine Zone darf minimal 20x20 und maximal 100x100 Blöcke groß sein. Deine" +
-            " Zone ist " + a + "x" + b + " Blöcke groß.");
-      }
-      Thread.currentThread().interrupt();
-    }).start();
-
-  }
 
   /**
    * Wenn ein Spieler interagiert
@@ -150,6 +76,181 @@ public class InteractEvents implements Listener {
 
   }
 
+  @SuppressWarnings("deprecation")
+  private void editZone(final Player p, final PlayerInteractEvent e) {
+    final Location loc = e.getClickedBlock().getLocation();
+
+    loc.setY(loc1.containsKey(p) ? 256 : 0);
+    isLocationSet(p, loc);
+    p.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(p) && loc2.containsKey(p) ? "2." : "1.") + " §7gesetzt.");
+
+    zoneScheduler(p, e);
+
+    if (loc1.containsKey(p) && loc2.containsKey(p)) {
+      createRegion(p);
+    }
+  }
+
+  private void isLocationSet(final Player p, final Location loc) {
+    if (loc1.containsKey(p)) {
+      loc2.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+    } else {
+      loc1.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void zoneScheduler(final Player p, final PlayerInteractEvent e) {
+    Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
+
+      if (loc1.containsKey(p) && !loc2.containsKey(p)) {
+        final List<Block> blocks = new ArrayList<>();
+
+        p.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
+        final Location beacon = e.getClickedBlock().getLocation().subtract(0, 1, 0);
+        final Location ironblock = e.getClickedBlock().getLocation().subtract(0, 2, 0);
+
+        replaceBlocks(p, blocks, beacon, ironblock);
+
+        if (show.containsKey(p)) {
+          blocks.addAll(show.get(p));
+        }
+
+        show.put(p, blocks);
+      }
+
+    }, 10L);
+  }
+
+  @SuppressWarnings("deprecation")
+  private void replaceBlocks(final Player p, final List<Block> blocks, final Location beacon, final Location ironblock) {
+    p.sendBlockChange(beacon, Material.BEACON, (byte) 0);
+    p.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
+    blocks.add(beacon.getBlock());
+    blocks.add(ironblock.getBlock());
+
+    IntStream.range(-1, 2).forEach(x ->
+        IntStream.range(-1, 2).forEach(z -> {
+          final Location block = ironblock.clone().add(x, 0, z);
+
+          p.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
+          blocks.add(block.getBlock());
+        }));
+  }
+
+  private static void createRegion(final Player p) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+
+    new Thread(() -> {
+      RegionManager manager = SurvivalData.getInstance().getDynmap().getRegion();
+      ProtectedCuboidRegion pr = new ProtectedCuboidRegion(p.getUniqueId().toString(), loc1.get(p), loc2.get(p));
+
+      int x1 = pr.getMinimumPoint().getBlockX();
+      int y1 = pr.getMinimumPoint().getBlockY();
+      int z1 = pr.getMinimumPoint().getBlockZ();
+      int x2 = pr.getMaximumPoint().getBlockX();
+      int y2 = pr.getMaximumPoint().getBlockY();
+      int z2 = pr.getMaximumPoint().getBlockZ();
+      int a = x1 - x2;
+      int b = z1 - z2;
+
+      if (validZone(Math.abs(a), Math.abs(b), survivalPlayer.getMaxzone(), survivalPlayer)) {
+        CuboidIterator blocks = new CuboidIterator(Bukkit.getWorld("world"), x1, y1, z1, x2, y2, z2);
+        boolean found = false;
+
+        while (blocks.hasNext()) {
+          Block block = (Block) ((Iterator<?>) blocks).next();
+
+          if (Regions.checkRegionLocationIn(manager, block.getLocation()) != null) {
+            found = true;
+            System.out.println(Objects.requireNonNull(Regions.checkRegionLocationIn(manager, block.getLocation())).getId());
+
+            p.sendMessage(Messages.NO_DUPLICATE_ZONE);
+            break;
+          }
+        }
+
+        loc1.remove(p);
+        loc2.remove(p);
+        settingUpZone(survivalPlayer, manager, pr, found);
+      }
+
+      Thread.currentThread().interrupt();
+    }).start();
+
+  }
+
+  private static void settingUpZone(final SurvivalPlayer survivalPlayer, final RegionManager manager,
+                                    final ProtectedCuboidRegion cuboidRegion, final boolean found) {
+    survivalPlayer.setZonenedit(false);
+    show.get(survivalPlayer.getPlayer()).forEach(block -> survivalPlayer.getPlayer().sendBlockChange(block.getLocation(), block.getBlockData()));
+    if (!found) {
+      survivalPlayer.setMaxzone(100);
+      final DefaultDomain defaultDomain = new DefaultDomain();
+
+      defaultDomain.addPlayer(survivalPlayer.getPlayer().getUniqueId());
+      cuboidRegion.setOwners(defaultDomain);
+      cuboidRegion.setPriority(100);
+
+      setFlags(cuboidRegion);
+
+      manager.addRegion(cuboidRegion);
+      try {
+        manager.save();
+      } catch (StorageException e) {
+        e.printStackTrace();
+      }
+
+      Hotbar.send(survivalPlayer.getPlayer());
+    }
+  }
+
+  private static void setFlags(final ProtectedCuboidRegion cuboidRegion) {
+    final Map<Flag<?>, Object> flags = new HashMap<>();
+    flags.put(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+    flags.put(Flags.POTION_SPLASH, StateFlag.State.DENY);
+    flags.put(Flags.FIRE_SPREAD, StateFlag.State.DENY);
+    flags.put(Flags.LAVA_FIRE, StateFlag.State.DENY);
+    cuboidRegion.setFlags(flags);
+  }
+
+  private static boolean validZone(final int a, final int b, final int max, final SurvivalPlayer survivalPlayer) {
+    if (a >= 20 && a <= max && b >= 20 && b <= max) {
+      return true;
+    } else {
+      survivalPlayer.getPlayer().sendMessage(Messages.PREFIX + " §cDeine Zone darf minimal 20x20 und maximal 100x100 Blöcke groß sein. Deine " +
+          "Zone ist " + a + "x" + b + " Blöcke groß.");
+    }
+
+    return false;
+  }
+
+  private void searchZone(final Player p, final PlayerInteractEvent e) {
+    new Thread(() -> {
+      if (noZoneFound(p, e)) {
+        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), e
+            .getClickedBlock().getLocation())).getId();
+        UUID uuid = UUID.fromString(name);
+        UUIDFetcher.getName(uuid, name1 -> p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" + name1 + " §7gefunden."));
+
+        if (name.toLowerCase().contains("spawnzone")) {
+          p.sendMessage(Messages.SPAWNZONE_FOUND);
+        }
+      }
+      Thread.currentThread().interrupt();
+    }).start();
+  }
+
+  private boolean noZoneFound(final Player player, final PlayerInteractEvent event) {
+    if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), event.getClickedBlock().getLocation()) != null) {
+      return true;
+    } else {
+      player.sendMessage(Messages.PREFIX + " §7Es wurde keine Zone bei §8(§e" + event.getClickedBlock().getLocation().getBlockX() + "§7/" +
+          "§e" + event.getClickedBlock().getLocation().getBlockZ() + "§8) §7gefunden.");
+    }
+    return false;
+  }
+
   /**
    * Wenn ein Spieler mit einem Button interagiert
    *
@@ -161,45 +262,39 @@ public class InteractEvents implements Listener {
     if (e.getClickedBlock().getState() instanceof Button) {
       final Button button = (Button) e.getClickedBlock().getState();
       final Block b = e.getClickedBlock().getRelative(button.getAttachedFace(), 2);
+
       if (b.getState() instanceof CommandBlock) {
         final CommandBlock commandblock = (CommandBlock) b.getState();
+
         e.setCancelled(true);
         final String[] args = commandblock.getCommand().split(" ");
-        switch (args[0]) {
-          case "FARMWELT":
-            e.getPlayer().teleport(Bukkit.getWorld("farmwelt").getSpawnLocation());
-            e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.3F, 0.3F);
-            e.getPlayer().sendMessage(Messages.PREFIX + " §7Du wurdest zum §eFarmwelt-Spawn §7teleportiert.");
-            break;
-          case "FACEBOOK":
-            final TextComponent facebook = new TextComponent(Messages.PREFIX + " §7Klicke §ehier §7zu unserem Facebook Profil.");
-            facebook.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ""));
-            e.getPlayer().spigot().sendMessage(facebook);
-            break;
-          case "WEBSITE":
-            final TextComponent webseite = new TextComponent(Messages.PREFIX + " §7Klicke §ehier §7zu unserer Webseite.");
-            webseite.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "http://www.MineMagicMania.de/"));
-            e.getPlayer().spigot().sendMessage(webseite);
-            break;
-          case "YOUTUBE":
-            final TextComponent youtube = new TextComponent(Messages.PREFIX + " §7Klicke §ehier §7zu unserem Youtube Kanal.");
-            youtube.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ""));
-            e.getPlayer().spigot().sendMessage(youtube);
-            break;
-          case "TWITTER":
-            final TextComponent twitter = new TextComponent(Messages.PREFIX + " §7Klicke §ehier §7zu unserem Twitter Profil.");
-            twitter.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, ""));
-            e.getPlayer().spigot().sendMessage(twitter);
-            break;
-          case "PROJEKTTELEPORTER":
 
-            break;
-          default:
-            break;
+        if (args[0].equals("FARMWELT")) {
+          performFarmwelt(e);
+        } else if (args[0].equals("FACEBOOK")) {
+          performSocial(e, " §7Klicke §ehier §7zu unserem Facebook Profil.", "");
+        } else if (args[0].equals("WEBSEITE")) {
+          performSocial(e, " §7Klicke §ehier §7zu unserer Webseite.", "http://www.MineMagicMania.de/");
+        } else if (args[0].equals("YOUTUBE")) {
+          performSocial(e, " §7Klicke §ehier §7zu unserem Youtube Kanal.", "");
+        } else if (args[0].equals("YOUTUBE")) {
+          performSocial(e, " §7Klicke §ehier §7zu unserem Twitter Profil.", "");
         }
       }
     }
 
+  }
+
+  private void performSocial(final PlayerInteractEvent e, final String s, final String s2) {
+    final TextComponent facebook = new TextComponent(Messages.PREFIX + s);
+    facebook.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, s2));
+    e.getPlayer().spigot().sendMessage(facebook);
+  }
+
+  private void performFarmwelt(final PlayerInteractEvent e) {
+    e.getPlayer().teleport(Bukkit.getWorld("farmwelt").getSpawnLocation());
+    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 0.3F, 0.3F);
+    e.getPlayer().sendMessage(Messages.PREFIX + " §7Du wurdest zum §eFarmwelt-Spawn §7teleportiert.");
   }
 
   /**
@@ -210,91 +305,20 @@ public class InteractEvents implements Listener {
    */
   @EventHandler
   public void onInteractEntity(final PlayerInteractEntityEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
-    if (survivalPlayer.isTamed()) {
-      final Tameable en = (Tameable) e.getRightClicked();
-      if (en.getOwner().getUniqueId().equals(e.getPlayer().getUniqueId())) {
-        en.setTamed(false);
-        e.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast das Tier freigelassen.");
-        survivalPlayer.setTamed(false);
-      } else {
-        e.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast dieses Tier nicht gezähmt.");
-      }
+    if (SurvivalPlayer.findSurvivalPlayer(e.getPlayer()).isTamed()) {
+      isTamed((Tameable) e.getRightClicked(), e, SurvivalPlayer.findSurvivalPlayer(e.getPlayer()));
     }
-
   }
 
-  /**
-   * Erstelle eine Zone
-   *
-   * @param p Spieler
-   * @param e PlayerInteractEvent
-   * @see org.bukkit.event.player.PlayerInteractEvent
-   */
-  @SuppressWarnings("deprecation")
-  private void editZone(final Player p, final PlayerInteractEvent e) {
-    final Location loc = e.getClickedBlock().getLocation();
+  private void isTamed(final Tameable tameable, final PlayerInteractEntityEvent event, final SurvivalPlayer survivalPlayer) {
+    if (tameable.getOwner().getUniqueId().equals(event.getPlayer().getUniqueId())) {
+      tameable.setTamed(false);
+      event.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast das Tier freigelassen.");
+      survivalPlayer.setTamed(false);
 
-    loc.setY(loc1.containsKey(p) ? 256 : 0);
-    if (loc1.containsKey(p)) {
-      loc2.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
     } else {
-      loc1.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+      event.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast dieses Tier nicht gezähmt.");
     }
-    p.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(p) && loc2.containsKey(p) ?
-        "2." : "1.") + " §7gesetzt.");
-    Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
-
-      if (loc1.containsKey(p) && !loc2.containsKey(p)) {
-        final List<Block> blocks = new ArrayList<>();
-
-        p.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
-        final Location beacon = e.getClickedBlock().getLocation().subtract(0, 1, 0);
-        final Location ironblock = e.getClickedBlock().getLocation().subtract(0, 2, 0);
-
-        p.sendBlockChange(beacon, Material.BEACON, (byte) 0);
-        p.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
-        blocks.add(beacon.getBlock());
-        blocks.add(ironblock.getBlock());
-
-        for (int x = -1; x <= 1; x++) {
-          for (int z = -1; z <= 1; z++) {
-            final Location block = ironblock.clone().add(x, 0, z);
-            p.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
-            blocks.add(block.getBlock());
-          }
-        }
-        if (show.containsKey(p)) {
-          blocks.addAll(show.get(p));
-        }
-        show.put(p, blocks);
-      }
-
-    }, 10L);
-
-    if (loc1.containsKey(p) && loc2.containsKey(p)) {
-      createRegion(p);
-    }
-  }
-
-  private void searchZone(final Player p, final PlayerInteractEvent e) {
-    new Thread(() -> {
-      if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), e.getClickedBlock().getLocation()) != null) {
-        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(),
-            e.getClickedBlock().getLocation())).getId();
-        UUID uuid = UUID.fromString(name);
-        UUIDFetcher.getName(uuid, name1 -> p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" +
-            name1 + " §7gefunden."));
-
-        if (name.toLowerCase().contains("spawnzone") || name.toLowerCase().equals("spawnzone")) {
-          p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone §eSpawnzone §7gefunden.");
-        }
-      } else {
-        p.sendMessage(Messages.PREFIX + " §7Es wurde keine Zone bei §8(§e" + e.getClickedBlock().getLocation
-            ().getBlockX() + "§7/" + "§e" + e.getClickedBlock().getLocation().getBlockZ() + "§8) §7gefunden.");
-      }
-      Thread.currentThread().interrupt();
-    }).start();
   }
 
 }

@@ -1,6 +1,5 @@
 package net.mmm.survival.vote;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,12 @@ public class VotifierPlugin implements Listener {
 
   public static Map<String, List<com.vexsoftware.votifier.model.Vote>> votes = new HashMap<>();
 
+  /**
+   * Spieler votet auf bestimmter Webseite fuer unseren Server
+   *
+   * @param uuid UUID des Spielers
+   * @param website Webseite
+   */
   public static void vote(final UUID uuid, final String website) {
     SurvivalData.getInstance().getAsyncMySQL().addVote(uuid, website);
   }
@@ -38,40 +43,35 @@ public class VotifierPlugin implements Listener {
   @EventHandler
   public void onVote(final VotifierEvent e) {
     final Player player = Bukkit.getPlayer(e.getVote().getUsername());
-    if (player != null) {
+
+    if (checkPlayer(player, e)) {
       vote(player.getUniqueId(), e.getVote().getServiceName());
       player.sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotet hast. §8[§e" + e.getVote().getServiceName
           () + "§8]");
 
-      SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
-      if (survivalPlayer != null) {
-        survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
-        survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
-      } else {
-        survivalPlayer = new SurvivalPlayer(player.getUniqueId(), Konst.VOTE_REWARD, new ArrayList<>(), new
-            ArrayList<>(), (short) 1, 100, null);
-        SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
-
-        SurvivalData.getInstance().getPlayers().put(player.getUniqueId(), survivalPlayer);
-      }
-
-      player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET,
-          "§cMünze", Collections.singletonList("§7§oDu kannst diese Münzen beim Markt eintauschen.")));
-    } else {
-      votes.put(e.getVote().getUsername().toLowerCase(), votes.containsKey(e.getVote().getUsername().toLowerCase()) ?
-          votes.put(e.getVote().getUsername().toLowerCase(), add(votes.get(e.getVote().getUsername().toLowerCase
-              ()), e.getVote())) : add(Collections.emptyList(), e.getVote()));
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+      survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
+      survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
+      player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList(Messages.VOTE_REWARD)));
     }
 
   }
 
-  /**
-   * Vote hinzufuegen
-   *
-   * @param list Liste mit Votes
-   * @param add Vote, der hinzukommen soll
-   * @return Liste mit Votes
-   */
+  private boolean checkPlayer(final Player player, final VotifierEvent event) {
+    if (player != null) {
+      return true;
+    } else {
+      if (votes.containsKey(event.getVote().getUsername().toLowerCase())) {
+        votes.put(event.getVote().getUsername().toLowerCase(), votes.put(event.getVote().getUsername().toLowerCase(), add(votes.get(event
+            .getVote().getUsername().toLowerCase()), event.getVote())));
+      } else {
+        votes.put(event.getVote().getUsername().toLowerCase(), add(Collections.emptyList(), event.getVote()));
+      }
+    }
+
+    return false;
+  }
+
   private List<com.vexsoftware.votifier.model.Vote> add(final List<com.vexsoftware.votifier.model.Vote> list,
                                                         final com.vexsoftware.votifier.model.Vote add) {
     list.add(add);

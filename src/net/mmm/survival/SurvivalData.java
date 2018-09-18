@@ -8,21 +8,21 @@ import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.SurvivalPlayer;
 
 public class SurvivalData {
-
   private static SurvivalData survivalData;
 
   private final AsyncMySQL async = new AsyncMySQL();
-  private final Map<UUID, SurvivalPlayer> players;
   private DynmapWorldGuardPlugin dynmap;
+  private final Map<UUID, SurvivalPlayer> players;
 
+  /**
+   * Konstruktor
+   */
   public SurvivalData() {
     players = async.getPlayers();
   }
 
   /**
-   * Konstruktor
-   *
-   * @return Instanz von Survival
+   * @return Instanz
    */
   public static SurvivalData getInstance() {
     if (survivalData == null) {
@@ -31,6 +31,7 @@ public class SurvivalData {
     return survivalData;
   }
 
+  //<editor-fold desc="getter and setter">
   public AsyncMySQL getAsyncMySQL() {
     return async;
   }
@@ -46,4 +47,5 @@ public class SurvivalData {
   public void setDynmap(final DynmapWorldGuardPlugin dynmap) {
     this.dynmap = dynmap;
   }
+  //</editor-fold>
 }

@@ -12,44 +12,21 @@ import org.bukkit.entity.Player;
  * Hotbar ermoeglicht das Senden einer Hotbar
  */
 public class Hotbar {
-
-  private static Class<?> craftPlayerClass;
   private static Field playerConnection;
   private static Method getHandle, sendPacket;
-  private static Constructor<?> packetPlayerChatConstructor, chatmessageConstructor;
+  private static Constructor<?> chatmessageConstructor;
 
   /**
    * setup der Hotbar
    */
   public static void setup() {
-    String sServerVersion = Bukkit.getServer().getClass().getName();
-    sServerVersion = sServerVersion.substring(sServerVersion.indexOf("craftbukkit.") + "craftbukkit.".length());
-    sServerVersion = sServerVersion.substring(0, sServerVersion.indexOf("."));
     try {
-      final Class<?> PACKET_CLASS = Class.forName("net.minecraft.server." + sServerVersion + ".Packet");
-      craftPlayerClass = Class.forName("org.bukkit.craftbukkit." + sServerVersion + ".entity.CraftPlayer");
-      getHandle = craftPlayerClass.getMethod("getHandle");
+      getHandle = Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getVersion() + ".entity.CraftPlayer").getMethod("getHandle");
       playerConnection = getHandle.getReturnType().getField("playerConnection");
-      sendPacket = playerConnection.getType().getMethod("sendPacket", PACKET_CLASS);
-      //setup Chatmessagetype
-      setupChatMesageType(sServerVersion);
-      //setup Chatmessage
-      final Class<?> CHATMESSAGE = Class.forName("net.minecraft.server." + sServerVersion + ".ChatMessage");
-      chatmessageConstructor = CHATMESSAGE.getConstructor(String.class, Object[].class);
-
-    } catch (final NoSuchMethodException | NoSuchFieldException | ClassNotFoundException ex) {
+      sendPacket = playerConnection.getType().getMethod("sendPacket", Class.forName("net.minecraft.server." + Bukkit.getServer().getVersion() + ".Packet"));
+      chatmessageConstructor = Class.forName("net.minecraft.server." + Bukkit.getServer().getVersion() + ".ChatMessage").getConstructor(String.class, Object[].class);
+    } catch (final ClassNotFoundException | NoSuchMethodException | NoSuchFieldException ex) {
       ex.printStackTrace();
-    }
-  }
-
-  private static void setupChatMesageType(final String sServerVersion) throws NoSuchMethodException, ClassNotFoundException {
-    final Class<?> PACKET_PLAYER_CHAT_CLASS = Class.forName("net.minecraft.server." + sServerVersion + ".PacketPlayOutChat");
-    final Class<?> ICHATCOMP = Class.forName("net.minecraft.server." + sServerVersion + ".IChatBaseComponent");
-    try {
-      packetPlayerChatConstructor = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP, byte.class);
-    } catch (final NoSuchMethodException e) {
-      final Class<?> CHAT_MESSAGE_TYPE_CLASS = Class.forName("net.minecraft.server." + sServerVersion + ".ChatMessageType");
-      packetPlayerChatConstructor = PACKET_PLAYER_CHAT_CLASS.getConstructor(ICHATCOMP, CHAT_MESSAGE_TYPE_CLASS);
     }
   }
 
@@ -60,18 +37,22 @@ public class Hotbar {
    */
   public static void send(final Player p) {
     try {
-      final Object icb = chatmessageConstructor.newInstance("§7Du hast erfolgreich deine Zone erstellt.", new
-          Object[0]);
-      final Object packet;
-      packet = packetPlayerChatConstructor.newInstance(icb, (byte) 2);
-      final Object craftplayerInst = craftPlayerClass.cast(p);
+      final Object icb = chatmessageConstructor.newInstance("§7Du hast erfolgreich deine Zone erstellt.", new Object[0]);
+      final Object craftplayerInst = Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getVersion() + ".entity.CraftPlayer").cast(p);
       final Object methodhHandle = getHandle.invoke(craftplayerInst);
-      final Object playerConnection = Hotbar.playerConnection.get(methodhHandle);
 
-      sendPacket.invoke(playerConnection, packet);
-    } catch (final IllegalAccessException | InstantiationException | InvocationTargetException ex) {
+      sendPacket.invoke(Hotbar.playerConnection.get(methodhHandle), setupChatMesageType(Bukkit.getServer().getVersion()).newInstance(icb, (byte) 2));
+    } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException ex) {
       ex.printStackTrace();
     }
+  }
+
+  private static Constructor<?> setupChatMesageType(final String version) throws NoSuchMethodException, ClassNotFoundException {
+    final Class<?> packetPlayerChatClass = Class.forName("net.minecraft.server." + version + ".PacketPlayOutChat");
+    final Class<?> ichatcomp = Class.forName("net.minecraft.server." + version + ".IChatBaseComponent");
+    final Class<?> chatMessageTypeClass = Class.forName("net.minecraft.server." + version + ".ChatMessageType");
+
+    return packetPlayerChatClass.getConstructor(ichatcomp, chatMessageTypeClass);
   }
 
 }

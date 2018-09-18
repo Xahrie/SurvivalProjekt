@@ -24,9 +24,9 @@ public class ItemManager {
    * @return Item
    */
   public static ItemStack build(final Material ma, final String name, final List<String> lore) {
-
     final ItemStack item = new ItemStack(ma);
     final ItemMeta meta = item.getItemMeta();
+
     meta.setDisplayName(name);
     meta.setLore(lore);
     item.setItemMeta(meta);
@@ -44,10 +44,9 @@ public class ItemManager {
    * @return Item
    */
   public static ItemStack build(final Material ma, final int damage, final String name, final List<String> lore) {
-
-    //noinspection deprecation
     final ItemStack item = new ItemStack(ma, 1, (short) damage);
     final ItemMeta meta = item.getItemMeta();
+
     meta.setDisplayName(name);
     meta.setLore(lore);
     item.setItemMeta(meta);
@@ -65,13 +64,10 @@ public class ItemManager {
    * @param lore Eigenschaften der Lore
    * @return Item
    */
-  public static ItemStack build(final Material ma, final Enchantment ench, final int level, final String name, final
-  List<String> lore) {
-
-    final ItemStack item = new ItemStack(ma, 1);
+  public static ItemStack build(final Material ma, final Enchantment ench, final int level, final String name, final List<String> lore) {
+    final ItemStack item = build(ma, name, lore);
     final ItemMeta meta = item.getItemMeta();
-    meta.setDisplayName(name);
-    meta.setLore(lore);
+
     meta.addEnchant(ench, level, true);
     item.setItemMeta(meta);
 
@@ -90,21 +86,31 @@ public class ItemManager {
   public static ItemStack getSkull(final GameProfile profile, final String name, final List<String> lore) {
     final ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
     final SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+
     skullMeta.setDisplayName(name);
     skullMeta.setLore(lore);
+
     Field profileField = null;
+
     try {
       profileField = skullMeta.getClass().getDeclaredField("profile");
     } catch (final NoSuchFieldException | SecurityException ignored) {
     }
-    assert (profileField != null);
-    profileField.setAccessible(true);
-    try {
-      profileField.set(skullMeta, profile);
-    } catch (final IllegalArgumentException | IllegalAccessException e) {
-      e.printStackTrace();
+
+    if (profileField != null) {
+      profileField.setAccessible(true);
     }
+
+    try {
+      if (profileField != null) {
+        profileField.set(skullMeta, profile);
+      }
+    } catch (final IllegalArgumentException | IllegalAccessException ex) {
+      ex.printStackTrace();
+    }
+
     skull.setItemMeta(skullMeta);
+
     return skull;
   }
 

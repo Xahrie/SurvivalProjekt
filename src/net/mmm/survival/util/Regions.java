@@ -12,11 +12,9 @@ import org.bukkit.Location;
  * Verwaltung der Regionen
  */
 public class Regions {
-  //Rueckgabe, wenn keine Region in Selektion definiert
-  private static final String GLOBAL_REGION = "__global__";
+  private static final String GLOBAL_REGION = "__global__";   /* Rueckgabe, wenn keine Region in Selektion definiert */
 
-  private static void checkRegionId(final String id, final boolean allowGlobal)
-      throws CommandException {
+  private static void checkRegionId(final String id, final boolean allowGlobal) throws CommandException {
     if (!ProtectedRegion.isValidId(id)) {
       throw new CommandException("The region name of '" + id + "' contains characters that are not allowed.");
     }
@@ -40,7 +38,9 @@ public class Regions {
     } catch (final CommandException ex) {
       ex.printStackTrace();
     }
+
     ProtectedRegion region = regionManager.getRegion(id);
+
     if (region == null) {
       if (id.equalsIgnoreCase(GLOBAL_REGION)) {
         region = new GlobalProtectedRegion(id);
@@ -63,34 +63,20 @@ public class Regions {
    */
   public static ProtectedRegion checkRegionLocationIn(final RegionManager regionManager, final Location loc) {
     final ApplicableRegionSet set = regionManager.getApplicableRegions(new Vector(loc.getX(), loc.getY(), loc.getZ()));
-    //keine Region ausgewaehlt, dann direkt abbrechen
-    if (set.size() == 0) {
+
+    if (set.size() == 0) { /* keine Region ausgewaehlt, dann direkt abbrechen */
       return null;
-    }
-    //mehr als eine Region ausgewaehlt
-    if (set.size() > 1) {
+    } else if (set.size() > 1) {  /* mehr als eine Region ausgewaehlt */
       warningMoreRegionsSelected(set);
     }
+
     return set.iterator().next();
   }
 
-  /**
-   * Es wurden mehrere Regionen ausgewaehlt
-   *
-   * @param set ApplicableRegionSet
-   * @see com.sk89q.worldguard.protection.ApplicableRegionSet
-   */
   private static void warningMoreRegionsSelected(final ApplicableRegionSet set) {
     final StringBuilder builder = new StringBuilder();
-    boolean first = true;
-
-    for (final ProtectedRegion region : set) {
-      if (!first) {
-        builder.append(", ");
-      }
-      first = false;
-      builder.append(region.getId());
-    }
+    set.forEach(region -> builder.append(region.getId()).append(", "));
+    builder.deleteCharAt(builder.length() - 1);
 
     try {
       throw new CommandException("You're standing in several regions (please pick one).\nYou're in: " + builder.toString());

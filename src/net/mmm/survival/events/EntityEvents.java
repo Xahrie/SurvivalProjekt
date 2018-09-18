@@ -26,13 +26,21 @@ public class EntityEvents implements Listener {
   @EventHandler
   public void onCreatureSpawn(final CreatureSpawnEvent e) {
     if (e.getEntity() instanceof Wither) {
-      if (e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER)) {
-        if (!e.getLocation().getWorld().getName().equals("world_nether")) {
-          e.setCancelled(true);
-        }
-      }
+      witherSpawn(e);
     } else if (e.getEntity() instanceof Monster) {
-      if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
+      monsterSpawn(e);
+    }
+  }
+
+  private void monsterSpawn(final CreatureSpawnEvent e) {
+    if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
+      e.setCancelled(true);
+    }
+  }
+
+  private void witherSpawn(final CreatureSpawnEvent e) {
+    if (e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER)) {
+      if (!e.getLocation().getWorld().getName().equals("world_nether")) {
         e.setCancelled(true);
       }
     }
@@ -46,8 +54,8 @@ public class EntityEvents implements Listener {
    */
   @EventHandler
   public void onTarget(final EntityTargetEvent e) {
-    if (e.getEntity().getWorld().getName().equals("world") && e.getTarget() instanceof Player && (e.getEntity()
-        instanceof IronGolem || e.getEntity() instanceof Wolf) && e.getTarget() instanceof Player) {
+    if (e.getEntity().getWorld().getName().equals("world") && e.getTarget() instanceof Player && (e.getEntity() instanceof IronGolem || e
+        .getEntity() instanceof Wolf) && e.getTarget() instanceof Player) {
       e.setCancelled(true);
     }
   }

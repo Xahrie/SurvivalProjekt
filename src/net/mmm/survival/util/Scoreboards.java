@@ -17,14 +17,12 @@ public class Scoreboards {
    * @param p Owner des Scoreboards
    */
   public static void setScoreboard(final Player p) {
-    final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
+    final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
-    manager.tablist.keySet().forEach(group -> sb.registerNewTeam("" + manager.tablist.get(group)).setPrefix
-        (BungeeGroupManager.getGroupManager().getKurzel(group)));
+    manager.tablist.keySet().forEach(group -> scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(manager.getKurzel(group)));
 
-    p.setScoreboard(sb);
+    p.setScoreboard(scoreboard);
     setPrefix(p);
   }
 

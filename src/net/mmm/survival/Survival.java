@@ -37,10 +37,12 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author Abgie
  * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch BlueIronGirl und Abgie
  */
-
 public class Survival extends JavaPlugin {
   private static Survival server = null;
 
+  /**
+   * @return Instanz
+   */
   public static Survival getInstance() {
     return server;
   }
@@ -50,18 +52,15 @@ public class Survival extends JavaPlugin {
    */
   public void onEnable() {
     server = this;
-    final SurvivalData survivalData = SurvivalData.getInstance();
+    final SurvivalData survivalData = SurvivalData.getInstance(); /* SurvivalData erstellen */
 
-    //Tabellen erzeugen
-    survivalData.getAsyncMySQL().getMySQL().createTables();
+    survivalData.getAsyncMySQL().getMySQL().createTables(); /* Tabellen erzeugen */
+    Hotbar.setup(); /* Hotbar einstellen */
+    registerEvents(); /* Events registrieren */
+    registerCommands(); /* Commands registrieren */
+    registerDynmap(survivalData); /* Dynmap registrieren */
 
-    Hotbar.setup();
-    registerEvents();
-    registerCommands();
-    registerDynmap(survivalData);
-
-    //Farmwelt ggf. erzeugen
-    if (Bukkit.getWorlds().contains(Bukkit.getWorld("farmwelt"))) {
+    if (Bukkit.getWorlds().contains(Bukkit.getWorld("farmwelt"))) { /* Farmwelt ggf. erzeugen */
       Bukkit.createWorld(new WorldCreator("farmwelt"));
     }
   }
@@ -70,18 +69,12 @@ public class Survival extends JavaPlugin {
    * Wird bei der Deaktivierung des Servers durchgefuehrt
    */
   public void onDisable() {
-    //Spielerdaten speichern
-    SurvivalData.getInstance().getAsyncMySQL().storePlayers();
-
-    //Datenbankverbindung schliessen
-    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection();
-
     Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet."));
+    SurvivalData.getInstance().getAsyncMySQL().storePlayers(); /* Spielerdaten speichern */
+    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
+    SurvivalData.getInstance().getDynmap().onDisable(); /* Disable von Dynmap */
   }
 
-  /**
-   * Events werden registriert
-   */
   private void registerEvents() {
     final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(), new PlayerConnectionEvents(), new DeathEvents(),
         new EntityEvents(), new InteractEvents(), new LocationChangeEvents(), new ServerEvents());
@@ -89,9 +82,6 @@ public class Survival extends JavaPlugin {
     listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
-  /**
-   * Commands werden registriert
-   */
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Gamemode(), new Home(), new Navi(), new SetHome(), new SetSpawn(), new Spawn(),
         new Tame(), new Vote(), new Zone());
@@ -99,13 +89,9 @@ public class Survival extends JavaPlugin {
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName().substring(26)).setExecutor(commandExecutor));
   }
 
-  /**
-   * Dynmap wird registriert
-   *
-   * @param survivalData Speicher
-   */
   private void registerDynmap(final SurvivalData survivalData) {
     final DynmapWorldGuardPlugin dynmap = new DynmapWorldGuardPlugin();
+
     dynmap.enable();
     survivalData.setDynmap(dynmap);
   }

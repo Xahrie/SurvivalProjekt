@@ -79,7 +79,7 @@ public class DynmapWorldGuardPlugin {
       v = v.replace("%a", "<center>" + marker.getLabel() + "</center>").replace("%c", "<center>Projekt-Zone</center>");
 
       final StringBuilder owner = new StringBuilder();
-      region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid)).append(", "));
+      region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)).append(", "));
       v = v.replace("%d", "<br />Projektleiter:<br /><span style=\"font-weight:bold;\">" + owner + "</span>");
 
     } else {
@@ -95,9 +95,9 @@ public class DynmapWorldGuardPlugin {
 
     } else {
       final StringBuilder owner = new StringBuilder();
-      region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid)).append(", "));
+      region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)).append(", "));
 
-      v = v.replace("%a", SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(UUID.fromString(marker.getLabel().toLowerCase())))
+      v = v.replace("%a", SurvivalData.getInstance().getAsyncMySQL().getName(UUID.fromString(marker.getLabel().toLowerCase())))
           .replace("%b", "Owner: ").replace("%c", owner.toString()).replace("%groupowners%", region.getOwners().toGroupsString())
           .replace("%groupmembers%", region.getMembers().toGroupsString()).replace("*", "");
     }
@@ -165,7 +165,7 @@ public class DynmapWorldGuardPlugin {
 
           if (style == null) {
             for (final UUID uuid : playerDomain.getUniqueIds()) {
-              final String p = SurvivalData.getInstance().getAsyncMySQL().getMySQL().getName(uuid);
+              final String p = SurvivalData.getInstance().getAsyncMySQL().getName(uuid);
 
               if (p != null) {
                 style = ownerstyle.get(p.toLowerCase());
