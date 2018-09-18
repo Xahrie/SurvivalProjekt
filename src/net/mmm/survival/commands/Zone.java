@@ -102,7 +102,7 @@ public class Zone implements CommandExecutor {
    * @param p Spieler
    */
   private void delete(final Player p) {
-    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, p.getUniqueId().toString(), false);
+    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), p.getUniqueId().toString(), false);
 
     deleteZone(p, region);
   }
@@ -113,7 +113,7 @@ public class Zone implements CommandExecutor {
    * @param p Spieler
    */
   private void info(final Player p) {
-    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg, p.getLocation());
+    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), p.getLocation());
 
     infoZone(region, p);
   }
@@ -127,7 +127,7 @@ public class Zone implements CommandExecutor {
   private void add(final Player p, final String[] args) {
     try {
       UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid, name -> {
-        final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid.toString(), false);
+        final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
         if (region != null && !region.getMembers().contains(uuid)) {
           region.getMembers().addPlayer(Bukkit.getPlayer(args[1]).getUniqueId());
           p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
@@ -150,7 +150,7 @@ public class Zone implements CommandExecutor {
     try {
       UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid,
           name -> {
-            final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid
+            final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid
                 .toString(), false);
 
             if (region != null && region.getMembers().contains(uuid)) {
@@ -243,7 +243,7 @@ public class Zone implements CommandExecutor {
    * @param survivalPlayer Spieler als SurvivalPlayer
    */
   private void createZone(final SurvivalPlayer survivalPlayer) {
-    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
+    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
       survivalPlayer.getPlayer().sendMessage(Messages.ZONE_ALREADY_EXIST);
     } else {
       if (!survivalPlayer.isZonenedit()) {
@@ -276,7 +276,7 @@ public class Zone implements CommandExecutor {
    */
   private void deleteZone(final Player p, final ProtectedRegion region) {
     if (region != null) {
-      SurvivalData.getInstance().getDynmap().rg.removeRegion(region.getId());
+      SurvivalData.getInstance().getDynmap().getRegion().removeRegion(region.getId());
       p.sendMessage(Messages.ZONE_REMOVED);
     } else {
       p.sendMessage(Messages.NO_ZONE_SET);

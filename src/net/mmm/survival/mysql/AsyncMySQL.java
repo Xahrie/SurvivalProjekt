@@ -355,7 +355,7 @@ public class AsyncMySQL {
       if (conn != null) {
         try {
           conn.close();
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
           e.printStackTrace();
         }
       }

@@ -57,8 +57,8 @@ public class Navi implements CommandExecutor {
   private void findRegion(final String args, final Player p) {
     try {
       UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, name -> {
-        if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid.toString(), false) != null) {
-          final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().rg, uuid.toString(), false);
+        if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false) != null) {
+          final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
 
           p.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
           p.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),

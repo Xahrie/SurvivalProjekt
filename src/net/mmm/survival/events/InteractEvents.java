@@ -63,7 +63,7 @@ public class InteractEvents implements Listener {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
 
     new Thread(() -> {
-      RegionManager manager = SurvivalData.getInstance().getDynmap().rg;
+      RegionManager manager = SurvivalData.getInstance().getDynmap().getRegion();
       ProtectedCuboidRegion pr = new ProtectedCuboidRegion(p.getUniqueId().toString(), loc1.get(p), loc2.get(p));
 
       int x1 = pr.getMinimumPoint().getBlockX();
@@ -279,8 +279,8 @@ public class InteractEvents implements Listener {
 
   private void searchZone(final Player p, final PlayerInteractEvent e) {
     new Thread(() -> {
-      if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg, e.getClickedBlock().getLocation()) != null) {
-        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().rg,
+      if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), e.getClickedBlock().getLocation()) != null) {
+        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(),
             e.getClickedBlock().getLocation())).getId();
         UUID uuid = UUID.fromString(name);
         UUIDFetcher.getName(uuid, name1 -> p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" +
