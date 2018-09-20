@@ -1,21 +1,17 @@
 package net.mmm.survival.dynmap;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.BlockVector2D;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.domains.DefaultDomain;
-import com.sk89q.worldguard.domains.PlayerDomain;
 import com.sk89q.worldguard.protection.flags.BooleanFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedPolygonalRegion;
@@ -78,14 +74,19 @@ public class DynmapWorldGuardPlugin {
     if (marker.getLabel().startsWith("P-")) {
       v = v.replace("%a", "<center>" + marker.getLabel() + "</center>").replace("%c", "<center>Projekt-Zone</center>");
 
-      final StringBuilder owner = new StringBuilder();
-      region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)).append(", "));
-      v = v.replace("%d", "<br />Projektleiter:<br /><span style=\"font-weight:bold;\">" + owner + "</span>");
+      v = appendOwner(region, v);
 
     } else {
       v = isUnowned(region, v, marker);
     }
 
+    return v;
+  }
+
+  private String appendOwner(final ProtectedRegion region, String v) {
+    final StringBuilder owner = new StringBuilder();
+    region.getOwners().getUniqueIds().forEach(uuid -> owner.append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)).append(", "));
+    v = v.replace("%d", "<br />Projektleiter:<br /><span style=\"font-weight:bold;\">" + owner + "</span>");
     return v;
   }
 
@@ -116,79 +117,41 @@ public class DynmapWorldGuardPlugin {
 
   private void addStyle(final String resid, final String worldid, final AreaMarker m, final ProtectedRegion region) {
     AreaStyle style = cusstyle.get(worldid + "/" + resid);
-    style = setStyle(resid, region, style);
+    style = determineStyle(resid, style);
 
     checkUnowned(region);
     checkRegionId(m, region, style);
+    determineLabel(m, style);
+    determineBoostFlag(m, region);
 
+  }
+
+  private void determineLabel(final AreaMarker m, final AreaStyle style) {
     if (style.getLabel() != null) {
       m.setLabel(style.getLabel());
     }
+  }
 
+  private void determineBoostFlag(final AreaMarker m, final ProtectedRegion region) {
     if (boost_flag != null) {
       final Boolean b = region.getFlag(boost_flag);
       m.setBoostFlag((b != null) && b);
     }
-
   }
 
-  private AreaStyle setStyle(final String resid, final ProtectedRegion region, AreaStyle style) {
+  private AreaStyle determineStyle(final String resid, AreaStyle style) {
     style = (style == null) ? cusstyle.get(resid) : null;
 
     style = checkWildcardStyle(resid, style);
 
-    style = checkOwnerStyle(region, style);
+    style = checkOwnerStyle(style);
 
     style = (style == null) ? defstyle : null;
 
     return style;
   }
 
-  private AreaStyle checkOwnerStyle(final ProtectedRegion region, AreaStyle style) {
-    if (style == null) {
-      if (!ownerstyle.isEmpty()) {
-        final DefaultDomain defaultDomain = region.getOwners();
-        final PlayerDomain playerDomain = defaultDomain.getPlayerDomain();
-
-        if (playerDomain != null) {
-          for (final String player : playerDomain.getPlayers()) {
-            style = ownerstyle.get(player.toLowerCase());
-            if (style != null) break;
-          }
-
-          if (style == null) {
-            for (final UUID uuid : playerDomain.getUniqueIds()) {
-              style = ownerstyle.get(uuid.toString());
-              if (style != null) break;
-            }
-          }
-
-          if (style == null) {
-            for (final UUID uuid : playerDomain.getUniqueIds()) {
-              final String player = SurvivalData.getInstance().getAsyncMySQL().getName(uuid);
-
-              if (player != null) {
-                style = ownerstyle.get(player.toLowerCase());
-                if (style != null) break;
-              }
-            }
-          }
-
-        }
-
-        if (style == null) {
-          final Set<String> grp = defaultDomain.getGroups();
-
-          if (grp != null) {
-            for (final String player : grp) {
-              style = ownerstyle.get(player.toLowerCase());
-              if (style != null) break;
-            }
-          }
-        }
-
-      }
-    }
+  private AreaStyle checkOwnerStyle(final AreaStyle style) {
     return style;
   }
 
@@ -233,83 +196,82 @@ public class DynmapWorldGuardPlugin {
   void handleRegion(final World world, final ProtectedRegion region, final Map<String, AreaMarker> newmap) {
     String name = region.getId();
     name = name.substring(0, 1).toUpperCase() + name.substring(1); /* Make first letter uppercase */
-    final double[] x = new double[0];
-    final double[] z = new double[0];
 
     /* Handle areas */
-    handleAreas(world, region, newmap, name, x, z);
+    handleAreas(world, region, newmap, name);
   }
 
-  private void handleAreas(final World world, final ProtectedRegion region, final Map<String, AreaMarker> newmap, final String name,
-                           double[] x, double[] z) {
+  private void handleAreas(final World world, final ProtectedRegion region, final Map<String, AreaMarker> newmap, final String name) {
     if (isVisible(region.getId(), world.getName())) {
-      final String id = region.getId();
-      final RegionType regionType = region.getType();
-      final BlockVector minimumPoint = region.getMinimumPoint();
-      final BlockVector maximumPoint = region.getMaximumPoint();
-
-      if (regionType == RegionType.CUBOID) { /* Cubiod region? Make outline */
-        final List<double[]> arrays = handleCuboid(minimumPoint, maximumPoint);
-        x = arrays.get(0);
-        z = arrays.get(1);
-      } else if (regionType == RegionType.POLYGON) {
-        final List<double[]> arrays = handlePolygon(region);
-        x = arrays.get(0);
-        z = arrays.get(1);
-      } //TODO (Abgie) 18.09.2018: else ???
-
-      final String markerid = world.getName() + "_" + id;
-      AreaMarker m = resareas.remove(markerid); /* Existing area? */
-
-      if (m == null) {
-        m = set.createAreaMarker(markerid, name, false, world.getName(), x, z, false);
-      } else {
-        m.setCornerLocations(x, z); /* Replace corner locations */
-        m.setLabel(name);   /* Update label */
+      final RegionType tn = region.getType();
+      final BlockVector l0 = region.getMinimumPoint();
+      final BlockVector l1 = region.getMaximumPoint();
+      final double[] x, z;
+      if (tn == RegionType.CUBOID) { /* Cubiod region? */
+        /* Make outline */
+        x = new double[4];
+        z = new double[4];
+        x[0] = l0.getX();
+        z[0] = l0.getZ();
+        x[1] = l0.getX();
+        z[1] = l1.getZ() + 1.0;
+        x[2] = l1.getX() + 1.0;
+        z[2] = l1.getZ() + 1.0;
+        x[3] = l1.getX() + 1.0;
+        z[3] = l0.getZ();
+      } else if (tn == RegionType.POLYGON) {
+        final ProtectedPolygonalRegion ppr = (ProtectedPolygonalRegion) region;
+        final List<BlockVector2D> points = ppr.getPoints();
+        x = new double[points.size()];
+        z = new double[points.size()];
+        for (int i = 0; i < points.size(); i++) {
+          final BlockVector2D pt = points.get(i);
+          x[i] = pt.getX();
+          z[i] = pt.getZ();
+        }
+      } else {  /* Unsupported type */
+        return;
       }
-
-      if (use3d) { /* If 3D? */
-        m.setRangeY(maximumPoint.getY() + 1.0, minimumPoint.getY());
-      }
-
-      addStyle(id, world.getName(), m, region); /* Set line and fill properties */
-
-      final String desc = formatInfoWindow(region, m); /* Build popup */
-      m.setDescription(desc); /* Set popup */
-
+      final String markerid = world.getName() + "_" + region.getId();
+      AreaMarker m = resareas.remove(markerid);
+      m = doesAreaExist(world, name, x, z, markerid, m);
+      check3d(region.getMinimumPoint(), region.getMaximumPoint(), m);
+      addStyle(region.getId(), world.getName(), m, region);
+      determinePopup(region, m);
       newmap.put(markerid, m); /* Add to map */
     }
   }
 
-  private List<double[]> handlePolygon(final ProtectedRegion region) {
-    final ProtectedPolygonalRegion ppr = (ProtectedPolygonalRegion) region;
-    final List<BlockVector2D> points = ppr.getPoints();
-    final double[] x = new double[points.size()];
-    final double[] z = new double[points.size()];
-
-    IntStream.range(0, points.size()).forEach(i -> {
-      final BlockVector2D pt = points.get(i);
-      x[i] = pt.getX();
-      z[i] = pt.getZ();
-    });
-
-    return Arrays.asList(x, z);
+  private AreaMarker doesAreaExist(final World world, final String name, final double[] x, final double[] z, final String markerid,
+                                   AreaMarker m) {
+    if (m == null) {
+      m = createAreaMarker(world, name, x, z, markerid);
+    } else {
+      replaceCornerLocation(x, z, m);
+      m.setLabel(name);
+    }
+    return m;
   }
 
-  private List<double[]> handleCuboid(final BlockVector vectorX, final BlockVector vectorZ) {
-    final double[] x = new double[4];
-    final double[] z = new double[4];
+  private void check3d(final BlockVector minimumPoint, final BlockVector maximumPoint, final AreaMarker m) {
+    if (use3d) {
+      m.setRangeY(maximumPoint.getY() + 1.0, minimumPoint.getY());
+    }
+  }
 
-    x[0] = vectorX.getX();
-    z[0] = vectorX.getZ();
-    x[1] = vectorX.getX();
-    z[1] = vectorZ.getZ() + 1.0;
-    x[2] = vectorZ.getX() + 1.0;
-    z[2] = vectorZ.getZ() + 1.0;
-    x[3] = vectorZ.getX() + 1.0;
-    z[3] = vectorX.getZ();
+  private void determinePopup(final ProtectedRegion region, final AreaMarker m) {
+    final String desc = formatInfoWindow(region, m);
+    m.setDescription(desc);
+  }
 
-    return Arrays.asList(x, z);
+  private AreaMarker createAreaMarker(final World world, final String name, final double[] x, final double[] z, final String markerid) {
+    final AreaMarker m;
+    m = set.createAreaMarker(markerid, name, false, world.getName(), x, z, false);
+    return m;
+  }
+
+  private void replaceCornerLocation(final double[] x, final double[] z, final AreaMarker m) {
+    m.setCornerLocations(x, z);
   }
 
   /**
@@ -317,27 +279,32 @@ public class DynmapWorldGuardPlugin {
    */
   public void enable() {
     final PluginManager pluginManager = Survival.getInstance().getServer().getPluginManager();
-    final Plugin dynmap = pluginManager.getPlugin("dynmap");
+    final Plugin dynmap = enablePlugin(pluginManager, "dynmap", "Cannot find dynmap!");
+    if (dynmap == null) return;
+    api = (DynmapAPI) dynmap;
+    final Plugin plugin = enablePlugin(pluginManager, "WorldGuard", "Cannot find WorldGuard!");
+    if (plugin == null) return;
 
-    if (dynmap == null) {
-      severe("Cannot find dynmap!");
-      return;
-    }
+    worldGuard = (WorldGuardPlugin) plugin;
+    checkEnabled(dynmap);
 
-    api = (DynmapAPI) dynmap; /* Get API */
-    final Plugin p = pluginManager.getPlugin("WorldGuard"); /* Get WorldGuard */
+  }
 
-    if (p == null) {
-      severe("Cannot find WorldGuard!");
-      return;
-    }
-
-    worldGuard = (WorldGuardPlugin) p;
-
+  private void checkEnabled(final Plugin dynmap) {
     if (dynmap.isEnabled() && worldGuard.isEnabled()) {
       activate();
     }
+  }
 
+  private Plugin enablePlugin(final PluginManager pluginManager, final String dynmap2, final String message) {
+    final Plugin dynmap = pluginManager.getPlugin(dynmap2);
+
+    if (dynmap == null) {
+      severe(message);
+      return null;
+    }
+
+    return dynmap;
   }
 
   /**
@@ -345,26 +312,28 @@ public class DynmapWorldGuardPlugin {
    */
   @SuppressWarnings("deprecation")
   public void activate() {
-    final MarkerAPI markerapi = api.getMarkerAPI(); /* Now, get markers API */
-
-    if (markerapi == null) {
-      severe("Error loading dynmap marker API!");
-      return;
-    }
-
-    reloadConfig();
-
-    if (setupConfig(markerapi)) {
-      return;
-    }
-
+    final MarkerAPI markerapi = activateMarkerAPI();
+    if (markerapi == null) return;
+    if (loadConfig(markerapi)) return;
     Survival.getInstance().getServer().getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), new UpdateJob(), 40L);  /* First time is 2 seconds */
   }
 
+  private boolean loadConfig(final MarkerAPI markerapi) {
+    reloadConfig();
+    return setupConfig(markerapi);
+  }
+
+  private MarkerAPI activateMarkerAPI() {
+    final MarkerAPI markerapi = api.getMarkerAPI(); /* Now, get markers API */
+    if (markerapi == null) {
+      severe("Error loading dynmap marker API!");
+      return null;
+    }
+    return markerapi;
+  }
+
   private boolean setupConfig(final MarkerAPI markerapi) {
-    final FileConfiguration cfg = Survival.getInstance().getConfig();
-    cfg.options().copyDefaults(true);   /* Load defaults, if needed */
-    Survival.getInstance().saveConfig();  /* Save updates, if needed */
+    final FileConfiguration cfg = initConfig();
 
     set = markerapi.getMarkerSet("worldguard.markerset");
 
@@ -379,6 +348,12 @@ public class DynmapWorldGuardPlugin {
       return true;
     }
 
+    loadDefaults(cfg);
+
+    return false;
+  }
+
+  private void loadDefaults(final FileConfiguration cfg) {
     final int minzoom = cfg.getInt("layer.minzoom", 0);
 
     if (minzoom > 0) {
@@ -431,12 +406,17 @@ public class DynmapWorldGuardPlugin {
 
     updperiod = (long) (per * 20);
     stop = false;
+  }
 
-    return false;
+  private FileConfiguration initConfig() {
+    final FileConfiguration cfg = Survival.getInstance().getConfig();
+    cfg.options().copyDefaults(true);   /* Load defaults, if needed */
+    Survival.getInstance().saveConfig();  /* Save updates, if needed */
+    return cfg;
   }
 
   private void reloadConfig() {
-    if (reload) { /* Load configuration */
+    if (reload) {
       Survival.getInstance().reloadConfig();
     } else {
       reload = true;
