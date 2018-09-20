@@ -1,6 +1,7 @@
 package net.mmm.survival.commands;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.mmm.survival.SurvivalData;
@@ -24,52 +25,50 @@ public class Navi implements CommandExecutor {
     if (CommandUtils.checkPlayer(sender)) {
       final Player player = (Player) sender;
 
-      if (checkArguments(player, args)) {
-        findRegion(args[0], player);
-      }
+      checkArguments(player, args);
     }
 
     return false;
   }
 
-  /**
-   * Erlaubtes Format verwendet
-   *
-   * @param args Argumente des Commands
-   * @param player Spieler
-   * @return boolean
-   */
-  private boolean checkArguments(final Player player, final String[] args) {
-    if (args.length != 1) {
-      player.sendMessage(Messages.USAGE_NAVI_COMMAND);
-      return false;
+  private void checkArguments(final Player executor, final String[] args) {
+    if (args.length == 1) {
+      findRegion(args[0], executor);
+    } else {
+      executor.sendMessage(Messages.USAGE_NAVI_COMMAND);
     }
-
-    return true;
   }
 
-  /**
-   * Finde die bestimmte Region eines Spielers
-   *
-   * @param args Argumente des Commands
-   * @param player Spieler
-   */
-  private void findRegion(final String args, final Player player) {
+  private void findRegion(final String args, final Player executor) {
     try {
-      UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, name -> {
-        if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false) != null) {
-          final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
-
-          player.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
-          player.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),
-              region.getMinimumPoint().getBlockY(), region.getMinimumPoint().getBlockZ()));
-        } else {
-          player.sendMessage(Messages.ZONE_UNGUELTIG);
-        }
-      }));
+      findPlayer(args, executor);
     } catch (final Exception ex) {
-      player.sendMessage(Messages.PLAYER_NOT_FOUND);
+      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
+  }
+
+  private void findPlayer(final String args, final Player player) {
+    UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, name -> checkRegion(player, uuid, name)));
+  }
+
+  private void checkRegion(final Player executor, final UUID uuid, final String name) {
+    final ProtectedRegion region = getRegionWhenExists(uuid, executor);
+    editCompassTarget(executor, region);
+    executor.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
+  }
+
+  private ProtectedRegion getRegionWhenExists(final UUID uuid, final Player executor) {
+    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false) != null) {
+      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+    } else {
+      executor.sendMessage(Messages.ZONE_UNGUELTIG);
+    }
+    return null;
+  }
+
+  private void editCompassTarget(final Player executor, final ProtectedRegion region) {
+    executor.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),
+        region.getMinimumPoint().getBlockY(), region.getMinimumPoint().getBlockZ()));
   }
 
 }

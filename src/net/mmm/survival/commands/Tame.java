@@ -15,18 +15,24 @@ public class Tame implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player player = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
-
-      survivalPlayer.setTamed(!survivalPlayer.isTamed());
-      if (survivalPlayer.isTamed()) {
-        player.sendMessage(Messages.TAME_DISABLE);
-      } else {
-        player.sendMessage(Messages.TAME_ENABLE);
-      }
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) sender);
+      editTameStatus(executor);
     }
 
     return false;
+  }
+
+  private void editTameStatus(final SurvivalPlayer survivalPlayer) {
+    survivalPlayer.setTamed(!survivalPlayer.isTamed());
+    checkTame(survivalPlayer);
+  }
+
+  private void checkTame(final SurvivalPlayer survivalPlayer) {
+    if (survivalPlayer.isTamed()) {
+      survivalPlayer.getPlayer().sendMessage(Messages.TAME_DISABLE);
+    } else {
+      survivalPlayer.getPlayer().sendMessage(Messages.TAME_ENABLE);
+    }
   }
 
 }

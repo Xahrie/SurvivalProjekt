@@ -16,31 +16,34 @@ import org.bukkit.entity.Player;
  * /gamemode Command
  */
 public class Gamemode implements CommandExecutor {
+
+  private Integer gamemode;
+  private Player executor, target;
+  private String executorMessage;
+
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player player = (Player) sender;
-      final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
+      final Player executor = (Player) sender;
+      final Group group = BungeeGroupManager.getGroupManager().getGroup(executor);
 
-      if (CommandUtils.isOperator(player, group) && checkArguments(args, player)) {
-        if (args.length == 1) {
-          evaluateOneArgument(args, player);
-        } else if (args.length == 2) {
-          evaluateTwoArguments(args, player);
-        }
+      if (CommandUtils.isOperator(executor, group)) {
+        checkArgumentLength(args, executor);
       }
     }
 
     return false;
   }
 
-  /**
-   * Erlaubtes Format verwendet: 1 oder 2 Argumente
-   *
-   * @param strings Argumente des Commands
-   * @param player Spieler
-   * @return boolean
-   */
+  private void checkArgumentLength(final String[] args, final Player executor) {
+    if (checkArguments(args, executor)) {
+      argumentLengthValid(args, executor);
+    } else {
+      argumentLengthNotValid(executor);
+    }
+
+  }
+
   private boolean checkArguments(final String[] strings, final Player player) {
     if (!(strings.length == 1 || strings.length == 2)) {
       player.sendMessage(Messages.USAGE_GAMEMODE_COMMAND);
@@ -50,65 +53,100 @@ public class Gamemode implements CommandExecutor {
     return true;
   }
 
-  /**
-   * setzt den GameMode
-   *
-   * @param args Argumente des Commands
-   * @param player Spieler
-   */
-  private void evaluateOneArgument(final String[] args, final Player player) {
+  private void argumentLengthValid(final String[] args, final Player executor) {
     final String mode = args[0];
-    if (mode.equalsIgnoreCase("0") || mode.equalsIgnoreCase("s") || mode.equalsIgnoreCase("survival")) {
-      player.sendMessage(Messages.GAMEMODE_SURVIVAL);
-      player.setGameMode(GameMode.SURVIVAL);
-    } else if (mode.equalsIgnoreCase("1") || mode.equalsIgnoreCase("c") || mode.equalsIgnoreCase("creativ")) {
-      player.sendMessage(Messages.GAMEMODE_CREATIVE);
-      player.setGameMode(GameMode.CREATIVE);
-    } else if (mode.equalsIgnoreCase("2") || mode.equalsIgnoreCase("a") || mode.equalsIgnoreCase("adventure")) {
-      player.sendMessage(Messages.GAMEMODE_ADVENTURE);
-      player.setGameMode(GameMode.ADVENTURE);
-    } else if (mode.equalsIgnoreCase("3") || mode.equalsIgnoreCase("spec") || mode.equalsIgnoreCase("spectator")) {
-      player.sendMessage(Messages.GAMEMODE_SPECTATOR);
-      player.setGameMode(GameMode.SPECTATOR);
-    } else {
-      player.sendMessage(Messages.GAMEMODE_UNGUELTIG);
-    }
 
+    if (args.length == 1) {
+      evaluateOneArgument(mode, executor);
+    } else {
+      evaluateTwoArguments(args, executor);
+    }
   }
 
-  /**
-   * setzt den GameMode anderer Spieler
-   *
-   * @param args Argumente des Commands
-   * @param player Spieler
-   */
-  private void evaluateTwoArguments(final String[] args, final Player player) {
-    if (Bukkit.getPlayer(args[1]) != null) {
-      final Player target = Bukkit.getPlayer(args[1]);
-      final String mode = args[0];
-      if (mode.equalsIgnoreCase("0") || mode.equalsIgnoreCase("s") || mode.equalsIgnoreCase("survival")) {
-        player.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.");
-        target.sendMessage(Messages.GAMEMODE_SURVIVAL);
-        target.setGameMode(GameMode.SURVIVAL);
-      } else if (mode.equalsIgnoreCase("1") || mode.equalsIgnoreCase("c") || mode.equalsIgnoreCase("creativ")) {
-        player.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.");
-        target.sendMessage(Messages.GAMEMODE_CREATIVE);
-        target.setGameMode(GameMode.CREATIVE);
-      } else if (mode.equalsIgnoreCase("2") || mode.equalsIgnoreCase("a") || mode.equalsIgnoreCase("adventure")) {
-        player.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.");
-        target.sendMessage(Messages.GAMEMODE_ADVENTURE);
-        target.setGameMode(GameMode.ADVENTURE);
-      } else if (mode.equalsIgnoreCase("3") || mode.equalsIgnoreCase("spec") || mode.equalsIgnoreCase("spectator")) {
-        player.sendMessage(Messages.PREFIX + " §7Du hast §e" + player.getDisplayName() + " §7in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.");
-        target.sendMessage(Messages.GAMEMODE_SPECTATOR);
-        target.setGameMode(GameMode.SPECTATOR);
-      } else {
-        player.sendMessage(Messages.GAMEMODE_UNGUELTIG);
-      }
-    } else {
-      player.sendMessage(Messages.PLAYER_NOT_FOUND);
-    }
+  private void evaluateOneArgument(final String mode, final Player target) {
+    this.target = target;
+    checkInput(mode);
+  }
 
+  private void evaluateTwoArguments(final String[] args, final Player executor) {
+    this.executor = executor;
+    final Player target = Bukkit.getPlayer(args[1]);
+
+    if (isOnline(target)) {
+      final String mode = args[0];
+      checkInput(mode);
+      sendExecutorMessage();
+    }
+  }
+
+  private void sendExecutorMessage() {
+    this.executor.sendMessage(Messages.PREFIX + " §7Du hast §e" + this.target.getDisplayName() + " §7in den Spielmodus§8: " + this.executorMessage +
+        " §7gesetzt.");
+  }
+
+  private boolean isOnline(final Player target) {
+    if (target.isOnline()) {
+      this.target = target;
+      return true;
+    } else {
+      this.executor.sendMessage(Messages.PLAYER_NOT_FOUND);
+      return false;
+    }
+  }
+
+  private void argumentLengthNotValid(final Player executor) {
+    executor.sendMessage(Messages.USAGE_GAMEMODE_COMMAND);
+  }
+
+  private void checkInput(final String input) {
+    isSurvivalExpected(input);
+  }
+
+  private void isSurvivalExpected(final String input) {
+    if (input.equals("0") || input.equals("s") || input.equals("survival")) {
+      this.gamemode = 0;
+      this.target.sendMessage(Messages.GAMEMODE_SURVIVAL);
+      this.executorMessage = "§eÜberlebensmodus §7§o(Survival)";
+    }
+    isCreativeExpected(input);
+  }
+
+  private void isCreativeExpected(final String input) {
+    if (input.equals("1") || input.equals("c") || input.equals("creative")) {
+      this.gamemode = 1;
+      this.target.sendMessage(Messages.GAMEMODE_CREATIVE);
+      this.executorMessage = "§eKreativmodus §7§o(Creative)";
+    }
+    isAdventureExpected(input);
+  }
+
+  private void isAdventureExpected(final String input) {
+    if (input.equals("2") || input.equals("a") || input.equals("adventure")) {
+      this.gamemode = 2;
+      this.target.sendMessage(Messages.GAMEMODE_ADVENTURE);
+      this.executorMessage = "§eAbenteuermodus §7§o(Adventure)";
+    }
+    isSpectatorExpected(input);
+  }
+
+  private void isSpectatorExpected(final String input) {
+    if (input.equals("0") || input.equals("s") || input.equals("survival")) {
+      this.gamemode = 0;
+      this.target.sendMessage(Messages.GAMEMODE_SPECTATOR);
+      this.executorMessage = "§eZuschauermodus §7§o(Spectatormode)";
+    } else {
+      notValid();
+    }
+    updateGamemode();
+  }
+
+  private void notValid() {
+    this.target.sendMessage(Messages.GAMEMODE_UNGUELTIG);
+  }
+
+  private void updateGamemode() {
+    final GameMode gamemode = GameMode.values()[this.gamemode];
+    this.target.setGameMode(gamemode);
   }
 
 }

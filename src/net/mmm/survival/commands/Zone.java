@@ -27,7 +27,6 @@ public class Zone implements CommandExecutor {
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
       final Player player = (Player) sender;
-
       if (CommandUtils.checkWorld(player)) {
         if (args.length == 1) {
           evaluateOneArgument(player, args);
@@ -39,7 +38,6 @@ public class Zone implements CommandExecutor {
           sendHelp(player);
         }
       }
-
     }
     return false;
   }
@@ -92,60 +90,76 @@ public class Zone implements CommandExecutor {
 
   private void add(final Player player, final String[] args) {
     try {
-      UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid, name -> {
-        final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
-        if (region != null && !region.getMembers().contains(uuid)) {
-          region.getMembers().addPlayer(Bukkit.getPlayer(args[1]).getUniqueId());
-          player.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
-        } else {
-          player.sendMessage(Messages.PREFIX + " §e" + name + " §7ist bereits Mitglied deiner Zone.");
-        }
-      }));
+      regionValidToAdd(player, args[1]);
     } catch (final Exception ex) {
       player.sendMessage(Messages.NO_ZONE_SET);
     }
   }
 
+  private void regionValidToAdd(final Player player, final String arg) {
+    UUIDFetcher.getUUID(arg, uuid -> UUIDFetcher.getName(uuid, name -> {
+      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+      if (region != null && !region.getMembers().contains(uuid)) {
+        region.getMembers().addPlayer(Bukkit.getPlayer(arg).getUniqueId());
+        isAlreadyMember(player, name, Messages.PREFIX, " §7Du hast §e", " §7zu deiner Zone hinzugefügt.");
+      } else {
+        isAlreadyMember(player, name, Messages.PREFIX, " §e", " §7ist bereits Mitglied deiner Zone.");
+      }
+    }));
+  }
+
   private void remove(final Player player, final String[] args) {
     try {
-      UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid,
-          name -> {
-            final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid
-                .toString(), false);
-
-            if (region != null && region.getMembers().contains(uuid)) {
-              region.getMembers().removePlayer(uuid);
-              player.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " von deiner Zone entfernt.");
-            } else {
-              player.sendMessage(Messages.PREFIX + " §e" + name + " §7ist kein Mitglied deiner Zone.");
-            }
-          }));
-
+      regionValidToRemove(player, args[1]);
     } catch (final Exception ex) {
       player.sendMessage(Messages.NO_ZONE_SET);
     }
+  }
+
+  private void regionValidToRemove(final Player player, final String arg) {
+    UUIDFetcher.getUUID(arg, uuid -> UUIDFetcher.getName(uuid, name -> {
+      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+      if (region != null && region.getMembers().contains(uuid)) {
+        region.getMembers().removePlayer(uuid);
+        isAlreadyMember(player, name, Messages.PREFIX, " §7Du hast §e", " von deiner Zone entfernt.");
+      } else {
+        isAlreadyMember(player, name, Messages.PREFIX, " §e", " §7ist kein Mitglied deiner Zone.");
+      }
+    }));
+  }
+
+  private void isAlreadyMember(final Player player, final String name, final String prefix, final String message, final String suffix) {
+    player.sendMessage(prefix + message + name + suffix);
   }
 
   private void info(final Player player, final String[] args) {
     final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
     if (CommandUtils.isOperator(player, group)) {
       try {
-        UUIDFetcher.getUUID(args[1], uuid -> {
-          final Long time = Bukkit.getOfflinePlayer(uuid).getLastPlayed();
-          final Long first = Bukkit.getOfflinePlayer(uuid).getFirstPlayed();
-          final String lastonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(time));
-          final String firstonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(first));
-
-          player.sendMessage(" ");
-          player.sendMessage(Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
-          player.sendMessage(Messages.PREFIX + " §7Erstes mal§8: §c" + firstonline);
-          player.sendMessage(" ");
-        });
+        determinePlayerInfo(player, args[1]);
 
       } catch (final Exception ex) {
-        player.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
+        player.sendMessage(Messages.PLAYER_NOT_FOUND);
       }
     }
+  }
+
+  private void determinePlayerInfo(final Player player, final String arg) {
+    UUIDFetcher.getUUID(arg, uuid -> {
+      final Long time = Bukkit.getOfflinePlayer(uuid).getLastPlayed();
+      final Long first = Bukkit.getOfflinePlayer(uuid).getFirstPlayed();
+      final String lastonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(time));
+      final String firstonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(first));
+
+      sendPlayerInfo(player, lastonline, firstonline);
+    });
+  }
+
+  private void sendPlayerInfo(final Player player, final String lastonline, final String firstonline) {
+    player.sendMessage(" ");
+    player.sendMessage(Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
+    player.sendMessage(Messages.PREFIX + " §7Erstes mal§8: §c" + firstonline);
+    player.sendMessage(" ");
   }
 
   private void setLength(final Player player, final String[] args) {
@@ -153,24 +167,23 @@ public class Zone implements CommandExecutor {
 
     if (CommandUtils.isOperator(player, group)) {
       try {
-        final Integer max = Integer.valueOf(args[2]);
-
-        try {
-          UUIDFetcher.getUUID(args[1], uuid -> {
-            final SurvivalPlayer survivalPlayer = SurvivalData.getInstance().getPlayers().get(uuid);
-
-            survivalPlayer.setMaxzone(max);
-            UUIDFetcher.getName(uuid, name -> player.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" +
-                max + " §7erstellen."));
-          });
-
-        } catch (final Exception ex) {
-          player.sendMessage(Messages.PLAYER_NOT_FOUND);
-        }
+        updateLength(player, args[1], Integer.valueOf(args[2]));
       } catch (final NumberFormatException ex) {
         player.sendMessage(Messages.USE_INTEGER);
+      } catch (final Exception ex) {
+        player.sendMessage(Messages.PLAYER_NOT_FOUND);
       }
     }
+  }
+
+  private void updateLength(final Player player, final String arg, final Integer max) {
+    UUIDFetcher.getUUID(arg, uuid -> {
+      final SurvivalPlayer survivalPlayer = SurvivalData.getInstance().getPlayers().get(uuid);
+
+      survivalPlayer.setMaxzone(max);
+      UUIDFetcher.getName(uuid, name -> player.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" +
+          max + " §7erstellen."));
+    });
   }
 
   private void sendHelp(final Player player) {
@@ -184,11 +197,15 @@ public class Zone implements CommandExecutor {
     if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
       survivalPlayer.getPlayer().sendMessage(Messages.ZONE_ALREADY_EXIST);
     } else {
-      if (!survivalPlayer.isZonenedit()) {
-        survivalPlayer.getPlayer().sendMessage(Messages.ZONE_EXPLAINATION);
-      }
-      survivalPlayer.setZonenedit(!survivalPlayer.isZonenedit());
+      allowCreateZone(survivalPlayer);
     }
+  }
+
+  private void allowCreateZone(final SurvivalPlayer survivalPlayer) {
+    if (!survivalPlayer.isZonenedit()) {
+      survivalPlayer.getPlayer().sendMessage(Messages.ZONE_EXPLAINATION);
+    }
+    survivalPlayer.setZonenedit(!survivalPlayer.isZonenedit());
   }
 
   private void searchZone(final SurvivalPlayer survivalPlayer) {
@@ -211,20 +228,24 @@ public class Zone implements CommandExecutor {
 
   private void infoZone(final ProtectedRegion region, final Player player) {
     if (region != null) {
-      UUIDFetcher.getName(UUID.fromString(region.getId()), name -> {
-        player.sendMessage("\n" + Messages.PREFIX + " §7Besitzer§8: " + name);
-
-        StringBuilder member = null;
-        for (final UUID uuid : region.getOwners().getUniqueIds()) {
-          member = (member == null) ? new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)) : member.append(", ")
-              .append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid));
-        }
-        player.sendMessage(Messages.PREFIX + " §7Mitglieder§8: " + member + "\n");
-      });
-
+      sendZoneInfo(region, player);
     } else {
       player.sendMessage(Messages.PREFIX + " §cDu stehst in keiner Zone.");
     }
+  }
+
+  private void sendZoneInfo(final ProtectedRegion region, final Player player) {
+    UUIDFetcher.getName(UUID.fromString(region.getId()), name -> {
+      isAlreadyMember(player, " §7Besitzer§8: ", "\n", Messages.PREFIX, name);
+      player.sendMessage(Messages.PREFIX + " §7Mitglieder§8: " + getZoneInfo(region) + "\n");
+    });
+  }
+
+  private StringBuilder getZoneInfo(final ProtectedRegion region) {
+    final StringBuilder member = new StringBuilder(SurvivalData.getInstance().getAsyncMySQL().getName(region.getOwners().getUniqueIds()
+        .iterator().next()));
+    region.getOwners().getUniqueIds().forEach(uuid -> member.append(", ").append(SurvivalData.getInstance().getAsyncMySQL().getName(uuid)));
+    return member;
   }
 
 }

@@ -16,26 +16,21 @@ public class Vote implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player player = (Player) sender;
-
-      player.sendMessage(Messages.VOTE_PAGES);
-      player.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Server.eu", "https://minecraft-server.eu/"));
-      player.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Serverliste.net", "https://www.minecraft-serverlist.net/serverlist"));
+      final Player executor = (Player) sender;
+      sendMessagge(executor);
     }
 
     return false;
   }
 
-  /**
-   * Messagestil
-   *
-   * @param message Mitteilung
-   * @param url URL
-   * @return Textkomponente
-   */
+  private void sendMessagge(final Player executor) {
+    executor.sendMessage(Messages.VOTE_PAGES);
+    executor.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Server.eu", "https://minecraft-server.eu/"));
+    executor.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Serverliste.net", "https://www.minecraft-serverlist.net/serverlist"));
+  }
+
   private TextComponent getTextComponent(final String message, final String url) {
     final TextComponent msg = new TextComponent(message);
-
     msg.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
 
     return msg;

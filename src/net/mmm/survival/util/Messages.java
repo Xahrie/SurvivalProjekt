@@ -21,7 +21,7 @@ public final class Messages {
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
   public static final String NO_ZONE_SET = "§8┃ §eSurvival §7» §cDu hast keine Zone.";
-  public static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
   static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";
   public static final String SPAWN_SET = "§8┃ §eSurvival §7» Du hast den §eSpawn §7gesetzt.";
@@ -29,6 +29,8 @@ public final class Messages {
   public static final String TAME_DISABLE = "§8┃ §eSurvival §7» Du kannst nun wieder normal mit den Tieren interagieren.";
   public static final String TAME_ENABLE = "§8┃ §eSurvival §7» Klicke auf das Tier, dass du freilassen möchtest.\nZum Abbrechen gebe erneut " +
       "§e/tame §7ein.";
+  public static final String TELEPRT_CANCELED = "§8┃ §eSurvival §7» §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.";
+  public static final String TELEPORT_DONT_MOVE = "§8┃ §eSurvival §7» Du wirst teleportiert.. §e§o» Bewege dich nicht..";
   public static final String USAGE_GAMEMODE_COMMAND = "§8┃ §eSurvival §7» §c/gm <0|1|2|3> <Spieler>";
   public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze /navi <Spieler>";
   public static final String USE_INTEGER = "§8┃ §eSurvival §7» §cDu musst eine Zahl angeben.";
