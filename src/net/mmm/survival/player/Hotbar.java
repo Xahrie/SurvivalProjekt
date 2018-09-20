@@ -35,10 +35,10 @@ public class Hotbar {
    *
    * @param p Spieler
    */
-  public static void send(final Player p) {
+  public static void send(final Player player) {
     try {
       final Object icb = chatmessageConstructor.newInstance("§7Du hast erfolgreich deine Zone erstellt.", new Object[0]);
-      final Object craftplayerInst = Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getVersion() + ".entity.CraftPlayer").cast(p);
+      final Object craftplayerInst = Class.forName("org.bukkit.craftbukkit." + Bukkit.getServer().getVersion() + ".entity.CraftPlayer").cast(player);
       final Object methodhHandle = getHandle.invoke(craftplayerInst);
 
       sendPacket.invoke(Hotbar.playerConnection.get(methodhHandle), setupChatMesageType(Bukkit.getServer().getVersion()).newInstance(icb, (byte) 2));

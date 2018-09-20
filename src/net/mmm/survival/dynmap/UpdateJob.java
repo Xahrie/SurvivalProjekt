@@ -42,11 +42,9 @@ class UpdateJob implements Runnable {
 
       final ProtectedRegion region = regionsToDo.remove(regionsToDo.size() - 1);
       int depth = 1;
-      ProtectedRegion p = region;
 
-      while (p.getParent() != null) {
+      while (region.getParent() != null) {
         depth++;
-        p = p.getParent();
       }
 
       if (depth > 16) continue;

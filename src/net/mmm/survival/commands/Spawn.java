@@ -14,11 +14,11 @@ public class Spawn extends Teleport implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player p = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+      final Player player = (Player) sender;
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
       if (CommandUtils.checkTeleport(survivalPlayer)) {
-        super.teleport(p, p.getWorld().getSpawnLocation());
+        super.teleport(player, player.getWorld().getSpawnLocation());
       }
     }
 

@@ -151,8 +151,8 @@ public class DynmapWorldGuardPlugin {
         final PlayerDomain playerDomain = defaultDomain.getPlayerDomain();
 
         if (playerDomain != null) {
-          for (final String p : playerDomain.getPlayers()) {
-            style = ownerstyle.get(p.toLowerCase());
+          for (final String player : playerDomain.getPlayers()) {
+            style = ownerstyle.get(player.toLowerCase());
             if (style != null) break;
           }
 
@@ -165,10 +165,10 @@ public class DynmapWorldGuardPlugin {
 
           if (style == null) {
             for (final UUID uuid : playerDomain.getUniqueIds()) {
-              final String p = SurvivalData.getInstance().getAsyncMySQL().getName(uuid);
+              final String player = SurvivalData.getInstance().getAsyncMySQL().getName(uuid);
 
-              if (p != null) {
-                style = ownerstyle.get(p.toLowerCase());
+              if (player != null) {
+                style = ownerstyle.get(player.toLowerCase());
                 if (style != null) break;
               }
             }
@@ -180,8 +180,8 @@ public class DynmapWorldGuardPlugin {
           final Set<String> grp = defaultDomain.getGroups();
 
           if (grp != null) {
-            for (final String p : grp) {
-              style = ownerstyle.get(p.toLowerCase());
+            for (final String player : grp) {
+              style = ownerstyle.get(player.toLowerCase());
               if (style != null) break;
             }
           }

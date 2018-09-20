@@ -20,11 +20,11 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class CommandEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCommandExecute(final PlayerCommandPreprocessEvent event) {
-    final Player p = event.getPlayer();
+    final Player player = event.getPlayer();
     final String msg = event.getMessage().split(" ")[0];
 
     if (msg.equalsIgnoreCase("/info")) {
-      Commands.info(p);
+      Commands.info(player);
     }
   }
 

@@ -62,70 +62,70 @@ public class InteractEvents implements Listener {
   @SuppressWarnings("deprecation")
   @EventHandler
   public void onInteract(final PlayerInteractEvent e) {
-    final Player p = e.getPlayer();
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+    final Player player = e.getPlayer();
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
     if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.STICK)) {
       //Keine Zone vorhanden
       if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
-        editZone(p, e);
+        editZone(player, e);
       } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
-        searchZone(p, e);
+        searchZone(player, e);
       }
     }
 
   }
 
   @SuppressWarnings("deprecation")
-  private void editZone(final Player p, final PlayerInteractEvent e) {
+  private void editZone(final Player player, final PlayerInteractEvent e) {
     final Location loc = e.getClickedBlock().getLocation();
 
-    loc.setY(loc1.containsKey(p) ? 256 : 0);
-    isLocationSet(p, loc);
-    p.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(p) && loc2.containsKey(p) ? "2." : "1.") + " §7gesetzt.");
+    loc.setY(loc1.containsKey(player) ? 256 : 0);
+    isLocationSet(player, loc);
+    player.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(player) && loc2.containsKey(player) ? "2." : "1.") + " §7gesetzt.");
 
-    zoneScheduler(p, e);
+    zoneScheduler(player, e);
 
-    if (loc1.containsKey(p) && loc2.containsKey(p)) {
-      createRegion(p);
+    if (loc1.containsKey(player) && loc2.containsKey(player)) {
+      createRegion(player);
     }
   }
 
-  private void isLocationSet(final Player p, final Location loc) {
-    if (loc1.containsKey(p)) {
-      loc2.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+  private void isLocationSet(final Player player, final Location loc) {
+    if (loc1.containsKey(player)) {
+      loc2.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
     } else {
-      loc1.put(p, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+      loc1.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
     }
   }
 
   @SuppressWarnings("deprecation")
-  private void zoneScheduler(final Player p, final PlayerInteractEvent e) {
+  private void zoneScheduler(final Player player, final PlayerInteractEvent e) {
     Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
 
-      if (loc1.containsKey(p) && !loc2.containsKey(p)) {
+      if (loc1.containsKey(player) && !loc2.containsKey(player)) {
         final List<Block> blocks = new ArrayList<>();
 
-        p.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
+        player.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
         final Location beacon = e.getClickedBlock().getLocation().subtract(0, 1, 0);
         final Location ironblock = e.getClickedBlock().getLocation().subtract(0, 2, 0);
 
-        replaceBlocks(p, blocks, beacon, ironblock);
+        replaceBlocks(player, blocks, beacon, ironblock);
 
-        if (show.containsKey(p)) {
-          blocks.addAll(show.get(p));
+        if (show.containsKey(player)) {
+          blocks.addAll(show.get(player));
         }
 
-        show.put(p, blocks);
+        show.put(player, blocks);
       }
 
     }, 10L);
   }
 
   @SuppressWarnings("deprecation")
-  private void replaceBlocks(final Player p, final List<Block> blocks, final Location beacon, final Location ironblock) {
-    p.sendBlockChange(beacon, Material.BEACON, (byte) 0);
-    p.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
+  private void replaceBlocks(final Player player, final List<Block> blocks, final Location beacon, final Location ironblock) {
+    player.sendBlockChange(beacon, Material.BEACON, (byte) 0);
+    player.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
     blocks.add(beacon.getBlock());
     blocks.add(ironblock.getBlock());
 
@@ -133,17 +133,17 @@ public class InteractEvents implements Listener {
         IntStream.range(-1, 2).forEach(z -> {
           final Location block = ironblock.clone().add(x, 0, z);
 
-          p.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
+          player.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
           blocks.add(block.getBlock());
         }));
   }
 
-  private static void createRegion(final Player p) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+  private static void createRegion(final Player player) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
     new Thread(() -> {
       RegionManager manager = SurvivalData.getInstance().getDynmap().getRegion();
-      ProtectedCuboidRegion pr = new ProtectedCuboidRegion(p.getUniqueId().toString(), loc1.get(p), loc2.get(p));
+      ProtectedCuboidRegion pr = new ProtectedCuboidRegion(player.getUniqueId().toString(), loc1.get(player), loc2.get(player));
 
       int x1 = pr.getMinimumPoint().getBlockX();
       int y1 = pr.getMinimumPoint().getBlockY();
@@ -165,13 +165,13 @@ public class InteractEvents implements Listener {
             found = true;
             System.out.println(Objects.requireNonNull(Regions.checkRegionLocationIn(manager, block.getLocation())).getId());
 
-            p.sendMessage(Messages.NO_DUPLICATE_ZONE);
+            player.sendMessage(Messages.NO_DUPLICATE_ZONE);
             break;
           }
         }
 
-        loc1.remove(p);
-        loc2.remove(p);
+        loc1.remove(player);
+        loc2.remove(player);
         settingUpZone(survivalPlayer, manager, pr, found);
       }
 
@@ -225,16 +225,16 @@ public class InteractEvents implements Listener {
     return false;
   }
 
-  private void searchZone(final Player p, final PlayerInteractEvent e) {
+  private void searchZone(final Player player, final PlayerInteractEvent e) {
     new Thread(() -> {
-      if (noZoneFound(p, e)) {
+      if (noZoneFound(player, e)) {
         String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), e
             .getClickedBlock().getLocation())).getId();
         UUID uuid = UUID.fromString(name);
-        UUIDFetcher.getName(uuid, name1 -> p.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" + name1 + " §7gefunden."));
+        UUIDFetcher.getName(uuid, name1 -> player.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" + name1 + " §7gefunden."));
 
         if (name.toLowerCase().contains("spawnzone")) {
-          p.sendMessage(Messages.SPAWNZONE_FOUND);
+          player.sendMessage(Messages.SPAWNZONE_FOUND);
         }
       }
       Thread.currentThread().interrupt();

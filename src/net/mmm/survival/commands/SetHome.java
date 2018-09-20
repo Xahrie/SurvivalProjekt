@@ -15,12 +15,12 @@ public class SetHome implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player p = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+      final Player player = (Player) sender;
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
-      if (CommandUtils.checkWorld(p)) {
-        survivalPlayer.setHome(p.getLocation());
-        p.sendMessage(Messages.HOME_SET);
+      if (CommandUtils.checkWorld(player)) {
+        survivalPlayer.setHome(player.getLocation());
+        player.sendMessage(Messages.HOME_SET);
       }
     }
 

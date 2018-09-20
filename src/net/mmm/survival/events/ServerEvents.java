@@ -16,8 +16,8 @@ public class ServerEvents implements Listener {
    */
   @EventHandler(priority = EventPriority.MONITOR)
   public void onPluginEnable(final PluginEnableEvent event) {
-    final Plugin p = event.getPlugin();
-    final String name = p.getDescription().getName();
+    final Plugin plugin = event.getPlugin();
+    final String name = plugin.getDescription().getName();
 
     if ((name.equals("dynmap") || name.equals("WorldGuard")) && Survival.getInstance().isEnabled() && SurvivalData.getInstance().getDynmap()
         .getWorldGuard().isEnabled()) {

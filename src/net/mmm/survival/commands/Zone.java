@@ -26,17 +26,17 @@ public class Zone implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final Player p = (Player) sender;
+      final Player player = (Player) sender;
 
-      if (CommandUtils.checkWorld(p)) {
+      if (CommandUtils.checkWorld(player)) {
         if (args.length == 1) {
-          evaluateOneArgument(p, args);
+          evaluateOneArgument(player, args);
         } else if (args.length == 2) {
-          evaluateTwoArguments(p, args);
+          evaluateTwoArguments(player, args);
         } else if (args.length == 3) {
-          evaluateThreeArguments(p, args);
+          evaluateThreeArguments(player, args);
         } else {
-          sendHelp(p);
+          sendHelp(player);
         }
       }
 
@@ -44,109 +44,69 @@ public class Zone implements CommandExecutor {
     return false;
   }
 
-  /**
-   * Erstellt, Sucht und Löscht die eigene Zone
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void evaluateOneArgument(final Player p, final String[] args) {
+  private void evaluateOneArgument(final Player player, final String[] args) {
     if (args[0].equalsIgnoreCase("create")) {
-      createZone(SurvivalPlayer.findSurvivalPlayer(p));
+      createZone(SurvivalPlayer.findSurvivalPlayer(player));
     } else if (args[0].equalsIgnoreCase("search")) {
-      searchZone(SurvivalPlayer.findSurvivalPlayer(p));
+      searchZone(SurvivalPlayer.findSurvivalPlayer(player));
     } else if (args[0].equalsIgnoreCase("delete")) {
-      delete(p);
+      delete(player);
     } else if (args[0].equalsIgnoreCase("info")) {
-      info(p);
+      info(player);
     } else {
-      sendHelp(p);
+      sendHelp(player);
     }
   }
 
-  /**
-   * Mitglieder hinzufuegen, entfernen oder abfragen
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void evaluateTwoArguments(final Player p, final String[] args) {
+  private void evaluateTwoArguments(final Player player, final String[] args) {
     if (args[0].equalsIgnoreCase("add")) {
-      add(p, args);
+      add(player, args);
     } else if (args[0].equalsIgnoreCase("remove")) {
-      remove(p, args);
+      remove(player, args);
     } else if (args[0].equalsIgnoreCase("info")) {
-      info(p, args);
+      info(player, args);
     } else {
-      sendHelp(p);
+      sendHelp(player);
     }
   }
 
-  /**
-   * Laenge der Zone festlegen
-   *
-   * @param p Spieler
-   * @param args Argumente des Command
-   */
-  private void evaluateThreeArguments(final Player p, final String[] args) {
+  private void evaluateThreeArguments(final Player player, final String[] args) {
     if (args[0].equalsIgnoreCase("setlength")) {
-      setLength(p, args);
+      setLength(player, args);
     } else {
-      sendHelp(p);
+      sendHelp(player);
     }
   }
 
-  /**
-   * loesche bestimmte Zone
-   *
-   * @param p Spieler
-   */
-  private void delete(final Player p) {
-    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), p.getUniqueId().toString(), false);
+  private void delete(final Player player) {
+    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), player.getUniqueId().toString(), false);
 
-    deleteZone(p, region);
+    deleteZone(player, region);
   }
 
-  /**
-   * Information ueber bestimmte Zone
-   *
-   * @param p Spieler
-   */
-  private void info(final Player p) {
-    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), p.getLocation());
+  private void info(final Player player) {
+    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), player.getLocation());
 
-    infoZone(region, p);
+    infoZone(region, player);
   }
 
-  /**
-   * Mitspieler zur Zone hinzufuegen
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void add(final Player p, final String[] args) {
+  private void add(final Player player, final String[] args) {
     try {
       UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid, name -> {
         final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
         if (region != null && !region.getMembers().contains(uuid)) {
           region.getMembers().addPlayer(Bukkit.getPlayer(args[1]).getUniqueId());
-          p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
+          player.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
         } else {
-          p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist bereits Mitglied deiner Zone.");
+          player.sendMessage(Messages.PREFIX + " §e" + name + " §7ist bereits Mitglied deiner Zone.");
         }
       }));
     } catch (final Exception ex) {
-      p.sendMessage(Messages.NO_ZONE_SET);
+      player.sendMessage(Messages.NO_ZONE_SET);
     }
   }
 
-  /**
-   * Mitspieler entfernen
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void remove(final Player p, final String[] args) {
+  private void remove(final Player player, final String[] args) {
     try {
       UUIDFetcher.getUUID(args[1], uuid -> UUIDFetcher.getName(uuid,
           name -> {
@@ -155,26 +115,20 @@ public class Zone implements CommandExecutor {
 
             if (region != null && region.getMembers().contains(uuid)) {
               region.getMembers().removePlayer(uuid);
-              p.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " von deiner Zone entfernt.");
+              player.sendMessage(Messages.PREFIX + " §7Du hast §e" + name + " von deiner Zone entfernt.");
             } else {
-              p.sendMessage(Messages.PREFIX + " §e" + name + " §7ist kein Mitglied deiner Zone.");
+              player.sendMessage(Messages.PREFIX + " §e" + name + " §7ist kein Mitglied deiner Zone.");
             }
           }));
 
     } catch (final Exception ex) {
-      p.sendMessage(Messages.NO_ZONE_SET);
+      player.sendMessage(Messages.NO_ZONE_SET);
     }
   }
 
-  /**
-   * Infoi ueber einen Spieler
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void info(final Player p, final String[] args) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(p);
-    if (CommandUtils.isOperator(p, group)) {
+  private void info(final Player player, final String[] args) {
+    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
+    if (CommandUtils.isOperator(player, group)) {
       try {
         UUIDFetcher.getUUID(args[1], uuid -> {
           final Long time = Bukkit.getOfflinePlayer(uuid).getLastPlayed();
@@ -182,28 +136,22 @@ public class Zone implements CommandExecutor {
           final String lastonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(time));
           final String firstonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(first));
 
-          p.sendMessage(" ");
-          p.sendMessage(Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
-          p.sendMessage(Messages.PREFIX + " §7Erstes mal§8: §c" + firstonline);
-          p.sendMessage(" ");
+          player.sendMessage(" ");
+          player.sendMessage(Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
+          player.sendMessage(Messages.PREFIX + " §7Erstes mal§8: §c" + firstonline);
+          player.sendMessage(" ");
         });
 
       } catch (final Exception ex) {
-        p.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
+        player.sendMessage(Messages.PREFIX + " §cSpieler wurde nicht gefunden.");
       }
     }
   }
 
-  /**
-   * Laenge der Zone setzen
-   *
-   * @param p Spieler
-   * @param args Argumente des Commands
-   */
-  private void setLength(final Player p, final String[] args) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(p);
+  private void setLength(final Player player, final String[] args) {
+    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
 
-    if (CommandUtils.isOperator(p, group)) {
+    if (CommandUtils.isOperator(player, group)) {
       try {
         final Integer max = Integer.valueOf(args[2]);
 
@@ -212,36 +160,26 @@ public class Zone implements CommandExecutor {
             final SurvivalPlayer survivalPlayer = SurvivalData.getInstance().getPlayers().get(uuid);
 
             survivalPlayer.setMaxzone(max);
-            UUIDFetcher.getName(uuid, name -> p.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" +
+            UUIDFetcher.getName(uuid, name -> player.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" +
                 max + " §7erstellen."));
           });
 
         } catch (final Exception ex) {
-          p.sendMessage(Messages.PLAYER_NOT_FOUND);
+          player.sendMessage(Messages.PLAYER_NOT_FOUND);
         }
       } catch (final NumberFormatException ex) {
-        p.sendMessage(Messages.USE_INTEGER);
+        player.sendMessage(Messages.USE_INTEGER);
       }
     }
   }
 
-  /**
-   * Zonenhilfe
-   *
-   * @param p Spieler
-   */
-  private void sendHelp(final Player p) {
-    p.sendMessage(Messages.ZONE_HELP);
-    if (p.isOp()) {
-      p.sendMessage(Messages.ZONE_HELP_ADMIN);
+  private void sendHelp(final Player player) {
+    player.sendMessage(Messages.ZONE_HELP);
+    if (player.isOp()) {
+      player.sendMessage(Messages.ZONE_HELP_ADMIN);
     }
   }
 
-  /**
-   * Region erstellen
-   *
-   * @param survivalPlayer Spieler als SurvivalPlayer
-   */
   private void createZone(final SurvivalPlayer survivalPlayer) {
     if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
       survivalPlayer.getPlayer().sendMessage(Messages.ZONE_ALREADY_EXIST);
@@ -253,12 +191,6 @@ public class Zone implements CommandExecutor {
     }
   }
 
-
-  /**
-   * Zone suchen
-   *
-   * @param survivalPlayer Spieler als SurvivalPlayer
-   */
   private void searchZone(final SurvivalPlayer survivalPlayer) {
     if (survivalPlayer.isZonensearch()) {
       survivalPlayer.getPlayer().sendMessage(Messages.ZONE_SEARCH_DISABLE);
@@ -268,27 +200,15 @@ public class Zone implements CommandExecutor {
     survivalPlayer.setZonensearch(!survivalPlayer.isZonensearch());
   }
 
-  /**
-   * Zone loeschen
-   *
-   * @param p Spieler
-   * @param region Zone
-   */
-  private void deleteZone(final Player p, final ProtectedRegion region) {
+  private void deleteZone(final Player player, final ProtectedRegion region) {
     if (region != null) {
       SurvivalData.getInstance().getDynmap().getRegion().removeRegion(region.getId());
-      p.sendMessage(Messages.ZONE_REMOVED);
+      player.sendMessage(Messages.ZONE_REMOVED);
     } else {
-      p.sendMessage(Messages.NO_ZONE_SET);
+      player.sendMessage(Messages.NO_ZONE_SET);
     }
   }
 
-  /**
-   * Zoneninfo
-   *
-   * @param region Zone
-   * @param player Spieler
-   */
   private void infoZone(final ProtectedRegion region, final Player player) {
     if (region != null) {
       UUIDFetcher.getName(UUID.fromString(region.getId()), name -> {

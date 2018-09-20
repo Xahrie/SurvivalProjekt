@@ -1,7 +1,6 @@
 package net.mmm.survival.util;
 
 // Package-Stil ???
-
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,33 +13,33 @@ public class Scoreboards {
   /**
    * Setzt fuer einen spezifischen Spieler <code>p</code> das Scoreboard
    *
-   * @param p Owner des Scoreboards
+   * @param player Owner des Scoreboards
    */
-  public static void setScoreboard(final Player p) {
+  public static void setScoreboard(final Player player) {
     final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
     manager.tablist.keySet().forEach(group -> scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(manager.getKurzel(group)));
 
-    p.setScoreboard(scoreboard);
-    setPrefix(p);
+    player.setScoreboard(scoreboard);
+    setPrefix(player);
   }
 
   /**
    * Setzt fuer einen spezifischen Spieler <code>p</code> den Prefix
    *
-   * @param p Owner des Prefix
+   * @param player Owner des Prefix
    */
   @SuppressWarnings("deprecation")
-  private static void setPrefix(final Player p) {
+  private static void setPrefix(final Player player) {
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
     Bukkit.getOnlinePlayers().forEach(all -> {
-      all.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(p.getUniqueId()))).addPlayer(p);
-      p.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(all.getUniqueId()))).addPlayer(all);
+      all.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(player.getUniqueId()))).addPlayer(player);
+      player.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(all.getUniqueId()))).addPlayer(all);
     });
-    p.setDisplayName(manager.getPrefix(p) + p.getName());
-    p.setPlayerListName(manager.getPrefix(p) + p.getName());
+    player.setDisplayName(manager.getPrefix(player) + player.getName());
+    player.setPlayerListName(manager.getPrefix(player) + player.getName());
 
   }
 

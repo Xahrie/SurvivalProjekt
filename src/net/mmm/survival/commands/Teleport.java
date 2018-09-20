@@ -16,11 +16,11 @@ public class Teleport {
   /**
    * Teleportation wir durchgefuehrt
    *
-   * @param p Spieler
+   * @param player Spieler
    * @param loc Target-Location
    */
-  void teleport(final Player p, final Location loc) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(p);
+  void teleport(final Player player, final Location loc) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
     survivalPlayer.setTeleport(true);
 
@@ -32,23 +32,23 @@ public class Teleport {
       public void run() {
         if (survivalPlayer.isTeleport()) {
           if (i == 3) {
-            p.sendMessage(Messages.PREFIX + " §7Du wirst teleportiert.. §e§o» Bewege dich nicht..");
+            player.sendMessage(Messages.PREFIX + " §7Du wirst teleportiert.. §e§o» Bewege dich nicht..");
           }
           if (i == 2) {
-            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
           }
           if (i == 1) {
-            p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
+            player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
           }
           if (i == 0) {
-            p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 4.0F, 5.0F);
-            p.teleport(loc);
+            player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 4.0F, 5.0F);
+            player.teleport(loc);
             survivalPlayer.setTeleport(false);
             cancel();
           }
           i -= 1;
         } else {
-          p.sendMessage(Messages.PREFIX + " §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.");
+          player.sendMessage(Messages.PREFIX + " §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.");
           survivalPlayer.setTeleport(false);
           cancel();
         }
