@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-//TODO (Abgie) 21.09.2018: Refactoring
 /**
  * Hotbar ermoeglicht das Senden einer Hotbar
  */
