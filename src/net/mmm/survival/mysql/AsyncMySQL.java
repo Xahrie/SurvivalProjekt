@@ -29,7 +29,9 @@ import org.bukkit.Location;
  */
 public class AsyncMySQL {
 
-  //Verbindungsdaten
+  /**
+   * Verbindungsdaten
+   */
   private static final int PORT = 3306;
   private static final String DATABASE = "mcmysql_1_nick";
   private static final String HOST = "sql430.your-server.de";
@@ -46,7 +48,7 @@ public class AsyncMySQL {
     try {
       sql = new MySQL(HOST, PORT, USER, PASSWORD, DATABASE);
       executor = Executors.newCachedThreadPool();
-    } catch (final SQLException | ClassNotFoundException ex) {
+    } catch (final ClassNotFoundException | SQLException ex) {
       ex.printStackTrace();
     }
   }
@@ -88,51 +90,60 @@ public class AsyncMySQL {
     final Map<UUID, SurvivalPlayer> players = new HashMap<>();
 
     try (final Statement statement = getMySQL().conn.createStatement();
-         final ResultSet resultSet = statement
-             .executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer")) {
-
+         final ResultSet resultSet = statement.executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer")) {
       while (resultSet.next()) {
-        final String uuidString = resultSet.getString(1);
-        final int money = resultSet.getInt(2);
-        final String complaintsString = resultSet.getString(3);
-        final String licencesString = resultSet.getString(4);
-        final short votes = (short) resultSet.getInt(5);
-        final int maxzone = resultSet.getInt(6);
-        final String homeString = resultSet.getString(7);
-
-        final UUID uuid = UUID.fromString(uuidString);
-
-        //Reason/Operator/Datum,Reason2/Operator2/Datum2
-        final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
-        final List<Complaint> complaints = new ArrayList<>();
-        complaintsList.stream().filter(complaint -> complaint.contains("/"))
-            .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1],
-                complaint.split("/")[2])));
-
-        final List<String> licencesList = Arrays.asList(licencesString.split(","));
-        final List<Licence> licences = new ArrayList<>();
-        licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
-            .forEach(licence -> licences.add(Licence.valueOf(licence)));
-
-        Location location = null;
-        if (!homeString.equals("")) {
-          final double x = Double.parseDouble(homeString.split("/")[0]);
-          final double y = Double.parseDouble(homeString.split("/")[1]);
-          final double z = Double.parseDouble(homeString.split("/")[2]);
-          location = new Location(Bukkit.getWorld("world"), x, y, z);
-        }
-
-        final SurvivalPlayer survivalPlayer = new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone,
-            location);
-
-        players.put(uuid, survivalPlayer);
+        final UUID uuid = generateUUID(UUID.fromString(resultSet.getString(1)));
+        players.put(uuid, determinePlayer(resultSet, uuid));
       }
-
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
 
     return players;
+  }
+
+  private UUID generateUUID(final UUID uuid) {
+    return uuid;
+  }
+
+  private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
+    final int money = resultSet.getInt(2);
+    //Reason/Operator/Datum,Reason2/Operator2/Datum2
+    final List<Complaint> complaints = determineComplaints(resultSet.getString(3));
+    final List<Licence> licences = determineLicences(resultSet.getString(4));
+    final short votes = (short) resultSet.getInt(5);
+    final int maxzone = resultSet.getInt(6);
+    final Location location = determineLocation(resultSet.getString(7));
+
+    return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
+  }
+
+  private List<Complaint> determineComplaints(final String complaintsString) {
+    final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
+    final List<Complaint> complaints = new ArrayList<>();
+    complaintsList.stream().filter(complaint -> complaint.contains("/"))
+        .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1],
+            complaint.split("/")[2])));
+    return complaints;
+  }
+
+  private List<Licence> determineLicences(final String licencesString) {
+    final List<String> licencesList = Arrays.asList(licencesString.split(","));
+    final List<Licence> licences = new ArrayList<>();
+    licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
+        .forEach(licence -> licences.add(Licence.valueOf(licence)));
+    return licences;
+  }
+
+  private Location determineLocation(final String homeString) {
+    Location location = null;
+    if (!homeString.equals("")) {
+      final double x = Double.parseDouble(homeString.split("/")[0]);
+      final double y = Double.parseDouble(homeString.split("/")[1]);
+      final double z = Double.parseDouble(homeString.split("/")[2]);
+      location = new Location(Bukkit.getWorld("world"), x, y, z);
+    }
+    return location;
   }
 
   /**
@@ -145,39 +156,48 @@ public class AsyncMySQL {
         .prepareStatement("UPDATE SurvivalPlayer SET money=?, complaints=?, licences=?, votes=?, maxzone=?, home=? WHERE uuid=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
-        final StringBuilder complaints = new StringBuilder();
-        survivalPlayer.getComplaints().forEach(complaints::append);
-        if (complaints.length() != 0) {
-          complaints.deleteCharAt(complaints.length() - 1);
-        }
-
-        final StringBuilder licences = new StringBuilder();
-        survivalPlayer.getLicences().forEach(licence -> licences.append(licence.toString()).append(","));
-        if (licences.length() != 0) {
-          licences.deleteCharAt(licences.length() - 1);
-        }
-
-        final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" + survivalPlayer
-            .getHome().getY() + "/" + survivalPlayer.getHome().getZ() : "";
-
-        try {
-          statement.setInt(1, survivalPlayer.getMoney());
-          statement.setString(2, complaints.toString());
-          statement.setString(3, licences.toString());
-          statement.setInt(4, survivalPlayer.getVotes());
-          statement.setInt(5, survivalPlayer.getMaxzone());
-          statement.setString(6, home);
-          statement.setString(7, survivalPlayer.getUuid().toString());
-          statement.executeUpdate();
-        } catch (final SQLException ex) {
-          ex.printStackTrace();
-        }
+        final StringBuilder complaints = determineComplaints(survivalPlayer);
+        final StringBuilder licences = determineLicences(survivalPlayer);
+        final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" + survivalPlayer.getHome().getY() + "/" +
+            survivalPlayer.getHome().getZ() : "";
+        updateAndExecuteStatement(statement, survivalPlayer, complaints, licences, home);
       }
 
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
 
+  }
+
+  private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer,
+                                         final StringBuilder complaints, final StringBuilder licences, final String home)
+      throws SQLException {
+    statement.setInt(1, survivalPlayer.getMoney());
+    statement.setString(2, complaints.toString());
+    statement.setString(3, licences.toString());
+    statement.setInt(4, survivalPlayer.getVotes());
+    statement.setInt(5, survivalPlayer.getMaxzone());
+    statement.setString(6, home);
+    statement.setString(7, survivalPlayer.getUuid().toString());
+    statement.executeUpdate();
+  }
+
+  private StringBuilder determineLicences(final SurvivalPlayer survivalPlayer) {
+    final StringBuilder licences = new StringBuilder();
+    if (!survivalPlayer.getLicences().isEmpty()) {
+      survivalPlayer.getLicences().forEach(licence -> licences.append(licence.toString()).append(","));
+      licences.deleteCharAt(licences.length() - 1);
+    }
+    return licences;
+  }
+
+  private StringBuilder determineComplaints(final SurvivalPlayer survivalPlayer) {
+    final StringBuilder complaints = new StringBuilder();
+    if (!survivalPlayer.getComplaints().isEmpty()) {
+      survivalPlayer.getComplaints().forEach(complaints::append);
+      complaints.deleteCharAt(complaints.length() - 1);
+    }
+    return complaints;
   }
 
   /**
@@ -253,9 +273,11 @@ public class AsyncMySQL {
      * Erstellung einer Tabelle
      */
     public void createTables() {
-      queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID VARCHAR(40) NOT NULL, Time VARCHAR(10) NOT NULL, Website VARCHAR(40) NOT NULL);" +
-          "CREATE TABLE IF NOT EXISTS SurvivalPlayer (uuid VARCHAR(40) NOT NULL, money int(11), complaints varchar(10000), licences " +
-          "varchar(10000), votes int(11), maxzone int(11), home varchar(64));");
+      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`Votes` (  `UUID` VARCHAR(40) NOT NULL,  `Time` " +
+          "VARCHAR(10) NOT NULL,  `Website` VARCHAR(40) NOT NULL);");
+      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`SurvivalPlayer` (  `uuid` VARCHAR(40) NOT NULL, " +
+          "`money` int(11), `complaints` varchar(10000), `licences` varchar(10000), `votes` int(11), `maxzone` " +
+          "int(11), `home` varchar(64))");
     }
 
     /**

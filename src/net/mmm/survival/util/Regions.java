@@ -15,9 +15,17 @@ public class Regions {
   private static final String GLOBAL_REGION = "__global__";   /* Rueckgabe, wenn keine Region in Selektion definiert */
 
   private static void checkRegionId(final String id, final boolean allowGlobal) throws CommandException {
+    checkValid(id);
+    checkGlobal(id, allowGlobal);
+  }
+
+  private static void checkValid(final String id) throws CommandException {
     if (!ProtectedRegion.isValidId(id)) {
       throw new CommandException("The region name of '" + id + "' contains characters that are not allowed.");
     }
+  }
+
+  private static void checkGlobal(final String id, final boolean allowGlobal) throws CommandException {
     if ((!allowGlobal) && (id.equalsIgnoreCase(GLOBAL_REGION))) {
       throw new CommandException("Sorry, you can't use __global__ here.");
     }
@@ -40,7 +48,6 @@ public class Regions {
     }
 
     ProtectedRegion region = regionManager.getRegion(id);
-
     if (region == null) {
       if (id.equalsIgnoreCase(GLOBAL_REGION)) {
         region = new GlobalProtectedRegion(id);

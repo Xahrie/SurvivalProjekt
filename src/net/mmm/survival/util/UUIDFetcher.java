@@ -59,19 +59,23 @@ public class UUIDFetcher {
       return uuidCache.get(name);
     }
     try {
-      final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection();
-      connection.setReadTimeout(5000);
-      final UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
-
-      uuidCache.put(name, data.id);
-      nameCache.put(data.id, data.name);
-
-      return data.id;
+      return cacheUUIDsAt(name, timestamp);
     } catch (final IOException ex) {
       ex.printStackTrace();
     }
 
     return null;
+  }
+
+  private static UUID cacheUUIDsAt(final String name, final long timestamp) throws IOException {
+    final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(UUID_URL, name, timestamp / 1000)).openConnection();
+    connection.setReadTimeout(5000);
+    final UUIDFetcher data = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher.class);
+
+    uuidCache.put(name, data.id);
+    nameCache.put(data.id, data.name);
+
+    return data.id;
   }
 
   /**
@@ -95,20 +99,24 @@ public class UUIDFetcher {
       return nameCache.get(uuid);
     }
     try {
-      final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
-      connection.setReadTimeout(5000);
-      final UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
-      final UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
-
-      uuidCache.put(currentNameData.name.toLowerCase(), uuid);
-      nameCache.put(uuid, currentNameData.name);
-
-      return currentNameData.name;
+      return cacheUUIDs(uuid);
     } catch (final IOException ex) {
       ex.printStackTrace();
     }
 
     return null;
+  }
+
+  private static String cacheUUIDs(final UUID uuid) throws IOException {
+    final HttpURLConnection connection = (HttpURLConnection) new URL(String.format(NAME_URL, UUIDTypeAdapter.fromUUID(uuid))).openConnection();
+    connection.setReadTimeout(5000);
+    final UUIDFetcher[] nameHistory = gson.fromJson(new BufferedReader(new InputStreamReader(connection.getInputStream())), UUIDFetcher[].class);
+    final UUIDFetcher currentNameData = nameHistory[nameHistory.length - 1];
+
+    uuidCache.put(currentNameData.name.toLowerCase(), uuid);
+    nameCache.put(uuid, currentNameData.name);
+
+    return currentNameData.name;
   }
 }
 

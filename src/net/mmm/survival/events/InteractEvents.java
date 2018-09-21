@@ -83,9 +83,7 @@ public class InteractEvents implements Listener {
     loc.setY(loc1.containsKey(player) ? 256 : 0);
     isLocationSet(player, loc);
     player.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(player) && loc2.containsKey(player) ? "2." : "1.") + " §7gesetzt.");
-
     zoneScheduler(player, e);
-
     if (loc1.containsKey(player) && loc2.containsKey(player)) {
       createRegion(player);
     }
@@ -129,6 +127,11 @@ public class InteractEvents implements Listener {
     blocks.add(beacon.getBlock());
     blocks.add(ironblock.getBlock());
 
+    replace(player, blocks, ironblock);
+  }
+
+  @SuppressWarnings("deprecation")
+  private void replace(final Player player, final List<Block> blocks, final Location ironblock) {
     IntStream.range(-1, 2).forEach(x ->
         IntStream.range(-1, 2).forEach(z -> {
           final Location block = ironblock.clone().add(x, 0, z);
@@ -142,65 +145,67 @@ public class InteractEvents implements Listener {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
     new Thread(() -> {
-      RegionManager manager = SurvivalData.getInstance().getDynmap().getRegion();
-      ProtectedCuboidRegion pr = new ProtectedCuboidRegion(player.getUniqueId().toString(), loc1.get(player), loc2.get(player));
-
-      int x1 = pr.getMinimumPoint().getBlockX();
-      int y1 = pr.getMinimumPoint().getBlockY();
-      int z1 = pr.getMinimumPoint().getBlockZ();
-      int x2 = pr.getMaximumPoint().getBlockX();
-      int y2 = pr.getMaximumPoint().getBlockY();
-      int z2 = pr.getMaximumPoint().getBlockZ();
-      int a = x1 - x2;
-      int b = z1 - z2;
-
-      if (validZone(Math.abs(a), Math.abs(b), survivalPlayer.getMaxzone(), survivalPlayer)) {
-        CuboidIterator blocks = new CuboidIterator(Bukkit.getWorld("world"), x1, y1, z1, x2, y2, z2);
-        boolean found = false;
-
-        while (blocks.hasNext()) {
-          Block block = (Block) ((Iterator<?>) blocks).next();
-
-          if (Regions.checkRegionLocationIn(manager, block.getLocation()) != null) {
-            found = true;
-            System.out.println(Objects.requireNonNull(Regions.checkRegionLocationIn(manager, block.getLocation())).getId());
-
-            player.sendMessage(Messages.NO_DUPLICATE_ZONE);
-            break;
-          }
-        }
-
-        loc1.remove(player);
-        loc2.remove(player);
-        settingUpZone(survivalPlayer, manager, pr, found);
-      }
-
+      RegionManager manager = SurvivalData.getInstance().getDynmap().getRegionManager();
+      ProtectedCuboidRegion cuboidRegion = new ProtectedCuboidRegion(player.getUniqueId().toString(), loc1.get(player), loc2.get(player));
+      int x1 = cuboidRegion.getMinimumPoint().getBlockX();
+      int y1 = cuboidRegion.getMinimumPoint().getBlockY();
+      int z1 = cuboidRegion.getMinimumPoint().getBlockZ();
+      int x2 = cuboidRegion.getMaximumPoint().getBlockX();
+      int y2 = cuboidRegion.getMaximumPoint().getBlockY();
+      int z2 = cuboidRegion.getMaximumPoint().getBlockZ();
+      checkValid(player, survivalPlayer, manager, cuboidRegion, x1, y1, z1, x2, y2, z2);
       Thread.currentThread().interrupt();
     }).start();
+  }
 
+  private static void checkValid(final Player player, final SurvivalPlayer survivalPlayer, final RegionManager manager,
+                                 final ProtectedCuboidRegion cuboidRegion, final int xMin, final int yMin, final int zMin, final int xMax,
+                                 final int yMax, final int zMax) {
+    if (validZone(Math.abs(xMin - xMax), Math.abs(zMin - zMax), survivalPlayer.getMaxzone(), survivalPlayer)) {
+      final CuboidIterator blocks = new CuboidIterator(Bukkit.getWorld("world"), xMin, yMin, zMin, xMax, yMax, zMax);
+      final boolean found = checkBlocks(player, manager, blocks);
+      loc1.remove(player);
+      loc2.remove(player);
+      settingUpZone(survivalPlayer, manager, cuboidRegion, found);
+    }
+  }
+
+  private static boolean checkBlocks(final Player player, final RegionManager manager, final CuboidIterator blocks) {
+    boolean found = false;
+    while (blocks.hasNext()) {
+      final Block block = (Block) ((Iterator<?>) blocks).next();
+      if (Regions.checkRegionLocationIn(manager, block.getLocation()) != null) {
+        found = true;
+        player.sendMessage(Messages.NO_DUPLICATE_ZONE);
+        break;
+      }
+    }
+    return found;
   }
 
   private static void settingUpZone(final SurvivalPlayer survivalPlayer, final RegionManager manager,
                                     final ProtectedCuboidRegion cuboidRegion, final boolean found) {
     survivalPlayer.setZonenedit(false);
     show.get(survivalPlayer.getPlayer()).forEach(block -> survivalPlayer.getPlayer().sendBlockChange(block.getLocation(), block.getBlockData()));
+    checkFound(survivalPlayer, manager, cuboidRegion, found);
+  }
+
+  private static void checkFound(final SurvivalPlayer survivalPlayer, final RegionManager manager, final ProtectedCuboidRegion cuboidRegion,
+                                 final boolean found) {
     if (!found) {
       survivalPlayer.setMaxzone(100);
       final DefaultDomain defaultDomain = new DefaultDomain();
-
       defaultDomain.addPlayer(survivalPlayer.getPlayer().getUniqueId());
       cuboidRegion.setOwners(defaultDomain);
       cuboidRegion.setPriority(100);
-
       setFlags(cuboidRegion);
-
       manager.addRegion(cuboidRegion);
+
       try {
         manager.save();
-      } catch (StorageException e) {
-        e.printStackTrace();
+      } catch (final StorageException ex) {
+        ex.printStackTrace();
       }
-
       Hotbar.send(survivalPlayer.getPlayer());
     }
   }
@@ -227,62 +232,66 @@ public class InteractEvents implements Listener {
 
   private void searchZone(final Player player, final PlayerInteractEvent e) {
     new Thread(() -> {
-      if (noZoneFound(player, e)) {
-        String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), e
-            .getClickedBlock().getLocation())).getId();
-        UUID uuid = UUID.fromString(name);
-        UUIDFetcher.getName(uuid, name1 -> player.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" + name1 + " §7gefunden."));
-
-        if (name.toLowerCase().contains("spawnzone")) {
-          player.sendMessage(Messages.SPAWNZONE_FOUND);
-        }
-      }
+      checkNoZoneFound(player, e);
       Thread.currentThread().interrupt();
     }).start();
   }
 
+  private void checkNoZoneFound(final Player player, final PlayerInteractEvent event) {
+    if (noZoneFound(player, event)) {
+      final String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegionManager(),
+          event.getClickedBlock().getLocation())).getId();
+      final UUID uuid = UUID.fromString(name);
+      UUIDFetcher.getName(uuid, name1 -> player.sendMessage(Messages.PREFIX + " §7Es wurde die Zone von §e" + name1 + " §7gefunden."));
+
+      if (name.toLowerCase().contains("spawnzone")) {
+        player.sendMessage(Messages.SPAWNZONE_FOUND);
+      }
+    }
+  }
+
   private boolean noZoneFound(final Player player, final PlayerInteractEvent event) {
-    if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), event.getClickedBlock().getLocation()) != null) {
-      return true;
-    } else {
+    if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, event.getClickedBlock()
+        .getLocation()) == null) {
       player.sendMessage(Messages.PREFIX + " §7Es wurde keine Zone bei §8(§e" + event.getClickedBlock().getLocation().getBlockX() + "§7/" +
           "§e" + event.getClickedBlock().getLocation().getBlockZ() + "§8) §7gefunden.");
+      return false;
     }
-    return false;
+    return true;
   }
 
   /**
    * Wenn ein Spieler mit einem Button interagiert
    *
-   * @param e PlayerInteractEvent
+   * @param event PlayerInteractEvent
    * @see org.bukkit.event.player.PlayerInteractEvent
    */
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-  public void onInteractButton(final PlayerInteractEvent e) {
-    if (e.getClickedBlock().getState() instanceof Button) {
-      final Button button = (Button) e.getClickedBlock().getState();
-      final Block b = e.getClickedBlock().getRelative(button.getAttachedFace(), 2);
-
+  public void onInteractButton(final PlayerInteractEvent event) {
+    if (event.getClickedBlock().getState() instanceof Button) {
+      final Block b = event.getClickedBlock().getRelative(((Button) event.getClickedBlock().getState()).getAttachedFace(), 2);
       if (b.getState() instanceof CommandBlock) {
         final CommandBlock commandblock = (CommandBlock) b.getState();
-
-        e.setCancelled(true);
-        final String[] args = commandblock.getCommand().split(" ");
-
-        if (args[0].equals("FARMWELT")) {
-          performFarmwelt(e);
-        } else if (args[0].equals("FACEBOOK")) {
-          performSocial(e, " §7Klicke §ehier §7zu unserem Facebook Profil.", "");
-        } else if (args[0].equals("WEBSEITE")) {
-          performSocial(e, " §7Klicke §ehier §7zu unserer Webseite.", "http://www.MineMagicMania.de/");
-        } else if (args[0].equals("YOUTUBE")) {
-          performSocial(e, " §7Klicke §ehier §7zu unserem Youtube Kanal.", "");
-        } else if (args[0].equals("YOUTUBE")) {
-          performSocial(e, " §7Klicke §ehier §7zu unserem Twitter Profil.", "");
-        }
+        event.setCancelled(true);
+        checkArguments(event, commandblock);
       }
     }
+  }
 
+  private void checkArguments(final PlayerInteractEvent event, final CommandBlock commandblock) {
+    final String[] args = commandblock.getCommand().split(" ");
+
+    if (args[0].equals("FARMWELT")) {
+      performFarmwelt(event);
+    } else if (args[0].equals("FACEBOOK")) {
+      performSocial(event, " §7Klicke §ehier §7zu unserem Facebook Profil.", "");
+    } else if (args[0].equals("WEBSEITE")) {
+      performSocial(event, " §7Klicke §ehier §7zu unserer Webseite.", "http://www.MineMagicMania.de/");
+    } else if (args[0].equals("YOUTUBE")) {
+      performSocial(event, " §7Klicke §ehier §7zu unserem Youtube Kanal.", "");
+    } else if (args[0].equals("YOUTUBE")) {
+      performSocial(event, " §7Klicke §ehier §7zu unserem Twitter Profil.", "");
+    }
   }
 
   private void performSocial(final PlayerInteractEvent e, final String s, final String s2) {

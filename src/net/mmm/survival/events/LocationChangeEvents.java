@@ -28,13 +28,17 @@ public class LocationChangeEvents implements Listener {
       e.setCancelled(true);
       e.useTravelAgent(false);
 
-      if (e.getFrom().getWorld().getName().equals("world")) {
-        e.getPlayer().teleport(Bukkit.getWorld("world_nether").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
-      } else {
-        e.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
-      }
+      checkWorld(e);
     }
 
+  }
+
+  private void checkWorld(PlayerPortalEvent e) {
+    if (e.getFrom().getWorld().getName().equals("world")) {
+      e.getPlayer().teleport(Bukkit.getWorld("world_nether").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+    } else {
+      e.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+    }
   }
 
   /**

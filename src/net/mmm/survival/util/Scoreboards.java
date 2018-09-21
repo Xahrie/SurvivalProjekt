@@ -20,7 +20,6 @@ public class Scoreboards {
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
     manager.tablist.keySet().forEach(group -> scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(manager.getKurzel(group)));
-
     player.setScoreboard(scoreboard);
     setPrefix(player);
   }

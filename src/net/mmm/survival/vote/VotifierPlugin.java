@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.model.VotifierEvent;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
@@ -22,8 +23,7 @@ import org.bukkit.event.Listener;
  * Implementiert die Vote-Funktion
  */
 public class VotifierPlugin implements Listener {
-
-  public static Map<String, List<com.vexsoftware.votifier.model.Vote>> votes = new HashMap<>();
+  public static Map<String, List<Vote>> votes = new HashMap<>();
 
   /**
    * Spieler votet auf bestimmter Webseite fuer unseren Server
@@ -46,34 +46,32 @@ public class VotifierPlugin implements Listener {
 
     if (checkPlayer(player, e)) {
       vote(player.getUniqueId(), e.getVote().getServiceName());
-      player.sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotet hast. §8[§e" + e.getVote().getServiceName
-          () + "§8]");
-
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
-      survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
-      survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
-      player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList(Messages.VOTE_REWARD)));
+      player.sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotet hast. §8[§e" + e.getVote().getServiceName() + "§8]");
+      updateVotes(player);
     }
 
+  }
+
+  private void updateVotes(final Player player) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
+    survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
+    player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList(Messages.VOTE_REWARD)));
   }
 
   private boolean checkPlayer(final Player player, final VotifierEvent event) {
     if (player != null) {
       return true;
-    } else {
-      if (votes.containsKey(event.getVote().getUsername().toLowerCase())) {
+    } else if (votes.containsKey(event.getVote().getUsername().toLowerCase())) {
         votes.put(event.getVote().getUsername().toLowerCase(), votes.put(event.getVote().getUsername().toLowerCase(), add(votes.get(event
             .getVote().getUsername().toLowerCase()), event.getVote())));
-      } else {
+    } else {
         votes.put(event.getVote().getUsername().toLowerCase(), add(Collections.emptyList(), event.getVote()));
-      }
     }
-
     return false;
   }
 
-  private List<com.vexsoftware.votifier.model.Vote> add(final List<com.vexsoftware.votifier.model.Vote> list,
-                                                        final com.vexsoftware.votifier.model.Vote add) {
+  private List<Vote> add(final List<Vote> list, final Vote add) {
     list.add(add);
     return list;
   }

@@ -58,8 +58,8 @@ public class Navi implements CommandExecutor {
   }
 
   private ProtectedRegion getRegionWhenExists(final UUID uuid, final Player executor) {
-    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false) != null) {
-      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false) != null) {
+      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false);
     } else {
       executor.sendMessage(Messages.ZONE_UNGUELTIG);
     }

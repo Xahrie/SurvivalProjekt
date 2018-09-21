@@ -77,13 +77,13 @@ public class Zone implements CommandExecutor {
   }
 
   private void delete(final Player player) {
-    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), player.getUniqueId().toString(), false);
+    final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, player.getUniqueId().toString(), false);
 
     deleteZone(player, region);
   }
 
   private void info(final Player player) {
-    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegion(), player.getLocation());
+    final ProtectedRegion region = Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, player.getLocation());
 
     infoZone(region, player);
   }
@@ -98,7 +98,7 @@ public class Zone implements CommandExecutor {
 
   private void regionValidToAdd(final Player player, final String arg) {
     UUIDFetcher.getUUID(arg, uuid -> UUIDFetcher.getName(uuid, name -> {
-      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false);
       if (region != null && !region.getMembers().contains(uuid)) {
         region.getMembers().addPlayer(Bukkit.getPlayer(arg).getUniqueId());
         isAlreadyMember(player, name, Messages.PREFIX, " §7Du hast §e", " §7zu deiner Zone hinzugefügt.");
@@ -118,7 +118,7 @@ public class Zone implements CommandExecutor {
 
   private void regionValidToRemove(final Player player, final String arg) {
     UUIDFetcher.getUUID(arg, uuid -> UUIDFetcher.getName(uuid, name -> {
-      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), uuid.toString(), false);
+      final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false);
       if (region != null && region.getMembers().contains(uuid)) {
         region.getMembers().removePlayer(uuid);
         isAlreadyMember(player, name, Messages.PREFIX, " §7Du hast §e", " von deiner Zone entfernt.");
@@ -194,7 +194,7 @@ public class Zone implements CommandExecutor {
   }
 
   private void createZone(final SurvivalPlayer survivalPlayer) {
-    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegion(), survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
+    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, survivalPlayer.getPlayer().getUniqueId().toString(), false) != null) {
       survivalPlayer.getPlayer().sendMessage(Messages.ZONE_ALREADY_EXIST);
     } else {
       allowCreateZone(survivalPlayer);
@@ -219,7 +219,7 @@ public class Zone implements CommandExecutor {
 
   private void deleteZone(final Player player, final ProtectedRegion region) {
     if (region != null) {
-      SurvivalData.getInstance().getDynmap().getRegion().removeRegion(region.getId());
+      SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/.removeRegion(region.getId());
       player.sendMessage(Messages.ZONE_REMOVED);
     } else {
       player.sendMessage(Messages.NO_ZONE_SET);

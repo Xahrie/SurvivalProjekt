@@ -52,9 +52,7 @@ public class PlayerConnectionEvents implements Listener {
     if (VotifierPlugin.votes.containsKey(e.getPlayer().getName().toLowerCase())) {
       VotifierPlugin.votes.get(e.getPlayer().getName().toLowerCase()).forEach(vote -> {
         e.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" + vote.getServiceName() + "§8]");
-
         survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
-
         VotifierPlugin.vote(e.getPlayer().getUniqueId(), vote.getServiceName());
         e.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList("§7§oDu kannst " +
             "diese Münzen beim Markt eintauschen.")));
