@@ -1,1 +1,9 @@
 net.mmm.survival
+net.mmm.survival.commands
+net.mmm.survival.dynmap
+net.mmm.survival.events
+net.mmm.survival.mysql
+net.mmm.survival.player
+net.mmm.survival.util
+net.mmm.survival.vote
+net.mmm.survival.worldedit

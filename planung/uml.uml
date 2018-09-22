@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="1414.0">net.mmm.survival.util.ItemManager</node>
+    <node x="322.0" y="1414.0">net.mmm.survival.events.DeathEvents</node>
+    <node x="117.0" y="1488.0">net.mmm.survival.commands.Vote</node>
+    <node x="1224.0" y="1132.0">net.mmm.survival.player.Licence</node>
+    <node x="789.0" y="1414.0">net.mmm.survival.commands.SetSpawn</node>
+    <node x="731.0" y="1295.0">net.mmm.survival.Survival</node>
+    <node x="0.0" y="1132.0">net.mmm.survival.player.Complaint</node>
+    <node x="212.0" y="1295.0">net.mmm.survival.vote.VotifierPlugin</node>
+    <node x="1328.0" y="1414.0">net.mmm.survival.commands.Zone</node>
+    <node x="282.0" y="520.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.AreaStyle</node>
+    <node x="938.0" y="1132.0">net.mmm.survival.events.InteractEvents</node>
+    <node x="880.0" y="793.0">net.mmm.survival.util.UUIDFetcher</node>
+    <node x="1141.0" y="1295.0">net.mmm.survival.events.LocationChangeEvents</node>
+    <node x="492.0" y="1295.0">net.mmm.survival.util.Regions</node>
+    <node x="801.0" y="256.0">net.mmm.survival.mysql.AsyncMySQL.MySQL</node>
+    <node x="164.0" y="1414.0">net.mmm.survival.util.Scoreboards</node>
+    <node x="768.5" y="1211.0">net.mmm.survival.events.CommandEvents.Commands</node>
+    <node x="525.0" y="1211.0">net.mmm.survival.commands.Home</node>
+    <node x="615.0" y="619.5">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.OurServerListener</node>
+    <node x="0.0" y="1488.0">net.mmm.survival.commands.Navi</node>
+    <node x="480.0" y="1414.0">net.mmm.survival.events.EntityEvents</node>
+    <node x="0.0" y="575.5">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.UpdateJob</node>
+    <node x="307.5" y="0.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin</node>
+    <node x="637.0" y="1414.0">net.mmm.survival.events.ChatEvents</node>
+    <node x="626.0" y="1211.0">net.mmm.survival.commands.Spawn</node>
+    <node x="754.0" y="1132.0">net.mmm.survival.events.CommandEvents</node>
+    <node x="286.0" y="1132.0">net.mmm.survival.commands.Gamemode</node>
+    <node x="920.0" y="1295.0">net.mmm.survival.events.PlayerConnectionEvents</node>
+    <node x="570.5" y="1132.0">net.mmm.survival.commands.Teleport</node>
+    <node x="526.0" y="793.0">net.mmm.survival.worldedit.CuboidIterator</node>
+    <node x="841.5" y="0.0">net.mmm.survival.mysql.AsyncMySQL</node>
+    <node x="933.0" y="1414.0">net.mmm.survival.commands.SetHome</node>
+    <node x="1355.0" y="1295.0">net.mmm.survival.util.CommandUtils</node>
+    <node x="0.0" y="1295.0">net.mmm.survival.util.Konst</node>
+    <node x="0.0" y="793.0">net.mmm.survival.player.SurvivalPlayer</node>
+    <node x="1205.0" y="1414.0">net.mmm.survival.commands.Tame</node>
+    <node x="1164.0" y="793.0">net.mmm.survival.SurvivalData</node>
+    <node x="1075.0" y="1414.0">net.mmm.survival.player.Hotbar</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.AreaStyle" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
+      <point x="0.0" y="-114.0" />
+      <point x="0.0" y="235.0" />
+    </edge>
+    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.OurServerListener" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
+      <point x="0.0" y="-14.5" />
+      <point x="685.5" y="495.0" />
+      <point x="525.8333333333333" y="495.0" />
+      <point x="87.33333333333326" y="235.0" />
+    </edge>
+    <edge source="net.mmm.survival.commands.Spawn" target="net.mmm.survival.commands.Teleport">
+      <point x="0.0" y="-14.5" />
+      <point x="667.5" y="1186.0" />
+      <point x="639.5" y="1186.0" />
+      <point x="23.0" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.events.CommandEvents.Commands" target="net.mmm.survival.events.CommandEvents">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.UpdateJob" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
+      <point x="0.0" y="-58.5" />
+      <point x="131.0" y="495.0" />
+      <point x="351.1666666666667" y="495.0" />
+      <point x="-87.33333333333331" y="235.0" />
+    </edge>
+    <edge source="net.mmm.survival.commands.Home" target="net.mmm.survival.commands.Teleport">
+      <point x="0.0" y="-14.5" />
+      <point x="565.5" y="1186.0" />
+      <point x="593.5" y="1186.0" />
+      <point x="-23.0" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.mysql.AsyncMySQL.MySQL" target="net.mmm.survival.mysql.AsyncMySQL">
+      <point x="0.0" y="-92.0" />
+      <point x="0.0" y="103.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.38099428068631763" x="1565.5" y="1126.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

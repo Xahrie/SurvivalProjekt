@@ -1,12 +1,17 @@
 Plugins etc
-TODO PaymentSystem (Abgie)
-TODO Gefaengnis (?)
+
+TODO PaymentSystem, Autogeld fuer Farming etc (Abgie)
+
 TODO Beschwerdesystem (Alice)
-TODO Lizenzen Portale, Extraitems etc (?)
-TODO Autogeld fuer Farming etc (Downloaden)
-TODO Jobsystem fuer verschiedene Aufgaben (?)
-TODO Am anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
+
 TODO Grundstueck kann man spaeter mit Geld erweitern (Pas)
+
+TODO Am Anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
+
+TODO Gefaengnis (?)
+TODO Jobsystem fuer verschiedene Aufgaben (?)
+TODO Lizenzen Portale, Extraitems etc (?)
+
 
 Builden
 TODO Spawn (Abgie, Alice, Pas)
