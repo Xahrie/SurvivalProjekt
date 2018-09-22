@@ -109,7 +109,7 @@ public class AsyncMySQL {
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final int money = resultSet.getInt(2);
-    final List<Complaint> complaints = determineComplaints(resultSet.getString(3));
+    final List<Complaint> complaints = determineComplaints();
     final List<Licence> licences = determineLicences(resultSet.getString(4));
     final short votes = (short) resultSet.getInt(5);
     final int maxzone = resultSet.getInt(6);
