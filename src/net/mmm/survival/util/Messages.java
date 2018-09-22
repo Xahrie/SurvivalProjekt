@@ -54,8 +54,15 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um " +
       "nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§8┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
-  public static final String ZONE_UNGUELTIG = "§4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
+  public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
 
+  /*
+  Beschwerden
+   */
+  public static final String COMPLAINT_TOO_FAST = "§8┃ §eSurvival §7» §4┃ Du kannst dich nur alle 30 Minuten über Spieler beschweren.";
+  public static final String COMPLAINT_TOO_FAST_PLAYER = "§8┃ §eSurvival §7» §4┃ Du kannst dich über diesen Spieler nur einmal pro Tag beschweren.";
+  public static final String COMPLAINT_TOOSHORT = "§8┃ §eSurvival §7» §4┃ Eine Beschwerde muss mindestens 10 Zeichen lang sein.";
+  public static final String COMPLAINT_INFO =  "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
 
   /**
    * Instanz

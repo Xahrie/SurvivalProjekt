@@ -1,6 +1,7 @@
 package net.mmm.survival.mysql;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -108,7 +109,6 @@ public class AsyncMySQL {
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final int money = resultSet.getInt(2);
-    //Reason/Operator/Datum,Reason2/Operator2/Datum2
     final List<Complaint> complaints = determineComplaints(resultSet.getString(3));
     final List<Licence> licences = determineLicences(resultSet.getString(4));
     final short votes = (short) resultSet.getInt(5);
@@ -118,27 +118,34 @@ public class AsyncMySQL {
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
   }
 
-  private List<Complaint> determineComplaints(final String complaintsString) {
-    if (complaintsString.contains(",")) {
-      final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
-      final List<Complaint> complaints = new ArrayList<>();
-      complaintsList.stream().filter(complaint -> complaint.contains("/"))
-          .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1], complaint.split("/")[2])));
-      return complaints;
+  private List<Complaint> determineComplaints() {
+    ArrayList<Complaint> complaints = new ArrayList<>();
+
+    try (final Statement statement = getMySQL().conn.createStatement();
+         final ResultSet resultSet = statement.executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
+      while (resultSet.next()) {
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
+        final int id = resultSet.getInt(2);
+        final String reason = resultSet.getString(3);
+        final UUID operator = UUID.fromString(resultSet.getString(4));
+        final Date date = resultSet.getDate(5);
+        complaints.add(new Complaint(uuid, id, reason, operator, date));
+      }
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
     }
 
-    return new ArrayList<>();
+    return complaints;
   }
 
   private List<Licence> determineLicences(final String licencesString) {
-    if (licencesString.contains(",")) {
+    if (licencesString != null && !licencesString.isEmpty()) {
       final List<String> licencesList = Arrays.asList(licencesString.split(","));
       final List<Licence> licences = new ArrayList<>();
       licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
           .forEach(licence -> licences.add(Licence.valueOf(licence)));
       return licences;
     }
-
     return new ArrayList<>();
   }
 

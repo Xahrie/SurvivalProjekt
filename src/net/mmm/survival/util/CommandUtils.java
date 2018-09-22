@@ -1,6 +1,7 @@
 package net.mmm.survival.util;
 
 import de.PAS123.Group.Group.Group;
+import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,6 +34,23 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean isOperator(final Player player, final Group group) {
+    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
+      player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
+      return false;
+    }
+
+    return true;
+  }
+
+
+  /**
+   * besitzt der Spieler die noetigen Gruppen oder ist Op
+   *
+   * @param player Player
+   * @return boolean
+   */
+  public static boolean isOperator(final Player player) {
+    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
     if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
       player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
       return false;
