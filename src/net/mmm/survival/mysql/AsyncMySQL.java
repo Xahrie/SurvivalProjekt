@@ -1,12 +1,13 @@
 package net.mmm.survival.mysql;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -109,7 +110,7 @@ public class AsyncMySQL {
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final int money = resultSet.getInt(2);
-    final List<Complaint> complaints = determineComplaints();
+    final List<Complaint> complaints = determineComplaints(uuid);
     final List<Licence> licences = determineLicences(resultSet.getString(4));
     final short votes = (short) resultSet.getInt(5);
     final int maxzone = resultSet.getInt(6);
@@ -118,18 +119,20 @@ public class AsyncMySQL {
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
   }
 
-  private List<Complaint> determineComplaints() {
+  private List<Complaint> determineComplaints(final UUID uuid) {
     ArrayList<Complaint> complaints = new ArrayList<>();
 
     try (final Statement statement = getMySQL().conn.createStatement();
          final ResultSet resultSet = statement.executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
       while (resultSet.next()) {
-        final UUID uuid = UUID.fromString(resultSet.getString(1));
+        final UUID uuidComplaint = UUID.fromString(resultSet.getString(1));
         final int id = resultSet.getInt(2);
         final String reason = resultSet.getString(3);
         final UUID operator = UUID.fromString(resultSet.getString(4));
-        final Date date = resultSet.getDate(5);
-        complaints.add(new Complaint(uuid, id, reason, operator, date));
+        final java.util.Date date = resultSet.getTimestamp(5);
+        if (uuidComplaint.equals(uuid)) {
+          complaints.add(new Complaint(uuid, id, reason, operator, date));
+        }
       }
     } catch (final SQLException ex) {
       ex.printStackTrace();
@@ -167,14 +170,13 @@ public class AsyncMySQL {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.conn
-        .prepareStatement("UPDATE SurvivalPlayer SET money=?, complaints=?, licences=?, votes=?, maxzone=?, home=? WHERE uuid=?")) {
+        .prepareStatement("UPDATE SurvivalPlayer SET money=?, licences=?, votes=?, maxzone=?, home=? WHERE uuid=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
-        final StringBuilder complaints = determineComplaints(survivalPlayer);
         final StringBuilder licences = determineLicences(survivalPlayer);
         final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" + survivalPlayer.getHome().getY() + "/" +
             survivalPlayer.getHome().getZ() : "";
-        updateAndExecuteStatement(statement, survivalPlayer, complaints, licences, home);
+        updateAndExecuteStatement(statement, survivalPlayer, licences, home);
       }
 
     } catch (final SQLException ex) {
@@ -187,9 +189,16 @@ public class AsyncMySQL {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.conn
+        .prepareStatement("DELETE FROM SurvivalPlayerComplaints")) {
+      statement.executeUpdate();
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
+
+    try (final PreparedStatement statement = sql.conn
         .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE)" +
             " VALUES ( ?, ?, ?, ?, ?)")) {
-
       for (SurvivalPlayer player : players) {
         for (Complaint complaint : player.getComplaints()) {
           try {
@@ -199,7 +208,8 @@ public class AsyncMySQL {
             statement.setString(4, complaint.getOperator().toString());
             java.util.Date utilDate = complaint.getDate();
             java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-            statement.setDate(5, sqlDate);
+            DateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+            statement.setString(5, df.format(sqlDate));
             statement.executeUpdate();
           } catch (Exception e) {
             //Duplicate Id
@@ -214,15 +224,14 @@ public class AsyncMySQL {
   }
 
   private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer,
-                                         final StringBuilder complaints, final StringBuilder licences, final String home)
+                                         final StringBuilder licences, final String home)
       throws SQLException {
     statement.setInt(1, survivalPlayer.getMoney());
-    statement.setString(2, complaints.toString());
-    statement.setString(3, licences.toString());
-    statement.setInt(4, survivalPlayer.getVotes());
-    statement.setInt(5, survivalPlayer.getMaxzone());
-    statement.setString(6, home);
-    statement.setString(7, survivalPlayer.getUuid().toString());
+    statement.setString(2, licences.toString());
+    statement.setInt(3, survivalPlayer.getVotes());
+    statement.setInt(4, survivalPlayer.getMaxzone());
+    statement.setString(5, home);
+    statement.setString(6, survivalPlayer.getUuid().toString());
     statement.executeUpdate();
   }
 
@@ -233,15 +242,6 @@ public class AsyncMySQL {
       licences.deleteCharAt(licences.length() - 1);
     }
     return licences;
-  }
-
-  private StringBuilder determineComplaints(final SurvivalPlayer survivalPlayer) {
-    final StringBuilder complaints = new StringBuilder();
-    if (!survivalPlayer.getComplaints().isEmpty()) {
-      survivalPlayer.getComplaints().forEach(complaints::append);
-      complaints.deleteCharAt(complaints.length() - 1);
-    }
-    return complaints;
   }
 
   /**
