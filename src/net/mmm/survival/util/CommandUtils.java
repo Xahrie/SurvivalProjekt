@@ -51,7 +51,7 @@ public final class CommandUtils {
    */
   public static boolean isOperator(final Player player) {
     final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
-    if (!player.isOp() || !group.equals(Group.OWNER) || !group.equals(Group.MANAGER) || !group.equals(Group.ADMIN)) {
+    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
       player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
       return false;
     }
