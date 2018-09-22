@@ -193,7 +193,6 @@ public class InteractEvents implements Listener {
   private static void checkFound(final SurvivalPlayer survivalPlayer, final RegionManager manager, final ProtectedCuboidRegion cuboidRegion,
                                  final boolean found) {
     if (!found) {
-      survivalPlayer.setMaxzone(100);
       final DefaultDomain defaultDomain = new DefaultDomain();
       defaultDomain.addPlayer(survivalPlayer.getPlayer().getUniqueId());
       cuboidRegion.setOwners(defaultDomain);

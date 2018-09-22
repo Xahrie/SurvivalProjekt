@@ -42,7 +42,7 @@ public class PlayerConnectionEvents implements Listener {
 
   private void isFirstJoin(SurvivalPlayer survivalPlayer, final PlayerJoinEvent event) {
     if (survivalPlayer == null) { // First-Join
-      survivalPlayer = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 0, 100, null);
+      survivalPlayer = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 0, 20, null);
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
       SurvivalData.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), survivalPlayer);
     }
