@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class AsyncMySQL {
     try (final Statement statement = getMySQL().conn.createStatement();
          final ResultSet resultSet = statement.executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer")) {
       while (resultSet.next()) {
-        final UUID uuid = generateUUID(UUID.fromString(resultSet.getString(1)));
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
         players.put(uuid, determinePlayer(resultSet, uuid));
       }
     } catch (final SQLException ex) {
@@ -102,14 +103,9 @@ public class AsyncMySQL {
     return players;
   }
 
-  private UUID generateUUID(final UUID uuid) {
-    return uuid;
-  }
-
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final int money = resultSet.getInt(2);
-    //Reason/Operator/Datum,Reason2/Operator2/Datum2
-    final List<Complaint> complaints = determineComplaints(resultSet.getString(3));
+    final List<Complaint> complaints = determineComplaints();
     final List<Licence> licences = determineLicences(resultSet.getString(4));
     final short votes = (short) resultSet.getInt(5);
     final int maxzone = resultSet.getInt(6);
@@ -118,26 +114,40 @@ public class AsyncMySQL {
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
   }
 
-  private List<Complaint> determineComplaints(final String complaintsString) {
-    final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
-    final List<Complaint> complaints = new ArrayList<>();
-    complaintsList.stream().filter(complaint -> complaint.contains("/"))
-        .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1],
-            complaint.split("/")[2])));
+  private List<Complaint> determineComplaints() {
+    ArrayList<Complaint> complaints = new ArrayList<>();
+
+    try (final Statement statement = getMySQL().conn.createStatement();
+         final ResultSet resultSet = statement.executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
+      while (resultSet.next()) {
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
+        final int id = resultSet.getInt(2);
+        final String reason = resultSet.getString(3);
+        final UUID operator = UUID.fromString(resultSet.getString(4));
+        final Date date = resultSet.getDate(5);
+        complaints.add(new Complaint(uuid, id, reason, operator, date));
+      }
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
     return complaints;
   }
 
   private List<Licence> determineLicences(final String licencesString) {
-    final List<String> licencesList = Arrays.asList(licencesString.split(","));
-    final List<Licence> licences = new ArrayList<>();
-    licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
-        .forEach(licence -> licences.add(Licence.valueOf(licence)));
-    return licences;
+    if (licencesString != null && !licencesString.isEmpty()) {
+      final List<String> licencesList = Arrays.asList(licencesString.split(","));
+      final List<Licence> licences = new ArrayList<>();
+      licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
+          .forEach(licence -> licences.add(Licence.valueOf(licence)));
+      return licences;
+    }
+    return new ArrayList<>();
   }
 
   private Location determineLocation(final String homeString) {
     Location location = null;
-    if (!homeString.equals("")) {
+    if (homeString != null && !homeString.equals("")) {
       final double x = Double.parseDouble(homeString.split("/")[0]);
       final double y = Double.parseDouble(homeString.split("/")[1]);
       final double z = Double.parseDouble(homeString.split("/")[2]);
@@ -161,6 +171,33 @@ public class AsyncMySQL {
         final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" + survivalPlayer.getHome().getY() + "/" +
             survivalPlayer.getHome().getZ() : "";
         updateAndExecuteStatement(statement, survivalPlayer, complaints, licences, home);
+      }
+
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
+    storeComplaints();
+  }
+
+  private void storeComplaints() {
+    final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
+
+    try (final PreparedStatement statement = sql.conn
+        .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE)" +
+            " VALUES ( ?, ?, ?, ?, ?)")) {
+
+      for (SurvivalPlayer player : players) {
+        for (Complaint complaint : player.getComplaints()) {
+          statement.setString(1, complaint.getUuid().toString());
+          statement.setInt(2, complaint.getId());
+          statement.setString(3, complaint.getReason());
+          statement.setString(4, complaint.getOperator().toString());
+          java.util.Date utilDate = complaint.getDate();
+          java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+          statement.setDate(5, sqlDate);
+          statement.executeUpdate();
+        }
       }
 
     } catch (final SQLException ex) {

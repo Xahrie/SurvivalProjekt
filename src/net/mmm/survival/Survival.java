@@ -3,6 +3,7 @@ package net.mmm.survival;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mmm.survival.commands.Complain;
 import net.mmm.survival.commands.Gamemode;
 import net.mmm.survival.commands.Home;
 import net.mmm.survival.commands.Navi;
@@ -33,7 +34,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author PAS123
  * @author BlueIronGirl
  * @author Abgie
- * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch BlueIronGirl und Abgie
+ *         Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch BlueIronGirl und Abgie
  */
 public class Survival extends JavaPlugin {
   private static Survival server = null;
@@ -67,14 +68,15 @@ public class Survival extends JavaPlugin {
   }
 
   private void registerEvents() {
-    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(), new PlayerConnectionEvents(), new DeathEvents(),
+    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(),
+        new PlayerConnectionEvents(), new DeathEvents(),
         new EntityEvents(), new InteractEvents(), new LocationChangeEvents());
     listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Gamemode(), new Home(), new Navi(), new SetHome(), new SetSpawn(), new Spawn(),
-        new Tame(), new Vote(), new Zone());
+        new Tame(), new Vote(), new Zone(), new Complain());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName().substring(26)).setExecutor(commandExecutor));
   }
 

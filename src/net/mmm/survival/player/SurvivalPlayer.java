@@ -1,9 +1,11 @@
 package net.mmm.survival.player;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -22,6 +24,7 @@ public class SurvivalPlayer {
   private short votes;
   private int money, maxzone;
   private List<Complaint> complaints;
+  private Date lastComplaint;
   private List<Licence> licences;
   private Location home;
   //</editor-fold>
@@ -51,6 +54,15 @@ public class SurvivalPlayer {
     this.zonenedit = false;
     this.zonensearch = false;
     this.tamed = false;
+    this.lastComplaint = new Date();
+  }
+
+  public static Player getPlayer(Player executor, String playerName) {
+    Player player = Bukkit.getPlayer(playerName);
+    if (player == null) {
+      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
+    }
+    return player;
   }
 
   /**
@@ -69,21 +81,24 @@ public class SurvivalPlayer {
     return Bukkit.getPlayer(uuid);
   }
 
+  public void addComplaint(Complaint complaint) {
+    complaints.add(complaint);
+    outputComplaint(complaint);
+  }
+
+  public void outputComplaint(Complaint complaint) {
+    getPlayer().sendMessage(Messages.PREFIX + "§c┃ Der Spieler: " + SurvivalData.getInstance().getPlayers()
+        .get(complaint.getOperator()).getPlayer().getDisplayName() + " hat sich am " +
+        complaint.outputDate() + " über dich beschwert: " + complaint.getReason());
+  }
+
   //<editor-fold desc="getter and setter">
   public List<Complaint> getComplaints() {
     return complaints;
   }
 
-  public void setComplaints(final List<Complaint> complaints) {
-    this.complaints = complaints;
-  }
-
   public List<Licence> getLicences() {
     return licences;
-  }
-
-  public void setLicences(final List<Licence> licences) {
-    this.licences = licences;
   }
 
   public UUID getUuid() {
@@ -157,6 +172,11 @@ public class SurvivalPlayer {
   public void setHome(final Location home) {
     this.home = home;
   }
+
+  public Date getLastComplaint() {
+    return lastComplaint;
+  }
+
   //</editor-fold>
 
 }

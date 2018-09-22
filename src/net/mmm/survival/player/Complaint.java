@@ -2,12 +2,17 @@ package net.mmm.survival.player;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Complaint speichert ueber eine Beschwerde Grund der Beschwerde, Operator und Datum
  */
 public class Complaint {
-  private String reason, operator, date;
+  private UUID uuid;
+  private int id;
+  private String reason;
+  private UUID operator;
+  private Date date;
 
   /**
    * Konstruktor
@@ -16,7 +21,9 @@ public class Complaint {
    * @param operator Beschwerender
    * @param date Datum (bereits formatiert)
    */
-  public Complaint(final String reason, final String operator, final String date) {
+  public Complaint(final UUID uuid, final int id, final String reason, final UUID operator, final Date date) {
+    this.uuid = uuid;
+    this.id = id;
     this.reason = reason;
     this.operator = operator;
     this.date = date;
@@ -27,8 +34,8 @@ public class Complaint {
    *
    * @return Datum als Zeichenkette
    */
-  private String calcDate() {
-    return new SimpleDateFormat("dd. MMMM yyyy hh:mm").format(new Date());
+  public String outputDate() {
+    return new SimpleDateFormat("dd. MMMM yyyy hh:mm").format(date);
     //yyy-MM-dd hh:mm:ss = Mysql
   }
 
@@ -46,20 +53,37 @@ public class Complaint {
     this.reason = reason;
   }
 
-  public String getOperator() {
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public UUID getOperator() {
     return operator;
   }
 
-  public void setOperator(String operator) {
+  public void setOperator(UUID operator) {
     this.operator = operator;
   }
 
-  public String getDate() {
+  public Date getDate() {
     return date;
   }
 
-  public void setDate(String date) {
+  public void setDate(Date date) {
     this.date = date;
   }
-  //</editor-fold>
+
+//</editor-fold>
 }

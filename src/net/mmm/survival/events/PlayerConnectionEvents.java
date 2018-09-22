@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
@@ -38,6 +39,7 @@ public class PlayerConnectionEvents implements Listener {
     e.setJoinMessage(null);
     Scoreboards.setScoreboard(e.getPlayer()); //Scoreboard initialisieren
     verarbeiteVotes(e, survivalPlayer);     //Vote-Plugin
+    verarbeiteComplaints(survivalPlayer);
   }
 
   private void isFirstJoin(SurvivalPlayer survivalPlayer, final PlayerJoinEvent event) {
@@ -59,6 +61,15 @@ public class PlayerConnectionEvents implements Listener {
       });
 
       VotifierPlugin.votes.remove(e.getPlayer().getName().toLowerCase());
+    }
+  }
+
+  private void verarbeiteComplaints(final SurvivalPlayer survivalPlayer) {
+    if (survivalPlayer.getComplaints().size() > 0) {
+      survivalPlayer.getPlayer().sendMessage(Messages.COMPLAINT_INFO);
+      for (Complaint complaint : survivalPlayer.getComplaints()) {
+        survivalPlayer.outputComplaint(complaint);
+      }
     }
   }
 
