@@ -180,6 +180,36 @@ public class AsyncMySQL {
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
+    storeComplaints();
+  }
+
+  private void storeComplaints() {
+    final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
+
+    try (final PreparedStatement statement = sql.conn
+        .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE)" +
+            " VALUES ( ?, ?, ?, ?, ?)")) {
+
+      for (SurvivalPlayer player : players) {
+        for (Complaint complaint : player.getComplaints()) {
+          try {
+            statement.setString(1, complaint.getUuid().toString());
+            statement.setInt(2, complaint.getId());
+            statement.setString(3, complaint.getReason());
+            statement.setString(4, complaint.getOperator().toString());
+            java.util.Date utilDate = complaint.getDate();
+            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+            statement.setDate(5, sqlDate);
+            statement.executeUpdate();
+          } catch (Exception e) {
+            //Duplicate Id
+          }
+        }
+      }
+
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
 
   }
 

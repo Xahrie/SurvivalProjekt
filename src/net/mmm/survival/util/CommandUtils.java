@@ -18,7 +18,7 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean checkPlayer(final CommandSender commandSender) {
-    if (!(commandSender instanceof Player) || SurvivalPlayer.findSurvivalPlayer((Player) commandSender) != null) {
+    if (!(commandSender instanceof Player) || SurvivalPlayer.findSurvivalPlayer((Player) commandSender) == null) {
       commandSender.sendMessage(Messages.NOT_A_PLAYER);
       return false;
     }

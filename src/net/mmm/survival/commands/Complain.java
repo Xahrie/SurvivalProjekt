@@ -85,10 +85,13 @@ public class Complain implements CommandExecutor {
 
   private void outputComplaint(final SurvivalPlayer survivalPlayer, final Player sender) {
     if (survivalPlayer.getComplaints().size() > 0) {
-      sender.sendMessage("§f┃ Über den Spieler §e" + survivalPlayer.getPlayer().getDisplayName() +
-          " §f liegen §e" + survivalPlayer.getComplaints().size() + " §f Beschwerden vor:");
-      for (Complaint complaint : survivalPlayer.getComplaints()) {
-        survivalPlayer.outputComplaint(complaint);
+      Player player = survivalPlayer.getPlayer();
+      if (player != null) {
+        sender.sendMessage("§f┃ Über den Spieler §e" + player.getDisplayName() +
+            " §f liegen §e" + survivalPlayer.getComplaints().size() + " §f Beschwerden vor:");
+        for (Complaint complaint : survivalPlayer.getComplaints()) {
+          survivalPlayer.outputComplaint(complaint);
+        }
       }
     }
   }

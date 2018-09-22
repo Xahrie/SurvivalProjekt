@@ -6,6 +6,7 @@ api-version: 1.13
 main: net.mmm.survival.Survival
 
 commands:
+  complain:
   economy:
     aliases: [eco]
   gamemode:
@@ -16,10 +17,10 @@ commands:
   navi:
     aliases: [navigation]
   pay:
+  save:
   sethome:
   setspawn:
   spawn:
   tame:
   vote:
   zone:
-  complain:

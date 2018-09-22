@@ -78,7 +78,11 @@ public class SurvivalPlayer {
   }
 
   public Player getPlayer() {
-    return Bukkit.getPlayer(uuid);
+    Player player = Bukkit.getPlayer(uuid);
+    if (player == null) {
+      player = Bukkit.getOfflinePlayer(uuid).getPlayer();
+    }
+    return player;
   }
 
   public void addComplaint(Complaint complaint) {
