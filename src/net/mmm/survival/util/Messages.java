@@ -6,7 +6,7 @@ package net.mmm.survival.util;
 public final class Messages {
   public static final String PREFIX = "§8┃ §eSurvival §7» ";
 
-  public static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
+  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   public static final String GAMEMODE_SURVIVAL = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) " +
       "§7gesetzt.";
   public static final String GAMEMODE_ADVENTURE = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) " +
@@ -21,7 +21,9 @@ public final class Messages {
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
   public static final String NO_ZONE_SET = "§8┃ §eSurvival §7» §cDu hast keine Zone.";
+  static final String NOT_A_NUMBER = "§8┃ §eSurvival §7» §cDu musst eine Zahl eingeben.";
   static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  public static final String NOT_ENOUGH_MONEY = "§8┃ §eSurvival §7» §cDu hast nicht genuegend Geld auf deinem Konto.";
   static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";
   public static final String SPAWN_SET = "§8┃ §eSurvival §7» Du hast den §eSpawn §7gesetzt.";
@@ -31,8 +33,12 @@ public final class Messages {
       "§e/tame §7ein.";
   public static final String TELEPRT_CANCELED = "§8┃ §eSurvival §7» §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.";
   public static final String TELEPORT_DONT_MOVE = "§8┃ §eSurvival §7» Du wirst teleportiert.. §e§o» Bewege dich nicht..";
+  public static final String USAGE_ECONOMY_COMMAND = "§8┃ §eSurvival §7» §c/eco [<set|reset|add|take>] <Spieler>";
   public static final String USAGE_GAMEMODE_COMMAND = "§8┃ §eSurvival §7» §c/gm <0|1|2|3> <Spieler>";
-  public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze /navi <Spieler>";
+  public static final String USAGE_MONEY_COMMAND = "§8┃ §eSurvival §7» §c/money";
+  public static final String USAGE_MONEY_COMMAND_ADMIN = "§8┃ §eSurvival §7» §c/money <Spieler>";
+  public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/navi <Spieler>";
+  public static final String USAGE_PAY_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/pay <Spieler> <Amount>";
   public static final String USE_INTEGER = "§8┃ §eSurvival §7» §cDu musst eine Zahl angeben.";
   public static final String VOTE_PAGES = "§8┃ §eSurvival §7» Unsere Vote-Seiten:";
   public static final String VOTE_REWARD = "§7§oDu kannst diese Münzen beim Markt eintauschen.";

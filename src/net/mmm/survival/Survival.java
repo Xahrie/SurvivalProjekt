@@ -3,9 +3,12 @@ package net.mmm.survival;
 import java.util.Arrays;
 import java.util.List;
 
+import net.mmm.survival.commands.Economy;
 import net.mmm.survival.commands.Gamemode;
 import net.mmm.survival.commands.Home;
+import net.mmm.survival.commands.Money;
 import net.mmm.survival.commands.Navi;
+import net.mmm.survival.commands.Pay;
 import net.mmm.survival.commands.SetHome;
 import net.mmm.survival.commands.SetSpawn;
 import net.mmm.survival.commands.Spawn;
@@ -73,8 +76,8 @@ public class Survival extends JavaPlugin {
   }
 
   private void registerCommands() {
-    final List<CommandExecutor> commands = Arrays.asList(new Gamemode(), new Home(), new Navi(), new SetHome(), new SetSpawn(), new Spawn(),
-        new Tame(), new Vote(), new Zone());
+    final List<CommandExecutor> commands = Arrays.asList(new Economy(), new Gamemode(), new Home(), new Money(), new Navi(), new Pay(),
+        new SetHome(), new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName().substring(26)).setExecutor(commandExecutor));
   }
 

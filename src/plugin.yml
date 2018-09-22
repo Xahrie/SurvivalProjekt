@@ -6,12 +6,16 @@ api-version: 1.13
 main: net.mmm.survival.Survival
 
 commands:
+  economy:
+    aliases: [eco]
   gamemode:
     aliases: [gm]
   home:
   info:
+  money:
   navi:
     aliases: [navigation]
+  pay:
   sethome:
   setspawn:
   spawn:

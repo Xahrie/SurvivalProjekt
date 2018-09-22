@@ -119,20 +119,27 @@ public class AsyncMySQL {
   }
 
   private List<Complaint> determineComplaints(final String complaintsString) {
-    final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
-    final List<Complaint> complaints = new ArrayList<>();
-    complaintsList.stream().filter(complaint -> complaint.contains("/"))
-        .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1],
-            complaint.split("/")[2])));
-    return complaints;
+    if (complaintsString.contains(",")) {
+      final List<String> complaintsList = Arrays.asList(complaintsString.split(","));
+      final List<Complaint> complaints = new ArrayList<>();
+      complaintsList.stream().filter(complaint -> complaint.contains("/"))
+          .forEach(complaint -> complaints.add(new Complaint(complaint.split("/")[0], complaint.split("/")[1], complaint.split("/")[2])));
+      return complaints;
+    }
+
+    return new ArrayList<>();
   }
 
   private List<Licence> determineLicences(final String licencesString) {
-    final List<String> licencesList = Arrays.asList(licencesString.split(","));
-    final List<Licence> licences = new ArrayList<>();
-    licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
-        .forEach(licence -> licences.add(Licence.valueOf(licence)));
-    return licences;
+    if (licencesString.contains(",")) {
+      final List<String> licencesList = Arrays.asList(licencesString.split(","));
+      final List<Licence> licences = new ArrayList<>();
+      licencesList.stream().filter(licence -> EnumUtils.isValidEnum(Licence.class, licence))
+          .forEach(licence -> licences.add(Licence.valueOf(licence)));
+      return licences;
+    }
+
+    return new ArrayList<>();
   }
 
   private Location determineLocation(final String homeString) {

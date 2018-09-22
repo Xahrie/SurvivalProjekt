@@ -17,7 +17,7 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean checkPlayer(final CommandSender commandSender) {
-    if (!(commandSender instanceof Player)) {
+    if (!(commandSender instanceof Player) || SurvivalPlayer.findSurvivalPlayer((Player) commandSender) != null) {
       commandSender.sendMessage(Messages.NOT_A_PLAYER);
       return false;
     }
@@ -33,7 +33,7 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean isOperator(final Player player, final Group group) {
-    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) || !group.equals(Group.ADMIN)) {
+    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
       player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
       return false;
     }
@@ -70,4 +70,22 @@ public final class CommandUtils {
 
     return true;
   }
+
+  /**
+   * Ueberpruefe, ob bei der Eingabe eine Nummer vorliegt
+   *
+   * @param input Eingabe
+   * @param executor Ausfuehrender Spieler
+   * @return ja -> Eingabe ist eine ganze Zahl
+   */
+  public static int checkNumber(final String input, final Player executor) {
+    try {
+      return Integer.parseInt(input);
+    } catch (final NumberFormatException ignored) {
+      executor.sendMessage(Messages.NOT_A_NUMBER);
+    }
+
+    return 0;
+  }
+
 }
