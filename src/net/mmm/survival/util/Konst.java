@@ -7,6 +7,8 @@ public final class Konst {
 
   public static final int VOTE_REWARD = 1;
 
+  public static final int ZONE_SIZE_DEFAULT = 20;
+
   /**
    * Instanz
    */

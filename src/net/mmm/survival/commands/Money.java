@@ -3,7 +3,6 @@ package net.mmm.survival.commands;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,11 +38,12 @@ public class Money implements CommandExecutor {
   private void evaluateOneArgument(final String[] strings, final Player executor) {
     final SurvivalPlayer survivalPlayer;
     if (CommandUtils.isOperator(executor)) {
-      final Player target = Bukkit.getPlayer(strings[0]);
-      survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
-      evaluateZeroArguments(executor, survivalPlayer, target.getDisplayName());
+      final Player target = SurvivalPlayer.getPlayer(executor, strings[0]);
+      survivalPlayer = SurvivalPlayer.findSurvivalPlayer(strings[0]);
+      if (survivalPlayer != null) {
+        evaluateZeroArguments(executor, survivalPlayer, target.getDisplayName());
+      }
     }
-
   }
 
 }

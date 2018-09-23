@@ -17,6 +17,57 @@ import org.bukkit.entity.Player;
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer {
+  /**
+   * Ermittle den SurvivalPlayer aus dem SpielerCache
+   *
+   * @param player Spieler
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
+   */
+  public static SurvivalPlayer findSurvivalPlayer(final Player player) {
+    UUID uuid = player.getUniqueId();
+
+    final SurvivalPlayer survivalPlayer = SurvivalData.getInstance().getPlayers().get(uuid);
+    if (survivalPlayer == null) {
+
+    }
+
+    return survivalPlayer;
+  }
+
+  /**
+   * Ermittle den SurvivalPlayer aus dem SpielerCache
+   *
+   * @param playerName Spielername+-
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
+   */
+  public static SurvivalPlayer findSurvivalPlayer(final String playerName) {
+    final UUID uuid;
+    if (Bukkit.getPlayer(playerName) != null) {
+      uuid = Bukkit.getPlayer(playerName).getUniqueId();
+    } else {
+      uuid = Bukkit.getOfflinePlayer(playerName).getUniqueId();
+    }
+
+    return SurvivalData.getInstance().getPlayers().get(uuid);
+  }
+
+  /**
+   * Spieler bestimmen
+   *
+   * @param executor Ausfuehrender Spieler
+   * @param playerName Spielername
+   * @return Spieler
+   */
+  public static Player getPlayer(final Player executor, final String playerName) {
+    Player player = Bukkit.getPlayer(playerName);
+    if (player == null) {
+      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
+
+      player = Bukkit.getOfflinePlayer(playerName).getPlayer();
+    }
+    return player;
+  }
+
   private final List<Complaint> complaints;
   private final Date lastComplaint;
   private final List<Licence> licences;
@@ -27,6 +78,7 @@ public class SurvivalPlayer {
   private int money, maxzone;
   private Location home;
   //</editor-fold>
+
 
   /**
    * Konstruktor
@@ -56,26 +108,6 @@ public class SurvivalPlayer {
     this.lastComplaint = new Date();
   }
 
-  public static Player getPlayer(final Player executor, final String playerName) {
-    final Player player = Bukkit.getPlayer(playerName);
-    if (player == null) {
-      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
-    }
-    return player;
-  }
-
-  /**
-   * Ermittle den SurvivalPlayer aus dem SpielerCache
-   *
-   * @param player Spieler
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
-   */
-  public static SurvivalPlayer findSurvivalPlayer(final Player player) {
-    final UUID uuid = player.getUniqueId();
-
-    return SurvivalData.getInstance().getPlayers().get(uuid);
-  }
-
   public Player getPlayer() {
     Player player = Bukkit.getPlayer(uuid);
     if (player == null) {
@@ -90,9 +122,9 @@ public class SurvivalPlayer {
   }
 
   public void outputComplaint(final Complaint complaint) {
-    getPlayer().sendMessage(Messages.PREFIX + "§c┃ Der Spieler: " + SurvivalData.getInstance().getPlayers()
-        .get(complaint.getOperator()).getPlayer().getDisplayName() + " hat sich am " +
-        complaint.outputDate() + " über dich beschwert: " + complaint.getReason());
+    getPlayer().sendMessage(Messages.PREFIX + "§c Der Spieler: §e" + SurvivalData.getInstance().getPlayers()
+        .get(complaint.getOperator()).getPlayer().getDisplayName() + "§c hat sich am §e" +
+        complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
   //<editor-fold desc="getter and setter">

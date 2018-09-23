@@ -43,7 +43,7 @@ public class UUIDFetcher {
    * @param name The name
    * @return The uuid
    */
-  private static UUID getUUID(final String name) {
+  public static UUID getUUID(final String name) {
     return getUUIDAt(name, System.currentTimeMillis());
   }
 

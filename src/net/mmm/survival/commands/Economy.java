@@ -19,12 +19,12 @@ import org.bukkit.entity.Player;
  */
 public class Economy implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
 
       if (CommandUtils.isOperator(executor)) {
-        checkCommandLength(strings, executor);
+        checkCommandLength(args, executor);
       }
     }
 
@@ -42,8 +42,8 @@ public class Economy implements CommandExecutor {
   }
 
   private void evaluateOneArgument(final String string, final Player executor) { /* /eco <Name> */
-    final Player target = Bukkit.getPlayer(string);
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
+    final Player target = SurvivalPlayer.getPlayer(executor, string);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(string);
     if (survivalPlayer != null) {
       final int money = survivalPlayer.getMoney();
       executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + target.getDisplayName() + "§7 hat §e" + money + "€§7 auf dem Konto.");
@@ -55,7 +55,7 @@ public class Economy implements CommandExecutor {
   private void evaluateThreeArguments(final String[] strings, final Player executor) {
     final String argument = strings[0];
     final Player target = Bukkit.getPlayer(strings[1]);
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(strings[1]);
     final int amount = CommandUtils.checkNumber(strings[2], executor);
 
     if (argument.equals("set")) { // Geld setzen

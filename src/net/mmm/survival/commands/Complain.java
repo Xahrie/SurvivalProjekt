@@ -49,12 +49,16 @@ public class Complain implements CommandExecutor {
   }
 
   private void delete(final Player sender, final String[] args) {
-    final Player targetPlayer = SurvivalPlayer.getPlayer(sender, args[1]);
-    if (targetPlayer != null) {
-      final SurvivalPlayer targetSurvivalPlayer = SurvivalPlayer.findSurvivalPlayer(targetPlayer);
-      targetSurvivalPlayer.getComplaints().clear();
-      sender.sendMessage("§f┃ Die Beschwerden des Spielers §e" + targetSurvivalPlayer.getPlayer().getDisplayName() +
-          " §f wurden gelöscht.");
+    if (args.length == 2) {
+      final Player targetPlayer = SurvivalPlayer.getPlayer(sender, args[1]);
+      if (targetPlayer != null) {
+        final SurvivalPlayer targetSurvivalPlayer = SurvivalPlayer.findSurvivalPlayer(targetPlayer);
+        targetSurvivalPlayer.getComplaints().clear();
+        sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden des Spielers §e" + targetSurvivalPlayer.getPlayer().getDisplayName() +
+            " §f wurden gelöscht.");
+      }
+    } else {
+      info(sender);
     }
   }
 
@@ -87,7 +91,7 @@ public class Complain implements CommandExecutor {
     if (survivalPlayer.getComplaints().size() > 0) {
       final Player player = survivalPlayer.getPlayer();
       if (player != null) {
-        sender.sendMessage("§f┃ Über den Spieler §e" + player.getDisplayName() +
+        sender.sendMessage(Messages.PREFIX + "§fÜber den Spieler §e" + player.getDisplayName() +
             " §f liegen §e" + survivalPlayer.getComplaints().size() + " §f Beschwerden vor:");
         for (final Complaint complaint : survivalPlayer.getComplaints()) {
           survivalPlayer.outputComplaint(complaint);
@@ -97,16 +101,20 @@ public class Complain implements CommandExecutor {
   }
 
   private void add(final Player sender, final String[] args) {
-    final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
-    final Player targetPlayer = SurvivalPlayer.getPlayer(sender, args[1]);
-    if (targetPlayer != null) {
-      final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(targetPlayer);
-      final String reason = args[2];
-      if (checkComplaint(executor, target, reason)) {
-        target.addComplaint(new Complaint(target.getUuid(), target.getComplaints().size() + 1, reason, executor.getUuid(), new Date()));
-        sender.sendMessage("§f┃ Die Beschwerden über den Spielers §e" + targetPlayer.getDisplayName() +
-            " §f wurden gespeichert.");
+    if (args.length == 3) {
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
+      final Player targetPlayer = SurvivalPlayer.getPlayer(sender, args[1]);
+      if (targetPlayer != null) {
+        final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(targetPlayer);
+        final String reason = args[2];
+        if (checkComplaint(executor, target, reason)) {
+          target.addComplaint(new Complaint(target.getUuid(), target.getComplaints().size() + 1, reason, executor.getUuid(), new Date()));
+          sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden über den Spielers §e" + targetPlayer.getDisplayName() +
+              " §f wurden gespeichert.");
+        }
       }
+    } else {
+      info(sender);
     }
   }
 

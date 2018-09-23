@@ -117,7 +117,7 @@ public class InteractEvents implements Listener {
       } catch (final StorageException ex) {
         ex.printStackTrace();
       }
-      Hotbar.send(survivalPlayer.getPlayer());
+      Hotbar.send(survivalPlayer.getPlayer(), "§7Du hast erfolgreich deine Zone erstellt.");
     }
   }
 
@@ -131,11 +131,11 @@ public class InteractEvents implements Listener {
   }
 
   private static boolean validZone(final int a, final int b, final int max, final SurvivalPlayer survivalPlayer) {
-    if (a >= 20 && a <= max && b >= 20 && b <= max) {
+    if (a >= survivalPlayer.getMaxzone() && a <= max && b >= survivalPlayer.getMaxzone() && b <= max) {
       return true;
     } else {
-      survivalPlayer.getPlayer().sendMessage(Messages.PREFIX + " §cDeine Zone darf minimal 20x20 und maximal 100x100 Blöcke groß sein. Deine " +
-          "Zone ist " + a + "x" + b + " Blöcke groß.");
+      survivalPlayer.getPlayer().sendMessage(Messages.PREFIX + " §cDeine Zone darf minimal " + survivalPlayer.getMaxzone() + "x" +
+          survivalPlayer.getMaxzone() + " Blöcke groß sein. Deine Zone ist " + a + "x" + b + " Blöcke groß.");
     }
 
     return false;

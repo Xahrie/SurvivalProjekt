@@ -44,7 +44,8 @@ public class PlayerConnectionEvents implements Listener {
 
   private void isFirstJoin(SurvivalPlayer survivalPlayer, final PlayerJoinEvent event) {
     if (survivalPlayer == null) { // First-Join
-      survivalPlayer = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 0, 20, null);
+      survivalPlayer = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 0,
+          Konst.ZONE_SIZE_DEFAULT, null);
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
       SurvivalData.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), survivalPlayer);
     }
@@ -67,7 +68,7 @@ public class PlayerConnectionEvents implements Listener {
   private void verarbeiteComplaints(final SurvivalPlayer survivalPlayer) {
     if (survivalPlayer.getComplaints().size() > 0) {
       survivalPlayer.getPlayer().sendMessage(Messages.COMPLAINT_INFO);
-      for (Complaint complaint : survivalPlayer.getComplaints()) {
+      for (final Complaint complaint : survivalPlayer.getComplaints()) {
         survivalPlayer.outputComplaint(complaint);
       }
     }

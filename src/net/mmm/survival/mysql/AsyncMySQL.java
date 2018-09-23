@@ -80,7 +80,7 @@ public class AsyncMySQL {
    * @param website Webseite
    */
   public void addVote(final UUID uuid, final String website) {
-    sql.update("INSERT INTO `Votes` (UUID, Time, Website) VALUES (" + uuid + ", " + System.currentTimeMillis() + ", " + website + ")");
+    sql.update("INSERT INTO Votes (UUID, Time, Website) VALUES (" + uuid + ", " + System.currentTimeMillis() + ", " + website + ")");
   }
 
   /**
@@ -92,7 +92,7 @@ public class AsyncMySQL {
     final Map<UUID, SurvivalPlayer> players = new HashMap<>();
 
     try (final Statement statement = getMySQL().conn.createStatement();
-         final ResultSet resultSet = statement.executeQuery("SELECT uuid, money, complaints, licences, votes, maxzone, home FROM SurvivalPlayer")) {
+         final ResultSet resultSet = statement.executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME FROM SurvivalPlayer")) {
       while (resultSet.next()) {
         final UUID uuid = generateUUID(UUID.fromString(resultSet.getString(1)));
         players.put(uuid, determinePlayer(resultSet, uuid));
@@ -111,10 +111,10 @@ public class AsyncMySQL {
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final int money = resultSet.getInt(2);
     final List<Complaint> complaints = determineComplaints(uuid);
-    final List<Licence> licences = determineLicences(resultSet.getString(4));
-    final short votes = (short) resultSet.getInt(5);
-    final int maxzone = resultSet.getInt(6);
-    final Location location = determineLocation(resultSet.getString(7));
+    final List<Licence> licences = determineLicences(resultSet.getString(3));
+    final short votes = (short) resultSet.getInt(4);
+    final int maxzone = resultSet.getInt(5);
+    final Location location = determineLocation(resultSet.getString(6));
 
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
   }
@@ -170,7 +170,7 @@ public class AsyncMySQL {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.conn
-        .prepareStatement("UPDATE SurvivalPlayer SET money=?, licences=?, votes=?, maxzone=?, home=? WHERE uuid=?")) {
+        .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=? WHERE UUID=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
         final StringBuilder licences = determineLicences(survivalPlayer);
@@ -197,8 +197,7 @@ public class AsyncMySQL {
 
 
     try (final PreparedStatement statement = sql.conn
-        .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE)" +
-            " VALUES ( ?, ?, ?, ?, ?)")) {
+        .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE) VALUES ( ?, ?, ?, ?, ?)")) {
       for (final SurvivalPlayer player : players) {
         for (final Complaint complaint : player.getComplaints()) {
           try {
@@ -251,7 +250,7 @@ public class AsyncMySQL {
    */
   public void createPlayer(final SurvivalPlayer survivalPlayer) {
     try (final PreparedStatement statement = sql.conn
-        .prepareStatement("INSERT INTO SurvivalPlayer (uuid, money, votes, maxzone) VALUES (?, ?, ?, ?)")) {
+        .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE) VALUES (?, ?, ?, ?)")) {
       statement.setString(1, survivalPlayer.getUuid().toString());
       statement.setInt(2, survivalPlayer.getMoney());
       statement.setInt(3, survivalPlayer.getVotes());
@@ -315,11 +314,10 @@ public class AsyncMySQL {
      * Erstellung einer Tabelle
      */
     public void createTables() {
-      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`Votes` (  `UUID` VARCHAR(40) NOT NULL,  `Time` " +
-          "VARCHAR(10) NOT NULL,  `Website` VARCHAR(40) NOT NULL);");
-      queryUpdate("CREATE TABLE IF NOT EXISTS `" + database + "`.`SurvivalPlayer` (  `uuid` VARCHAR(40) NOT NULL, " +
-          "`money` int(11), `complaints` varchar(10000), `licences` varchar(10000), `votes` int(11), `maxzone` " +
-          "int(11), `home` varchar(64))");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Votes " +
+          "(UUID varchar(40) NOT NULL, Time varchar(10) NOT NULL,  Website varchar(40) NOT NULL);");
+      queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer " +
+          "(UUID varchar(40) NOT NULL, MONEY int(11), LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
     }
 
     /**
