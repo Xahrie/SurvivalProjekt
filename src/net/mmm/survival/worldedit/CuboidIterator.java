@@ -10,8 +10,8 @@ import org.bukkit.block.Block;
  */
 public class CuboidIterator implements Iterator<Block> {
   private final int baseX, baseY, baseZ, sizeX, sizeY, sizeZ;
-  private int x, y, z;
   private final World w;
+  private int x, y, z;
 
   /**
    * Konstruktor

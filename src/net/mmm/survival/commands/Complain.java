@@ -21,7 +21,7 @@ public class Complain implements CommandExecutor {
   private static final int MINDESTANZ_ZEICHEN = 10;
 
   @Override
-  public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
       if (args.length < 1) {
         info(sender);
@@ -41,7 +41,7 @@ public class Complain implements CommandExecutor {
     return true;
   }
 
-  private void info(CommandSender sender) {
+  private void info(final CommandSender sender) {
     sender.sendMessage("§f Verfügbare Commands:");
     sender.sendMessage("§f add player reason: §8 Beschwerde hinzufuegen");
     sender.sendMessage("§f list [player/all]: §8 Beschwerden auflisten");
@@ -63,7 +63,7 @@ public class Complain implements CommandExecutor {
       final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
       sender.sendMessage(Messages.COMPLAINT_INFO);
       if (executor.getComplaints().size() > 0) {
-        for (Complaint complaint : executor.getComplaints()) {
+        for (final Complaint complaint : executor.getComplaints()) {
           executor.outputComplaint(complaint);
         }
       }
@@ -85,18 +85,18 @@ public class Complain implements CommandExecutor {
 
   private void outputComplaint(final SurvivalPlayer survivalPlayer, final Player sender) {
     if (survivalPlayer.getComplaints().size() > 0) {
-      Player player = survivalPlayer.getPlayer();
+      final Player player = survivalPlayer.getPlayer();
       if (player != null) {
         sender.sendMessage("§f┃ Über den Spieler §e" + player.getDisplayName() +
             " §f liegen §e" + survivalPlayer.getComplaints().size() + " §f Beschwerden vor:");
-        for (Complaint complaint : survivalPlayer.getComplaints()) {
+        for (final Complaint complaint : survivalPlayer.getComplaints()) {
           survivalPlayer.outputComplaint(complaint);
         }
       }
     }
   }
 
-  private void add(Player sender, String[] args) {
+  private void add(final Player sender, final String[] args) {
     final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
     final Player targetPlayer = SurvivalPlayer.getPlayer(sender, args[1]);
     if (targetPlayer != null) {
@@ -112,16 +112,16 @@ public class Complain implements CommandExecutor {
 
   private boolean checkComplaint(final SurvivalPlayer executor, final SurvivalPlayer target, final String reason) {
     //nur jede halbe Stunde reporten
-    Date now = new Date();
+    final Date now = new Date();
     if ((now.getTime() - executor.getLastComplaint().getTime()) < HALBE_STUNDE) {
       executor.getPlayer().sendMessage(Messages.COMPLAINT_TOO_FAST);
       return false;
     }
 
     //einen Spieler nur einmal pro Tag reporten
-    for (SurvivalPlayer targetCheck : SurvivalData.getInstance().getPlayers().values()) {
+    for (final SurvivalPlayer targetCheck : SurvivalData.getInstance().getPlayers().values()) {
       if (targetCheck.getUuid().equals(target.getUuid())) {
-        for (Complaint complaint : targetCheck.getComplaints()) {
+        for (final Complaint complaint : targetCheck.getComplaints()) {
           if (complaint.getOperator().equals(executor.getUuid()) && now.getTime() - complaint.getDate().getTime() < EIN_TAG) {
             executor.getPlayer().sendMessage(Messages.COMPLAINT_TOO_FAST_PLAYER);
             return false;
@@ -130,7 +130,7 @@ public class Complain implements CommandExecutor {
       }
     }
 
-    //Grund mindestens 20 Zeichen
+    //Grund mindestens 10 Zeichen
     if (reason.length() < MINDESTANZ_ZEICHEN) {
       executor.getPlayer().sendMessage(Messages.COMPLAINT_TOOSHORT);
       return false;

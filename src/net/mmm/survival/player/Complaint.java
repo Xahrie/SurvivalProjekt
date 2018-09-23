@@ -17,6 +17,8 @@ public class Complaint {
   /**
    * Konstruktor
    *
+   * @param uuid UUID des Spielers
+   * @param id Beschwerde-ID
    * @param reason Beschwerdegrund
    * @param operator Beschwerender
    * @param date Datum (bereits formatiert)

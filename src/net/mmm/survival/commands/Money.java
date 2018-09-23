@@ -1,7 +1,5 @@
 package net.mmm.survival.commands;
 
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
@@ -17,21 +15,20 @@ public class Money implements CommandExecutor {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
       final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor);
-      final Group group = BungeeGroupManager.getGroupManager().getGroup(executor);
 
-      checkArgumentLength(strings, executor, survivalPlayer, group);
+      checkArgumentLength(strings, executor, survivalPlayer);
     }
 
     return false;
   }
 
-  private void checkArgumentLength(final String[] strings, final Player executor, final SurvivalPlayer survivalPlayer, final Group group) {
+  private void checkArgumentLength(final String[] strings, final Player executor, final SurvivalPlayer survivalPlayer) {
     if (strings.length == 0) {
       evaluateZeroArguments(executor, survivalPlayer, executor.getDisplayName());
     } else if (strings.length == 1) {
-      evaluateOneArgument(strings, executor, group);
+      evaluateOneArgument(strings, executor);
     } else {
-      executor.sendMessage((CommandUtils.isOperator(executor, group)) ? Messages.USAGE_MONEY_COMMAND : Messages.USAGE_MONEY_COMMAND_ADMIN);
+      executor.sendMessage((CommandUtils.isOperator(executor)) ? Messages.USAGE_MONEY_COMMAND : Messages.USAGE_MONEY_COMMAND_ADMIN);
     }
   }
 
@@ -39,9 +36,9 @@ public class Money implements CommandExecutor {
     executor.sendMessage(Messages.PREFIX + "Kontostand von §e" + displayName + "§7: §e" + survivalPlayer.getMoney() + "€§7.");
   }
 
-  private void evaluateOneArgument(final String[] strings, final Player executor, final Group group) {
+  private void evaluateOneArgument(final String[] strings, final Player executor) {
     final SurvivalPlayer survivalPlayer;
-    if (CommandUtils.isOperator(executor, group)) {
+    if (CommandUtils.isOperator(executor)) {
       final Player target = Bukkit.getPlayer(strings[0]);
       survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
       evaluateZeroArguments(executor, survivalPlayer, target.getDisplayName());

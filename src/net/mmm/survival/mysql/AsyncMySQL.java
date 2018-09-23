@@ -48,7 +48,7 @@ public class AsyncMySQL {
    */
   public AsyncMySQL() {
     try {
-      sql = new MySQL(HOST, PORT, USER, PASSWORD, DATABASE);
+      sql = new MySQL();
       executor = Executors.newCachedThreadPool();
     } catch (final ClassNotFoundException | SQLException ex) {
       ex.printStackTrace();
@@ -120,7 +120,7 @@ public class AsyncMySQL {
   }
 
   private List<Complaint> determineComplaints(final UUID uuid) {
-    ArrayList<Complaint> complaints = new ArrayList<>();
+    final ArrayList<Complaint> complaints = new ArrayList<>();
 
     try (final Statement statement = getMySQL().conn.createStatement();
          final ResultSet resultSet = statement.executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
@@ -199,19 +199,19 @@ public class AsyncMySQL {
     try (final PreparedStatement statement = sql.conn
         .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE)" +
             " VALUES ( ?, ?, ?, ?, ?)")) {
-      for (SurvivalPlayer player : players) {
-        for (Complaint complaint : player.getComplaints()) {
+      for (final SurvivalPlayer player : players) {
+        for (final Complaint complaint : player.getComplaints()) {
           try {
             statement.setString(1, complaint.getUuid().toString());
             statement.setInt(2, complaint.getId());
             statement.setString(3, complaint.getReason());
             statement.setString(4, complaint.getOperator().toString());
-            java.util.Date utilDate = complaint.getDate();
-            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-            DateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+            final java.util.Date utilDate = complaint.getDate();
+            final java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+            final DateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
             statement.setString(5, df.format(sqlDate));
             statement.executeUpdate();
-          } catch (Exception e) {
+          } catch (final Exception e) {
             //Duplicate Id
           }
         }
@@ -273,28 +273,26 @@ public class AsyncMySQL {
    */
   public class MySQL {
 
+    final String database;
+    final String host;
+    final String password;
+    final String user;
     private final int port;
     private Connection conn;
-    String database, host, password, user;
 
     /**
      * Konstruktor
      *
-     * @param host Host
-     * @param port Port
-     * @param user Username
-     * @param password Passwort
-     * @param database Datenbank
      * @throws SQLException SQL-Ausnahme
      * @throws ClassNotFoundException Driver wurde nicht gefunden
      */
-    MySQL(final String host, final int port, final String user, final String password, final String database)
+    MySQL()
         throws SQLException, ClassNotFoundException {
-      this.host = host;
-      this.port = port;
-      this.user = user;
-      this.password = password;
-      this.database = database;
+      this.host = AsyncMySQL.HOST;
+      this.port = AsyncMySQL.PORT;
+      this.user = AsyncMySQL.USER;
+      this.password = AsyncMySQL.PASSWORD;
+      this.database = AsyncMySQL.DATABASE;
 
       this.openConnection();
     }

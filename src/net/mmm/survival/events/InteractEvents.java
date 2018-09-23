@@ -53,94 +53,6 @@ public class InteractEvents implements Listener {
   private static final Map<Player, BlockVector> loc1 = new HashMap<>(), loc2 = new HashMap<>();
   private static final Map<Player, List<Block>> show = new HashMap<>();
 
-  /**
-   * Wenn ein Spieler interagiert
-   *
-   * @param e PlayerInteractEvent
-   * @see org.bukkit.event.player.PlayerInteractEvent
-   */
-  @SuppressWarnings("deprecation")
-  @EventHandler
-  public void onInteract(final PlayerInteractEvent e) {
-    final Player player = e.getPlayer();
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
-
-    if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.STICK)) {
-      //Keine Zone vorhanden
-      if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
-        editZone(player, e);
-      } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
-        searchZone(player, e);
-      }
-    }
-
-  }
-
-  @SuppressWarnings("deprecation")
-  private void editZone(final Player player, final PlayerInteractEvent e) {
-    final Location loc = e.getClickedBlock().getLocation();
-
-    loc.setY(loc1.containsKey(player) ? 256 : 0);
-    isLocationSet(player, loc);
-    player.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(player) && loc2.containsKey(player) ? "2." : "1.") + " §7gesetzt.");
-    zoneScheduler(player, e);
-    if (loc1.containsKey(player) && loc2.containsKey(player)) {
-      createRegion(player);
-    }
-  }
-
-  private void isLocationSet(final Player player, final Location loc) {
-    if (loc1.containsKey(player)) {
-      loc2.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
-    } else {
-      loc1.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
-    }
-  }
-
-  @SuppressWarnings("deprecation")
-  private void zoneScheduler(final Player player, final PlayerInteractEvent e) {
-    Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
-
-      if (loc1.containsKey(player) && !loc2.containsKey(player)) {
-        final List<Block> blocks = new ArrayList<>();
-
-        player.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
-        final Location beacon = e.getClickedBlock().getLocation().subtract(0, 1, 0);
-        final Location ironblock = e.getClickedBlock().getLocation().subtract(0, 2, 0);
-
-        replaceBlocks(player, blocks, beacon, ironblock);
-
-        if (show.containsKey(player)) {
-          blocks.addAll(show.get(player));
-        }
-
-        show.put(player, blocks);
-      }
-
-    }, 10L);
-  }
-
-  @SuppressWarnings("deprecation")
-  private void replaceBlocks(final Player player, final List<Block> blocks, final Location beacon, final Location ironblock) {
-    player.sendBlockChange(beacon, Material.BEACON, (byte) 0);
-    player.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
-    blocks.add(beacon.getBlock());
-    blocks.add(ironblock.getBlock());
-
-    replace(player, blocks, ironblock);
-  }
-
-  @SuppressWarnings("deprecation")
-  private void replace(final Player player, final List<Block> blocks, final Location ironblock) {
-    IntStream.range(-1, 2).forEach(x ->
-        IntStream.range(-1, 2).forEach(z -> {
-          final Location block = ironblock.clone().add(x, 0, z);
-
-          player.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
-          blocks.add(block.getBlock());
-        }));
-  }
-
   private static void createRegion(final Player player) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
 
@@ -227,6 +139,94 @@ public class InteractEvents implements Listener {
     }
 
     return false;
+  }
+
+  /**
+   * Wenn ein Spieler interagiert
+   *
+   * @param e PlayerInteractEvent
+   * @see org.bukkit.event.player.PlayerInteractEvent
+   */
+  @SuppressWarnings("deprecation")
+  @EventHandler
+  public void onInteract(final PlayerInteractEvent e) {
+    final Player player = e.getPlayer();
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+
+    if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.STICK)) {
+      //Keine Zone vorhanden
+      if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
+        editZone(player, e);
+      } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
+        searchZone(player, e);
+      }
+    }
+
+  }
+
+  @SuppressWarnings("deprecation")
+  private void editZone(final Player player, final PlayerInteractEvent e) {
+    final Location loc = e.getClickedBlock().getLocation();
+
+    loc.setY(loc1.containsKey(player) ? 256 : 0);
+    isLocationSet(player, loc);
+    player.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(player) && loc2.containsKey(player) ? "2." : "1.") + " §7gesetzt.");
+    zoneScheduler(player, e);
+    if (loc1.containsKey(player) && loc2.containsKey(player)) {
+      createRegion(player);
+    }
+  }
+
+  private void isLocationSet(final Player player, final Location loc) {
+    if (loc1.containsKey(player)) {
+      loc2.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+    } else {
+      loc1.put(player, new BlockVector(loc.getX(), loc.getY(), loc.getZ()));
+    }
+  }
+
+  @SuppressWarnings("deprecation")
+  private void zoneScheduler(final Player player, final PlayerInteractEvent e) {
+    Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
+
+      if (loc1.containsKey(player) && !loc2.containsKey(player)) {
+        final List<Block> blocks = new ArrayList<>();
+
+        player.sendBlockChange(e.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
+        final Location beacon = e.getClickedBlock().getLocation().subtract(0, 1, 0);
+        final Location ironblock = e.getClickedBlock().getLocation().subtract(0, 2, 0);
+
+        replaceBlocks(player, blocks, beacon, ironblock);
+
+        if (show.containsKey(player)) {
+          blocks.addAll(show.get(player));
+        }
+
+        show.put(player, blocks);
+      }
+
+    }, 10L);
+  }
+
+  @SuppressWarnings("deprecation")
+  private void replaceBlocks(final Player player, final List<Block> blocks, final Location beacon, final Location ironblock) {
+    player.sendBlockChange(beacon, Material.BEACON, (byte) 0);
+    player.sendBlockChange(ironblock, Material.IRON_BLOCK, (byte) 0);
+    blocks.add(beacon.getBlock());
+    blocks.add(ironblock.getBlock());
+
+    replace(player, blocks, ironblock);
+  }
+
+  @SuppressWarnings("deprecation")
+  private void replace(final Player player, final List<Block> blocks, final Location ironblock) {
+    IntStream.range(-1, 2).forEach(x ->
+        IntStream.range(-1, 2).forEach(z -> {
+          final Location block = ironblock.clone().add(x, 0, z);
+
+          player.sendBlockChange(block, Material.IRON_BLOCK, (byte) 0);
+          blocks.add(block.getBlock());
+        }));
   }
 
   private void searchZone(final Player player, final PlayerInteractEvent e) {

@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
@@ -133,8 +131,7 @@ public class Zone implements CommandExecutor {
   }
 
   private void info(final Player player, final String[] args) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
-    if (CommandUtils.isOperator(player, group)) {
+    if (CommandUtils.isOperator(player)) {
       try {
         determinePlayerInfo(player, args[1]);
 
@@ -163,9 +160,7 @@ public class Zone implements CommandExecutor {
   }
 
   private void setLength(final Player player, final String[] args) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
-
-    if (CommandUtils.isOperator(player, group)) {
+    if (CommandUtils.isOperator(player)) {
       try {
         updateLength(player, args[1], Integer.valueOf(args[2]));
       } catch (final NumberFormatException ex) {

@@ -1,7 +1,5 @@
 package net.mmm.survival.commands;
 
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
@@ -24,9 +22,8 @@ public class Economy implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
-      final Group group = BungeeGroupManager.getGroupManager().getGroup(executor);
 
-      if (CommandUtils.isOperator(executor, group)) {
+      if (CommandUtils.isOperator(executor)) {
         checkCommandLength(strings, executor);
       }
     }
@@ -61,15 +58,15 @@ public class Economy implements CommandExecutor {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
     final int amount = CommandUtils.checkNumber(strings[2], executor);
 
-    if (argument.equals("set")) {
+    if (argument.equals("set")) { // Geld setzen
       updateMoney(executor, target, survivalPlayer, amount);
-    } else if (argument.equals("take")) {
+    } else if (argument.equals("take")) { // Geld wegnehmen
       if (amount <= survivalPlayer.getMoney()) {
         updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() - amount);
       }
-    } else if (argument.equals("reset")) {
+    } else if (argument.equals("reset")) { // Geld zuruecksetzen
       updateMoney(executor, target, survivalPlayer, 0);
-    } else if (argument.equals("add")) {
+    } else if (argument.equals("add")) { // Geld hinzufuegen
       updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() + amount);
     } else {
       executor.sendMessage(Messages.USAGE_ECONOMY_COMMAND);

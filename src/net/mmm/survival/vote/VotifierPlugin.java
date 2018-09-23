@@ -63,10 +63,10 @@ public class VotifierPlugin implements Listener {
     if (player != null) {
       return true;
     } else if (votes.containsKey(event.getVote().getUsername().toLowerCase())) {
-        votes.put(event.getVote().getUsername().toLowerCase(), votes.put(event.getVote().getUsername().toLowerCase(), add(votes.get(event
-            .getVote().getUsername().toLowerCase()), event.getVote())));
+      votes.put(event.getVote().getUsername().toLowerCase(), votes.put(event.getVote().getUsername().toLowerCase(), add(votes.get(event
+          .getVote().getUsername().toLowerCase()), event.getVote())));
     } else {
-        votes.put(event.getVote().getUsername().toLowerCase(), add(Collections.emptyList(), event.getVote()));
+      votes.put(event.getVote().getUsername().toLowerCase(), add(Collections.emptyList(), event.getVote()));
     }
     return false;
   }

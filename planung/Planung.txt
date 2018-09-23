@@ -1,10 +1,13 @@
-Plugins etc
+ToDo-Liste Survival-Projekt:
 
-TODO PaymentSystem, Autogeld fuer Farming etc (Abgie)
+Testphase:
+  Beschwerdesystem
+  PaymentSystem
 
-TODO Beschwerdesystem (Alice)
-
-TODO Grundstueck kann man spaeter mit Geld erweitern (Pas)
+In Arbeit:
+  Abgie   Autogeld fuer Farming etc
+  Alice   ?
+  PAS123  Grundstueck kann man spaeter mit Geld erweitern
 
 TODO Am Anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
 
@@ -14,5 +17,5 @@ TODO Lizenzen Portale, Extraitems etc (?)
 
 
 Builden
-TODO Spawn (Abgie, Alice, Pas)
 TODO Hotel (Abgie, Alice)
+TODO Spawn (Abgie, Alice, Pas)

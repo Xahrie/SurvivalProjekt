@@ -5,8 +5,6 @@ package net.mmm.survival.util;
  */
 public final class Messages {
   public static final String PREFIX = "§8┃ §eSurvival §7» ";
-
-  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   public static final String GAMEMODE_SURVIVAL = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) " +
       "§7gesetzt.";
   public static final String GAMEMODE_ADVENTURE = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) " +
@@ -15,16 +13,11 @@ public final class Messages {
   public static final String GAMEMODE_SPECTATOR = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) " +
       "§7gesetzt.";
   public static final String GAMEMODE_UNGUELTIG = "§4┃ Der eingegebene Spielmodus ist ungueltig";
-
   public static final String HOME_SET = "§8┃ §eSurvival §7» Du hast deinen Home-Punkt gesetzt.";
   public static final String NO_DUPLICATE_ZONE = "§8┃ §eSurvival §7» Du kannst keine Zone in einer bereits bestehenden Zone erstellen.";
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
-  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
   public static final String NO_ZONE_SET = "§8┃ §eSurvival §7» §cDu hast keine Zone.";
-  static final String NOT_A_NUMBER = "§8┃ §eSurvival §7» §cDu musst eine Zahl eingeben.";
-  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
   public static final String NOT_ENOUGH_MONEY = "§8┃ §eSurvival §7» §cDu hast nicht genuegend Geld auf deinem Konto.";
-  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";
   public static final String SPAWN_SET = "§8┃ §eSurvival §7» Du hast den §eSpawn §7gesetzt.";
   public static final String SPAWNZONE_FOUND = "§8┃ §eSurvival §7» Es wurde die Zone §eSpawnzone §7gefunden.";
@@ -55,14 +48,18 @@ public final class Messages {
       "nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§8┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
-
   /*
   Beschwerden
    */
   public static final String COMPLAINT_TOO_FAST = "§8┃ §eSurvival §7» §4┃ Du kannst dich nur alle 30 Minuten über Spieler beschweren.";
   public static final String COMPLAINT_TOO_FAST_PLAYER = "§8┃ §eSurvival §7» §4┃ Du kannst dich über diesen Spieler nur einmal pro Tag beschweren.";
   public static final String COMPLAINT_TOOSHORT = "§8┃ §eSurvival §7» §4┃ Eine Beschwerde muss mindestens 10 Zeichen lang sein.";
-  public static final String COMPLAINT_INFO =  "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
+  public static final String COMPLAINT_INFO = "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
+  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
+  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
+  static final String NOT_A_NUMBER = "§8┃ §eSurvival §7» §cDu musst eine Zahl eingeben.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
 
   /**
    * Instanz

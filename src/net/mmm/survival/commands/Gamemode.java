@@ -1,8 +1,7 @@
 package net.mmm.survival.commands;
 
 // Package-Stil???
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
@@ -25,9 +24,8 @@ public class Gamemode implements CommandExecutor {
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
       final Player executor = (Player) sender;
-      final Group group = BungeeGroupManager.getGroupManager().getGroup(executor);
 
-      if (CommandUtils.isOperator(executor, group)) {
+      if (CommandUtils.isOperator(executor)) {
         checkArgumentLength(args, executor);
       }
     }

@@ -8,9 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * /home Command
+ * /save Command
+ * <p>
+ * Nur fuer Testzwecke
  */
-public class Save extends Teleport implements CommandExecutor {
+public class Save implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.isOperator((Player) sender)) {

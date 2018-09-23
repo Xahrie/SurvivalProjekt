@@ -17,15 +17,14 @@ import org.bukkit.entity.Player;
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer {
+  private final List<Complaint> complaints;
+  private final Date lastComplaint;
+  private final List<Licence> licences;
   private boolean zonenedit, zonensearch, tamed, teleport;
-
   //<editor-fold desc="mysql parameter">
   private UUID uuid;
   private short votes;
   private int money, maxzone;
-  private List<Complaint> complaints;
-  private Date lastComplaint;
-  private List<Licence> licences;
   private Location home;
   //</editor-fold>
 
@@ -57,8 +56,8 @@ public class SurvivalPlayer {
     this.lastComplaint = new Date();
   }
 
-  public static Player getPlayer(Player executor, String playerName) {
-    Player player = Bukkit.getPlayer(playerName);
+  public static Player getPlayer(final Player executor, final String playerName) {
+    final Player player = Bukkit.getPlayer(playerName);
     if (player == null) {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
@@ -85,12 +84,12 @@ public class SurvivalPlayer {
     return player;
   }
 
-  public void addComplaint(Complaint complaint) {
+  public void addComplaint(final Complaint complaint) {
     complaints.add(complaint);
     outputComplaint(complaint);
   }
 
-  public void outputComplaint(Complaint complaint) {
+  public void outputComplaint(final Complaint complaint) {
     getPlayer().sendMessage(Messages.PREFIX + "§c┃ Der Spieler: " + SurvivalData.getInstance().getPlayers()
         .get(complaint.getOperator()).getPlayer().getDisplayName() + " hat sich am " +
         complaint.outputDate() + " über dich beschwert: " + complaint.getReason());
@@ -182,5 +181,4 @@ public class SurvivalPlayer {
   }
 
   //</editor-fold>
-
 }

@@ -30,23 +30,6 @@ public final class CommandUtils {
    * besitzt der Spieler die noetigen Gruppen oder ist Op
    *
    * @param player Player
-   * @param group Group
-   * @return boolean
-   */
-  public static boolean isOperator(final Player player, final Group group) {
-    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
-      player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
-      return false;
-    }
-
-    return true;
-  }
-
-
-  /**
-   * besitzt der Spieler die noetigen Gruppen oder ist Op
-   *
-   * @param player Player
    * @return boolean
    */
   public static boolean isOperator(final Player player) {
@@ -94,7 +77,9 @@ public final class CommandUtils {
    *
    * @param input Eingabe
    * @param executor Ausfuehrender Spieler
-   * @return ja -> Eingabe ist eine ganze Zahl
+   * @return !=0 : Eingabe ist eine ganze Zahl (Integer) ; ==0 : NumberFormatException (keine ganze
+   * Zahl)
+   * @see java.lang.NumberFormatException
    */
   public static int checkNumber(final String input, final Player executor) {
     try {
