@@ -168,8 +168,8 @@ public class AsyncMySQL {
   public Map<UUID, String> getPlayerCache() {
     final Map<UUID, String> cache = new HashMap<>();
 
-    try(final Statement statement = getMySQL().conn.createStatement();
-        final ResultSet resultSet = statement.executeQuery("SELECT UUID, name FROM Playerstatus")) {
+    try (final Statement statement = getMySQL().conn.createStatement();
+         final ResultSet resultSet = statement.executeQuery("SELECT UUID, name FROM Playerstatus")) {
       while (resultSet.next()) {
         final UUID uuid = UUID.fromString(resultSet.getString(1));
         final String name = resultSet.getString(2);

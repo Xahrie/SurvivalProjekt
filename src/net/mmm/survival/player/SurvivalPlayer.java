@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.farming.Statistics;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Location;
@@ -42,10 +43,11 @@ public class SurvivalPlayer extends HotbarMessager {
     return null;
   }
 
-  private final List<Complaint> complaints;
-  private final Date lastComplaint;
-  private final List<Licence> licences;
   private boolean zonenedit, zonensearch, tamed, teleport;
+  private final Date lastComplaint;
+  private final List<Complaint> complaints;
+  private final List<Licence> licences;
+  private final Statistics stats;
   //<editor-fold desc="mysql parameter">
   private UUID uuid;
   private short votes;
@@ -80,6 +82,7 @@ public class SurvivalPlayer extends HotbarMessager {
     this.zonensearch = false;
     this.tamed = false;
     this.lastComplaint = new Date();
+    this.stats = new Statistics();
   }
 
   public Player getPlayer() {
@@ -97,11 +100,11 @@ public class SurvivalPlayer extends HotbarMessager {
         complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
-
   public void sendHotbarMessage(final String message) {
     sendHotBarMessage(getPlayer(), message);
   }
   //<editor-fold desc="getter and setter">
+
   public List<Complaint> getComplaints() {
     return complaints;
   }
@@ -124,6 +127,10 @@ public class SurvivalPlayer extends HotbarMessager {
 
   public int getMoney() {
     return money;
+  }
+
+  public Statistics getStats() {
+    return stats;
   }
 
   public UUID getUuid() {

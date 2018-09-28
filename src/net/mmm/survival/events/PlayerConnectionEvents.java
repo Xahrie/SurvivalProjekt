@@ -3,8 +3,8 @@ package net.mmm.survival.events;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import net.mmm.survival.Survival;
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.ItemManager;
@@ -12,7 +12,6 @@ import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Scoreboards;
 import net.mmm.survival.vote.VotifierPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -88,6 +87,7 @@ public class PlayerConnectionEvents implements Listener {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
 
     survivalPlayer.setZonensearch(false);
+    StatsManager.saveStats(survivalPlayer);
     e.setQuitMessage(null);
   }
 

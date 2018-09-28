@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="85.0">net.mmm.survival.farming.statistics.WalkLength</node>
+    <node x="0.0" y="165.0">net.mmm.survival.farming.PlayerStats</node>
+    <node x="176.0" y="85.0">net.mmm.survival.farming.statistics.OnlineTime</node>
+    <node x="195.0" y="165.0">net.mmm.survival.events.FarmingEvents</node>
+    <node x="0.0" y="410.0">net.mmm.survival.farming.Type</node>
+    <node x="217.0" y="330.0">net.mmm.survival.farming.StatsManager</node>
+    <node x="0.0" y="330.0">net.mmm.survival.player.SurvivalPlayer</node>
+    <node x="103.0" y="0.0">net.mmm.survival.farming.statistics.Statistic</node>
+    <node x="9.0" y="250.0">net.mmm.survival.farming.Statistics</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.statistics.Statistic">
+      <point x="0.0" y="-17.5" />
+      <point x="252.0" y="60.0" />
+      <point x="196.0" y="60.0" />
+      <point x="31.0" y="17.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.farming.statistics.Statistic">
+      <point x="0.0" y="-17.5" />
+      <point x="78.0" y="60.0" />
+      <point x="134.0" y="60.0" />
+      <point x="-31.0" y="17.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.Statistics" target="net.mmm.survival.farming.PlayerStats">
+      <point x="0.0" y="-17.5" />
+      <point x="0.0" y="17.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.611287254280279" x="691.5" y="778.5" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

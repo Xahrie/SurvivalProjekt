@@ -1,6 +1,7 @@
 package net.mmm.survival.commands;
 
 import net.mmm.survival.Survival;
+import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Location;
@@ -43,6 +44,7 @@ public class Teleport {
             executor.getPlayer().playSound(executor.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
           }
           if (i == 0) {
+            executor.getStats().getStatistic(Type.WALK_LENGTH_CM).update(executor);
             executor.getPlayer().playSound(executor.getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 4.0F, 5.0F);
             executor.getPlayer().teleport(loc);
             executor.setTeleport(false);
