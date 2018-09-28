@@ -1,7 +1,6 @@
 package net.mmm.survival.automoney;
 
 import net.mmm.survival.player.SurvivalPlayer;
-import org.bukkit.Statistic;
 
 /**
  * @see org.bukkit.Statistic
@@ -11,9 +10,6 @@ public class Playerstats {
 
   public Playerstats(SurvivalPlayer survivalPlayer) {
     this.survivalPlayer = survivalPlayer;
-
-
-    Statistic horse = Statistic.HORSE_ONE_CM;
   }
 
   /**
