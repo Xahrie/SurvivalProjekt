@@ -3,6 +3,7 @@ package net.mmm.survival.events;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import net.mmm.survival.Survival;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.SurvivalPlayer;
@@ -11,6 +12,7 @@ import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Scoreboards;
 import net.mmm.survival.vote.VotifierPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,7 +35,8 @@ public class PlayerConnectionEvents implements Listener {
    */
   @EventHandler
   public void onJoin(final PlayerJoinEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
+    SurvivalData.getInstance().getAsyncMySQL().updatePlayer(e.getPlayer()); // muss oben stehen
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
 
     isFirstJoin(survivalPlayer, e);
     e.setJoinMessage(null);
@@ -82,7 +85,7 @@ public class PlayerConnectionEvents implements Listener {
    */
   @EventHandler
   public void onQuit(final PlayerQuitEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
 
     survivalPlayer.setZonensearch(false);
     e.setQuitMessage(null);

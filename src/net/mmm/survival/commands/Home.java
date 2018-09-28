@@ -16,7 +16,7 @@ public class Home extends Teleport implements CommandExecutor {
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
       final Player player = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
 
       if (checkHome(survivalPlayer) && CommandUtils.checkTeleport(survivalPlayer)) {
         super.teleport(player, survivalPlayer.getHome());

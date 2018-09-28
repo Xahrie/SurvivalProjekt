@@ -2,6 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -14,7 +15,7 @@ public class Pay implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
-      final SurvivalPlayer survivalExecutor = SurvivalPlayer.findSurvivalPlayer(executor);
+      final SurvivalPlayer survivalExecutor = SurvivalPlayer.findSurvivalPlayer(executor, executor.getName());
       checkArgumentLength(strings, executor, survivalExecutor);
     }
 
@@ -30,18 +31,18 @@ public class Pay implements CommandExecutor {
   }
 
   private void evaluateTwoArguments(final String[] strings, final Player executor, final SurvivalPlayer survivalExecutor) {
-    final Player target = Bukkit.getPlayer(strings[0]);
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(target);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, strings[0]);
     final int amount = CommandUtils.checkNumber(strings[1], executor);
 
-    checkMoney(executor, survivalExecutor, target, survivalPlayer, amount);
+    checkMoney(executor, survivalExecutor, survivalPlayer.getPlayer(), survivalPlayer, amount);
   }
 
-  private void checkMoney(final Player executor, final SurvivalPlayer survivalExecutor, final Player target, final SurvivalPlayer survivalPlayer, final int amount) {
+  private void checkMoney(final Player executor, final SurvivalPlayer survivalExecutor, final Player target,
+                          final SurvivalPlayer survivalPlayer, final int amount) {
     if (amount <= survivalExecutor.getMoney()) {
       survivalPlayer.setMoney(survivalPlayer.getMoney() + amount);
       survivalExecutor.setMoney(survivalExecutor.getMoney() - amount);
-      executor.sendMessage(Messages.PREFIX + "Du hast " + target.getDisplayName() + amount + "€ gezahlt.");
+      executor.sendMessage(Messages.PREFIX + "Du hast " + target.getDisplayName() + amount + Konst.CURRENCY + " gezahlt.");
     } else {
       executor.sendMessage(Messages.NOT_ENOUGH_MONEY);
     }

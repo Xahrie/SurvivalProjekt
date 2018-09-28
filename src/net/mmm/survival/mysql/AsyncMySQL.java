@@ -25,6 +25,7 @@ import net.mmm.survival.player.SurvivalPlayer;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 /**
  * Verwaltung der MySQL-Datenbank-Verbindung
@@ -94,7 +95,7 @@ public class AsyncMySQL {
     try (final Statement statement = getMySQL().conn.createStatement();
          final ResultSet resultSet = statement.executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME FROM SurvivalPlayer")) {
       while (resultSet.next()) {
-        final UUID uuid = generateUUID(UUID.fromString(resultSet.getString(1)));
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
         players.put(uuid, determinePlayer(resultSet, uuid));
       }
     } catch (final SQLException ex) {
@@ -102,10 +103,6 @@ public class AsyncMySQL {
     }
 
     return players;
-  }
-
-  private UUID generateUUID(final UUID uuid) {
-    return uuid;
   }
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
@@ -161,6 +158,43 @@ public class AsyncMySQL {
       location = new Location(Bukkit.getWorld("world"), x, y, z);
     }
     return location;
+  }
+
+  /**
+   * Liste mit allen Spieler auf diesem Server abfragen
+   *
+   * @return Playerliste
+   */
+  public Map<UUID, String> getPlayerCache() {
+    final Map<UUID, String> cache = new HashMap<>();
+
+    try(final Statement statement = getMySQL().conn.createStatement();
+        final ResultSet resultSet = statement.executeQuery("SELECT UUID, name FROM Playerstatus")) {
+      while (resultSet.next()) {
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
+        final String name = resultSet.getString(2);
+        cache.put(uuid, name);
+      }
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+
+    return cache;
+  }
+
+  public void updatePlayer(final Player player) {
+    final String qry = SurvivalData.getInstance().getPlayers().containsKey(player.getUniqueId()) ?
+        "UPDATE Playerstatus SET name=? WHERE UUID=?" : "INSERT INTO Playerstatus (name, UUID) VALUES (?, ?)";
+
+    try (final PreparedStatement statement = sql.conn
+        .prepareStatement(qry)) {
+      statement.setString(1, player.getName());
+      statement.setString(2, player.getUniqueId().toString());
+      statement.executeUpdate();
+    } catch (final SQLException ex) {
+      ex.printStackTrace();
+    }
+    SurvivalData.getInstance().getPlayerCache().put(player.getUniqueId(), player.getName());
   }
 
   /**
@@ -314,10 +348,13 @@ public class AsyncMySQL {
      * Erstellung einer Tabelle
      */
     public void createTables() {
-      queryUpdate("CREATE TABLE IF NOT EXISTS Votes " +
-          "(UUID varchar(40) NOT NULL, Time varchar(10) NOT NULL,  Website varchar(40) NOT NULL);");
-      queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer " +
-          "(UUID varchar(40) NOT NULL, MONEY int(11), LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID varchar(40) NOT NULL, Time varchar(10) " +
+          "NOT NULL, Website varchar(40) NOT NULL);");
+      queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer (UUID varchar(40) NOT NULL, MONEY " +
+          "int(11), LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Playerstatus (id int PRIMARY KEY AUTO_INCREMENT, UUID" +
+          " VARCHAR(45), name VARCHAR(20), online int(1), lastonline timestamp, firstjoin timestamp" +
+          ", ip VARCHAR(20));");
     }
 
     /**

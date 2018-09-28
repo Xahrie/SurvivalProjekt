@@ -2,15 +2,16 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
-import org.bukkit.Bukkit;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * /economy-Command (get, take, set, reset)
+ * /eco-Command (get, take, set, reset)
  * <p>
  * /eco set Name amount
  * /eco take Name amount
@@ -22,7 +23,6 @@ public class Economy implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
-
       if (CommandUtils.isOperator(executor)) {
         checkCommandLength(args, executor);
       }
@@ -42,11 +42,11 @@ public class Economy implements CommandExecutor {
   }
 
   private void evaluateOneArgument(final String string, final Player executor) { /* /eco <Name> */
-    final Player target = SurvivalPlayer.getPlayer(executor, string);
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(string);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, string);
     if (survivalPlayer != null) {
       final int money = survivalPlayer.getMoney();
-      executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + target.getDisplayName() + "§7 hat §e" + money + "€§7 auf dem Konto.");
+      executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + survivalPlayer.getPlayer()
+          .getDisplayName() + "§7 hat §e" + money + Konst.CURRENCY + "§7 auf dem Konto.");
     } else {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
@@ -54,16 +54,15 @@ public class Economy implements CommandExecutor {
 
   private void evaluateThreeArguments(final String[] strings, final Player executor) {
     final String argument = strings[0];
-    final Player target = Bukkit.getPlayer(strings[1]);
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(strings[1]);
+    final Player target = UUIDUtils.getPlayer(strings[1]);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, strings[1]);
     final int amount = CommandUtils.checkNumber(strings[2], executor);
 
     if (argument.equals("set")) { // Geld setzen
       updateMoney(executor, target, survivalPlayer, amount);
     } else if (argument.equals("take")) { // Geld wegnehmen
-      if (amount <= survivalPlayer.getMoney()) {
+      if (amount <= survivalPlayer.getMoney())
         updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() - amount);
-      }
     } else if (argument.equals("reset")) { // Geld zuruecksetzen
       updateMoney(executor, target, survivalPlayer, 0);
     } else if (argument.equals("add")) { // Geld hinzufuegen
@@ -76,8 +75,10 @@ public class Economy implements CommandExecutor {
   private void updateMoney(final Player executor, final Player target, final SurvivalPlayer survivalPlayer, final int amount) {
     survivalPlayer.setMoney(amount);
     if (target.isOnline()) {
-      target.sendMessage(Messages.PREFIX + "Dein Kontostand wurde auf §e" + survivalPlayer.getMoney() + "€§7 gesetzt.");
+      target.sendMessage(Messages.PREFIX + "Dein Kontostand wurde auf §e" + survivalPlayer.getMoney() +
+          Konst.CURRENCY + "§7 gesetzt.");
     }
-    executor.sendMessage(Messages.PREFIX + "Du hast den Kontostand von " + target.getDisplayName() + " auf " + survivalPlayer.getMoney() + "€ gesetzt.");
+    executor.sendMessage(Messages.PREFIX + "Du hast den Kontostand von " + target.getDisplayName() +
+        " auf " + survivalPlayer.getMoney() + Konst.CURRENCY + " gesetzt.");
   }
 }

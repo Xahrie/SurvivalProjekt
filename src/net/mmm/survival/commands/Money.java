@@ -2,6 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +14,7 @@ public class Money implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor);
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, executor.getName());
 
       checkArgumentLength(strings, executor, survivalPlayer);
     }
@@ -32,17 +33,13 @@ public class Money implements CommandExecutor {
   }
 
   private void evaluateZeroArguments(final Player executor, final SurvivalPlayer survivalPlayer, final String displayName) {
-    executor.sendMessage(Messages.PREFIX + "Kontostand von §e" + displayName + "§7: §e" + survivalPlayer.getMoney() + "€§7.");
+    executor.sendMessage(Messages.PREFIX + "Kontostand von §e" + displayName + "§7: §e" + survivalPlayer.getMoney() + Konst.CURRENCY + "§7.");
   }
 
   private void evaluateOneArgument(final String[] strings, final Player executor) {
-    final SurvivalPlayer survivalPlayer;
-    if (CommandUtils.isOperator(executor)) {
-      final Player target = SurvivalPlayer.getPlayer(executor, strings[0]);
-      survivalPlayer = SurvivalPlayer.findSurvivalPlayer(strings[0]);
-      if (survivalPlayer != null) {
-        evaluateZeroArguments(executor, survivalPlayer, target.getDisplayName());
-      }
+    final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(executor, strings[0]);
+    if (target != null) {
+      evaluateZeroArguments(executor, target, target.getPlayer().getDisplayName());
     }
   }
 

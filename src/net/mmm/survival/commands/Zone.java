@@ -11,6 +11,7 @@ import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Regions;
 import net.mmm.survival.util.UUIDFetcher;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,9 +43,9 @@ public class Zone implements CommandExecutor {
 
   private void evaluateOneArgument(final Player player, final String[] args) {
     if (args[0].equalsIgnoreCase("create")) {
-      createZone(SurvivalPlayer.findSurvivalPlayer(player));
+      createZone(SurvivalPlayer.findSurvivalPlayer(player, player.getName()));
     } else if (args[0].equalsIgnoreCase("search")) {
-      searchZone(SurvivalPlayer.findSurvivalPlayer(player));
+      searchZone(SurvivalPlayer.findSurvivalPlayer(player, player.getName()));
     } else if (args[0].equalsIgnoreCase("delete")) {
       delete(player);
     } else if (args[0].equalsIgnoreCase("info")) {
@@ -98,7 +99,7 @@ public class Zone implements CommandExecutor {
     UUIDFetcher.getUUID(arg, uuid -> UUIDFetcher.getName(uuid, name -> {
       final ProtectedRegion region = Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false);
       if (region != null && !region.getMembers().contains(uuid)) {
-        region.getMembers().addPlayer(Bukkit.getPlayer(arg).getUniqueId());
+        region.getMembers().addPlayer(UUIDUtils.getPlayer(arg).getUniqueId());
         isAlreadyMember(player, name, Messages.PREFIX, " §7Du hast §e", " §7zu deiner Zone hinzugefügt.");
       } else {
         isAlreadyMember(player, name, Messages.PREFIX, " §e", " §7ist bereits Mitglied deiner Zone.");

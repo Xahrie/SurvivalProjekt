@@ -49,7 +49,7 @@ public class LocationChangeEvents implements Listener {
    */
   @EventHandler
   public void onMove(final PlayerMoveEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer());
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
 
     survivalPlayer.setTeleport(false);
   }

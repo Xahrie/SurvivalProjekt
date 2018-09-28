@@ -24,7 +24,6 @@ public class Navi implements CommandExecutor {
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
       final Player player = (Player) sender;
-
       checkArguments(player, args);
     }
 

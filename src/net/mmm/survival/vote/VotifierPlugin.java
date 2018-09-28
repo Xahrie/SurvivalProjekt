@@ -53,7 +53,7 @@ public class VotifierPlugin implements Listener {
   }
 
   private void updateVotes(final Player player) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
     survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
     survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD);
     player.getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList(Messages.VOTE_REWARD)));

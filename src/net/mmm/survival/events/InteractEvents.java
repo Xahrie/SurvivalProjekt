@@ -21,7 +21,6 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.mmm.survival.Survival;
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.player.Hotbar;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Regions;
@@ -54,7 +53,7 @@ public class InteractEvents implements Listener {
   private static final Map<Player, List<Block>> show = new HashMap<>();
 
   private static void createRegion(final Player player) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
 
     new Thread(() -> {
       RegionManager manager = SurvivalData.getInstance().getDynmap().getRegionManager();
@@ -117,7 +116,7 @@ public class InteractEvents implements Listener {
       } catch (final StorageException ex) {
         ex.printStackTrace();
       }
-      Hotbar.send(survivalPlayer.getPlayer(), "§7Du hast erfolgreich deine Zone erstellt.");
+      survivalPlayer.sendHotbarMessage("§7Du hast erfolgreich deine Zone erstellt.");
     }
   }
 
@@ -151,7 +150,7 @@ public class InteractEvents implements Listener {
   @EventHandler
   public void onInteract(final PlayerInteractEvent e) {
     final Player player = e.getPlayer();
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
 
     if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getItem() != null && e.getItem().getType().equals(Material.STICK)) {
       //Keine Zone vorhanden
@@ -313,8 +312,9 @@ public class InteractEvents implements Listener {
    */
   @EventHandler
   public void onInteractEntity(final PlayerInteractEntityEvent e) {
-    if (SurvivalPlayer.findSurvivalPlayer(e.getPlayer()).isTamed()) {
-      isTamed((Tameable) e.getRightClicked(), e, SurvivalPlayer.findSurvivalPlayer(e.getPlayer()));
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
+    if (survivalPlayer.isTamed()) {
+      isTamed((Tameable) e.getRightClicked(), e, survivalPlayer);
     }
   }
 

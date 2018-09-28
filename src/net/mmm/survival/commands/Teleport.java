@@ -20,7 +20,7 @@ public class Teleport {
    * @param loc Target-Location
    */
   void teleport(final Player player, final Location loc) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
     survivalPlayer.setTeleport(true);
     countdown(loc, survivalPlayer);
   }

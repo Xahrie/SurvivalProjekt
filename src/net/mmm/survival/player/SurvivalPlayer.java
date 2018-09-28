@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.util.Messages;
-import org.bukkit.Bukkit;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -16,56 +16,30 @@ import org.bukkit.entity.Player;
  *
  * @author BlueIronGirl, Abgie
  */
-public class SurvivalPlayer {
+public class SurvivalPlayer extends HotbarMessager {
   /**
    * Ermittle den SurvivalPlayer aus dem SpielerCache
-   *
-   * @param player Spieler
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
-   */
-  public static SurvivalPlayer findSurvivalPlayer(final Player player) {
-    UUID uuid = player.getUniqueId();
-
-    final SurvivalPlayer survivalPlayer = SurvivalData.getInstance().getPlayers().get(uuid);
-    if (survivalPlayer == null) {
-
-    }
-
-    return survivalPlayer;
-  }
-
-  /**
-   * Ermittle den SurvivalPlayer aus dem SpielerCache
-   *
-   * @param playerName Spielername+-
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
-   */
-  public static SurvivalPlayer findSurvivalPlayer(final String playerName) {
-    final UUID uuid;
-    if (Bukkit.getPlayer(playerName) != null) {
-      uuid = Bukkit.getPlayer(playerName).getUniqueId();
-    } else {
-      uuid = Bukkit.getOfflinePlayer(playerName).getUniqueId();
-    }
-
-    return SurvivalData.getInstance().getPlayers().get(uuid);
-  }
-
-  /**
-   * Spieler bestimmen
    *
    * @param executor Ausfuehrender Spieler
    * @param playerName Spielername
-   * @return Spieler
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
    */
-  public static Player getPlayer(final Player executor, final String playerName) {
-    Player player = Bukkit.getPlayer(playerName);
-    if (player == null) {
+  public static SurvivalPlayer findSurvivalPlayer(final Player executor, final String playerName) {
+    final SurvivalPlayer survivalPlayer = determinePlayer(playerName);
+    if (survivalPlayer == null) {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
-
-      player = Bukkit.getOfflinePlayer(playerName).getPlayer();
     }
-    return player;
+    return survivalPlayer;
+  }
+
+  private static SurvivalPlayer determinePlayer(final String playerName) {
+    if (SurvivalData.getInstance().getPlayerCache().containsValue(playerName)) {
+      final UUID uuid = UUIDUtils.getUUID(playerName);
+      if (SurvivalData.getInstance().getPlayers().containsKey(uuid)) {
+        return SurvivalData.getInstance().getPlayers().get(uuid);
+      }
+    }
+    return null;
   }
 
   private final List<Complaint> complaints;
@@ -109,11 +83,7 @@ public class SurvivalPlayer {
   }
 
   public Player getPlayer() {
-    Player player = Bukkit.getPlayer(uuid);
-    if (player == null) {
-      player = Bukkit.getOfflinePlayer(uuid).getPlayer();
-    }
-    return player;
+    return UUIDUtils.getPlayer(this.uuid);
   }
 
   public void addComplaint(final Complaint complaint) {
@@ -127,89 +97,93 @@ public class SurvivalPlayer {
         complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
+
+  public void sendHotbarMessage(final String message) {
+    sendHotBarMessage(getPlayer(), message);
+  }
   //<editor-fold desc="getter and setter">
   public List<Complaint> getComplaints() {
     return complaints;
-  }
-
-  public List<Licence> getLicences() {
-    return licences;
-  }
-
-  public UUID getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(final UUID uuid) {
-    this.uuid = uuid;
-  }
-
-  public int getMoney() {
-    return money;
-  }
-
-  public void setMoney(final int money) {
-    this.money = money;
-  }
-
-  public short getVotes() {
-    return votes;
-  }
-
-  public void setVotes(final short votes) {
-    this.votes = votes;
-  }
-
-  public boolean isTeleport() {
-    return teleport;
-  }
-
-  public void setTeleport(final boolean teleport) {
-    this.teleport = teleport;
-  }
-
-  public boolean isZonenedit() {
-    return zonenedit;
-  }
-
-  public void setZonenedit(final boolean zonenedit) {
-    this.zonenedit = zonenedit;
-  }
-
-  public boolean isZonensearch() {
-    return zonensearch;
-  }
-
-  public void setZonensearch(final boolean zonensearch) {
-    this.zonensearch = zonensearch;
-  }
-
-  public boolean isTamed() {
-    return tamed;
-  }
-
-  public void setTamed(final boolean tamed) {
-    this.tamed = tamed;
-  }
-
-  public int getMaxzone() {
-    return maxzone;
-  }
-
-  public void setMaxzone(final int maxzone) {
-    this.maxzone = maxzone;
   }
 
   public Location getHome() {
     return home;
   }
 
-  public void setHome(final Location home) {
-    this.home = home;
-  }
-
   public Date getLastComplaint() {
     return lastComplaint;
+  }
+
+  public List<Licence> getLicences() {
+    return licences;
+  }
+
+  public int getMaxzone() {
+    return maxzone;
+  }
+
+  public int getMoney() {
+    return money;
+  }
+
+  public UUID getUuid() {
+    return uuid;
+  }
+
+  public short getVotes() {
+    return votes;
+  }
+
+  public boolean isTamed() {
+    return tamed;
+  }
+
+  public boolean isTeleport() {
+    return teleport;
+  }
+
+  public boolean isZonenedit() {
+    return zonenedit;
+  }
+
+  public boolean isZonensearch() {
+    return zonensearch;
+  }
+
+  public void setMaxzone(final int maxzone) {
+    this.maxzone = maxzone;
+  }
+
+  public void setMoney(final int money) {
+    this.money = money;
+  }
+
+  public void setUuid(final UUID uuid) {
+    this.uuid = uuid;
+  }
+
+  public void setVotes(final short votes) {
+    this.votes = votes;
+  }
+
+  public void setTamed(final boolean tamed) {
+    this.tamed = tamed;
+  }
+
+  public void setTeleport(final boolean teleport) {
+    this.teleport = teleport;
+  }
+
+  public void setZonenedit(final boolean zonenedit) {
+    this.zonenedit = zonenedit;
+  }
+
+  public void setZonensearch(final boolean zonensearch) {
+    this.zonensearch = zonensearch;
+  }
+
+  public void setHome(final Location home) {
+    this.home = home;
   }
 
   //</editor-fold>

@@ -25,6 +25,8 @@ import net.mmm.survival.events.EntityEvents;
 import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
+import net.mmm.survival.player.SurvivalPlayer;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.WorldCreator;
@@ -59,16 +61,34 @@ public class Survival extends JavaPlugin {
     createFarmwelt();
   }
 
+  /**
+   * Wird bei der Deaktivierung des Servers durchgefuehrt
+   */
+  public void onDisable() {
+    Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet."));
+    save();
+    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
+    if (SurvivalData.getInstance().getDynmap() != null) {
+      SurvivalData.getInstance().getDynmap().onDisable(); /* Disable von Dynmap */
+    }
+  }
+
+
   private SurvivalData createInstanceAndData() {
     server = this;
     return SurvivalData.getInstance();
   }
 
   private void setupPlugin(final SurvivalData survivalData) {
-    survivalData.getAsyncMySQL().getMySQL().createTables(); /* Tabellen erzeugen */
-    registerEvents(); /* Events registrieren */
-    registerCommands(); /* Commands registrieren */
-    registerDynmap(survivalData); /* Dynmap registrieren */
+    survivalData.getAsyncMySQL().getMySQL().createTables(); // Tabellen erzeugen
+    registerEvents(); // Events registrieren
+    registerCommands(); // Commands registrieren
+    registerDynmap(survivalData); // Dynmap registrieren
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(Survival.getInstance(), () ->
+            Bukkit.getOnlinePlayers().forEach(player ->
+                SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage("Money: " +
+                    SurvivalPlayer.findSurvivalPlayer(player, player.getName()).getMoney() + Konst.CURRENCY))
+        , 20L, 10*20L);
   }
 
   private void registerEvents() {
@@ -92,18 +112,6 @@ public class Survival extends JavaPlugin {
   private void createFarmwelt() {
     if (Bukkit.getWorlds().contains(Bukkit.getWorld("farmwelt"))) {
       Bukkit.createWorld(new WorldCreator("farmwelt"));
-    }
-  }
-
-  /**
-   * Wird bei der Deaktivierung des Servers durchgefuehrt
-   */
-  public void onDisable() {
-    Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet."));
-    save();
-    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
-    if (SurvivalData.getInstance().getDynmap() != null) {
-      SurvivalData.getInstance().getDynmap().onDisable(); /* Disable von Dynmap */
     }
   }
 

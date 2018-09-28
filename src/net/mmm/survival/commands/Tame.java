@@ -15,7 +15,7 @@ public class Tame implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(sender)) {
-      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) sender);
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) sender, sender.getName());
       editTameStatus(executor);
     }
 
