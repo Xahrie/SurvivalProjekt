@@ -128,7 +128,7 @@ public class Survival extends JavaPlugin {
           if (counter.get() % 60 == 0) {
             StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
           }
-          if (counter.get() % 5 == 0) {
+          if (counter.get() % 5 == 0) { //dauerhaft Geldwert anzeigen
             Bukkit.getOnlinePlayers().forEach(player ->
                 SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
                     "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())

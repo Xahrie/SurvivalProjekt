@@ -17,7 +17,7 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public class OnlineTime extends Statistic {
-  private final Set<Long> activeMinutes = new HashSet<>();
+  private final Set<Long> addedMinutes = new HashSet<>(); //Pro Minute nur einmal Wert erhoehen
 
   /**
    * Konstruktor
@@ -36,24 +36,17 @@ public class OnlineTime extends Statistic {
   }
 
   /**
-   * Berechnet wie viel die Statistik wert ist
-   *
-   * @param objects Parameter
-   */
-  @Override
-  public void modify(final Object... objects) {
-    this.activeMinutes.add((Long) objects[0]);
-  }
-
-  /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
    *
    * @param survivalPlayer Spieler der Statistik
    */
   @Override
   public void update(final SurvivalPlayer survivalPlayer) {
-    incrementValue(this.activeMinutes.size() - 1);
-    this.activeMinutes.clear();
+    final Long aktuelleSystemzeitMinuten = System.currentTimeMillis() / 60000;
+    if (!addedMinutes.contains(aktuelleSystemzeitMinuten)) {
+      incrementValue(1);
+      this.addedMinutes.add(aktuelleSystemzeitMinuten);
+    }
   }
 
   /**

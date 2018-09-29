@@ -52,13 +52,6 @@ public abstract class Statistic {
   }
 
   /**
-   * Veraendert den Wert der Statistik
-   *
-   * @param objects Parameter
-   */
-  public abstract void modify(Object... objects);
-
-  /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
    *
    * @param survivalPlayer Spieler der Statistik

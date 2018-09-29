@@ -30,15 +30,8 @@ public class StatsManager {
    * @param playerToSave zu verarbeitender Spieler
    */
   private static void saveStats(final SurvivalPlayer playerToSave) {
-    updateStats(playerToSave);
     replaceStatsToMoney(playerToSave);
     resetStats(playerToSave);
-  }
-
-
-  private static void updateStats(final SurvivalPlayer playerToSave) {
-    Arrays.asList(Type.values()).forEach(type ->
-        playerToSave.getStats().getStatistic(type).update(playerToSave));
   }
 
   private static void replaceStatsToMoney(final SurvivalPlayer playerToSave) {

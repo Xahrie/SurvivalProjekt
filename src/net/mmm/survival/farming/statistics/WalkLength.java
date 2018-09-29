@@ -17,7 +17,6 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public class WalkLength extends Statistic {
-  private int lengthInCm;
   private final List<org.bukkit.Statistic> statistics = Arrays.asList(org.bukkit.Statistic.WALK_ON_WATER_ONE_CM,
       org.bukkit.Statistic.WALK_ONE_CM, org.bukkit.Statistic.WALK_UNDER_WATER_ONE_CM,
       org.bukkit.Statistic.SPRINT_ONE_CM, org.bukkit.Statistic.CROUCH_ONE_CM,
@@ -43,26 +42,18 @@ public class WalkLength extends Statistic {
   }
 
   /**
-   * Berechnet wie viel die Statistik wert ist
-   *
-   * @param objects Parameter
-   */
-  @Override
-  public void modify(final Object... objects) {
-    final SurvivalPlayer target = (SurvivalPlayer) objects[0];
-    statistics.forEach(statistic -> lengthInCm += target.getPlayer().getStatistic(statistic));
-  }
-
-  /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
    *
    * @param survivalPlayer Spieler der Statistik
    */
   @Override
   public void update(final SurvivalPlayer survivalPlayer) {
+    int lengthInCm = 0;
+    for (final org.bukkit.Statistic statistic : statistics) {
+      lengthInCm += survivalPlayer.getPlayer().getStatistic(statistic);
+    }
     final int actualLength = statistics.stream().mapToInt(statistic -> survivalPlayer.getPlayer().getStatistic(statistic)).sum();
     final int distance = actualLength - lengthInCm;
-    this.lengthInCm = actualLength;
     incrementValue(distance);
   }
 
