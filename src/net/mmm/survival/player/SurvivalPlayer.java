@@ -21,7 +21,7 @@ public class SurvivalPlayer extends HotbarMessager {
   private final Date lastComplaint;
   private final PlayerStats stats;
   private final List<Complaint> complaints;
-  private final List<Licence> licences;
+  private List<Licence> licences;
   private boolean zonenedit, zonensearch, tamed, teleport;
   //<editor-fold desc="mysql parameter">
   private short votes;
@@ -188,6 +188,13 @@ public class SurvivalPlayer extends HotbarMessager {
   public void setZonensearch(final boolean zonensearch) {
     this.zonensearch = zonensearch;
   }
-
+  
+  public void setLicences(final List<Licence> licences) {
+    this.licences = licences;
+  }
+  
+  public boolean hasLicence(final Licence licence) {
+    return licences.contains(licence);
+  }
   //</editor-fold>
 }

@@ -28,4 +28,12 @@ public enum SurvivalWorld {
   public World get() {
     return this.world;
   }
+  
+  public static SurvivalWorld getWorld(final String name) {
+    if(name.equals("world")) return BAUWELT;
+    if(name.equals("farmwelt")) return FARMWELT;
+    if(name.equals("world_nether")) return NETHER;
+    if(name.equals("world_the_end")) return END;
+    return BAUWELT;
+  }
 }
