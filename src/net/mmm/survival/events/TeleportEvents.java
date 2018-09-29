@@ -12,7 +12,7 @@ import net.mmm.survival.player.Licence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.SurvivalWorld;
 
-public class WorldChangeEvents implements Listener {
+public class TeleportEvents implements Listener {
 
   /* Created by: Suders
    * Date: 30.09.2018
