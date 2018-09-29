@@ -16,8 +16,8 @@ import org.bukkit.entity.Player;
  * Created by Alice on 22.09.2018.
  */
 public class Complain implements CommandExecutor {
-  private static final long HALBE_STUNDE = 2000; //1_800_000
-  private static final long EIN_TAG = 4000; //86_400_000
+  private static final long HALBE_STUNDE = 1_800_000; //1_800_000 2000
+  private static final long EIN_TAG = 86_400_000; //86_400_000 4000
   private static final int MINDESTANZ_ZEICHEN = 10;
 
   @Override

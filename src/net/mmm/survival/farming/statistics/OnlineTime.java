@@ -3,7 +3,7 @@ package net.mmm.survival.farming.statistics;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.mmm.survival.farming.Farming;
+import net.mmm.survival.farming.FarmingKonst;
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 
@@ -17,7 +17,7 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public class OnlineTime extends Statistic {
-  private final Set<Long> activeMinutes;
+  private final Set<Long> activeMinutes = new HashSet<>();
 
   /**
    * Konstruktor
@@ -33,7 +33,6 @@ public class OnlineTime extends Statistic {
    */
   private OnlineTime(final int value) {
     super(Type.ONLINE_TIME, value);
-    this.activeMinutes = new HashSet<>();
   }
 
   /**
@@ -42,7 +41,7 @@ public class OnlineTime extends Statistic {
    * @param objects Parameter
    */
   @Override
-  public void calculate(final Object... objects) {
+  public void modify(final Object... objects) {
     this.activeMinutes.add((Long) objects[0]);
   }
 
@@ -62,7 +61,7 @@ public class OnlineTime extends Statistic {
    */
   @Override
   public float getMoney() {
-    return getValue() * Farming.MONEY_PER_ACTIVE_MINUTE;
+    return getValue() * FarmingKonst.MONEY_PER_ACTIVE_MINUTE;
   }
 
 }

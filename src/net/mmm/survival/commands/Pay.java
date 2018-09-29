@@ -32,10 +32,10 @@ public class Pay implements CommandExecutor {
     final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(executor.getPlayer(), strings[0]);
     final int amount = CommandUtils.checkNumber(strings[1], executor.getPlayer());
 
-    checkMoney(executor, target, amount);
+    payMoney(executor, target, amount);
   }
 
-  private void checkMoney(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {
+  private void payMoney(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {
     if (amount <= executor.getMoney()) {
       target.setMoney(target.getMoney() + amount);
       executor.setMoney(executor.getMoney() - amount);

@@ -137,6 +137,6 @@ public class Survival extends JavaPlugin {
           counter.getAndIncrement();
         }
 
-        , 20L, 5 * 20L);
+        , 20L, 20L);
   }
 }

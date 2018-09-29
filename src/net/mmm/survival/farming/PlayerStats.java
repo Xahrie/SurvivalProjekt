@@ -1,10 +1,11 @@
 package net.mmm.survival.farming;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.mmm.survival.farming.statistics.OnlineTime;
 import net.mmm.survival.farming.statistics.Statistic;
+import net.mmm.survival.farming.statistics.WalkLength;
 
 /**
  * PlayerStats speichert die Statistiken eines Spielers
@@ -15,30 +16,29 @@ import net.mmm.survival.farming.statistics.Statistic;
  * @since JDK 8
  */
 public class PlayerStats {
-  private final Set<Statistic> statistics;
+  private final Set<Statistic> statistics = new HashSet<>();
 
   /**
    * Konstruktor zur Erstellung von PlayerStats
    */
-  PlayerStats() {
-    this.statistics = new HashSet<>();
+  public PlayerStats() {
     fillStats();
   }
 
   private void fillStats() {
-    Arrays.asList(Type.values()).forEach(type -> statistics.add(StatsManager.create(type)));
+    statistics.add(new OnlineTime());
+    statistics.add(new WalkLength());
   }
 
-  Set<Statistic> getStatistics() {
-    return statistics;
-  }
-
-  protected Statistic get(final Type statisticType) {
+  /**
+   * Statistik eines Typs
+   *
+   * @param statisticType Typ der Statistik
+   * @return Statistik
+   */
+  public Statistic getStatistic(final Type statisticType) {
     return statistics.stream().filter(statistic ->
         statistic.getType().equals(statisticType)).findFirst().orElse(null);
   }
 
-  boolean isEmpty() {
-    return statistics.stream().allMatch(statistic -> statistic.getValue() == 0);
-  }
 }

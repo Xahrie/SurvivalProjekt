@@ -3,7 +3,7 @@ package net.mmm.survival.farming.statistics;
 import java.util.Arrays;
 import java.util.List;
 
-import net.mmm.survival.farming.Farming;
+import net.mmm.survival.farming.FarmingKonst;
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 
@@ -48,7 +48,7 @@ public class WalkLength extends Statistic {
    * @param objects Parameter
    */
   @Override
-  public void calculate(final Object... objects) {
+  public void modify(final Object... objects) {
     final SurvivalPlayer target = (SurvivalPlayer) objects[0];
     statistics.forEach(statistic -> lengthInCm += target.getPlayer().getStatistic(statistic));
   }
@@ -71,7 +71,7 @@ public class WalkLength extends Statistic {
    */
   @Override
   public float getMoney() {
-    return getValue() / 100F * Farming.MONEY_PER_METER;
+    return getValue() / 100F * FarmingKonst.MONEY_PER_METER;
   }
 
 }

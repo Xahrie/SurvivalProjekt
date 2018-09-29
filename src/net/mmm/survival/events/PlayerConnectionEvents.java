@@ -47,7 +47,7 @@ public class PlayerConnectionEvents implements Listener {
   private void checkWorld(final SurvivalPlayer joined) {
     final World joinedWorld = joined.getPlayer().getWorld();
     if (joinedWorld.equals(SurvivalWorld.FARMWELT.get())) {
-      joined.getStats().getStatistic(Type.WALK_LENGTH_CM).calculate(joined);
+      joined.getStats().getStatistic(Type.WALK_LENGTH_CM).modify(joined);
     }
   }
 

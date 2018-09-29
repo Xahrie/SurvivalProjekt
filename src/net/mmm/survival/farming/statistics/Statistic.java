@@ -27,26 +27,12 @@ public abstract class Statistic {
   }
 
   /**
-   * Erhoeht den Wert der Statistik um 1
-   */
-  public void incrementValue() {
-    incrementValue(1);
-  }
-
-  /**
    * Erhoeht den Wert der Statistik um dem Faktor <code>amount</code>
    *
    * @param amount Faktor der Erhöhung
    */
   void incrementValue(final int amount) {
     this.value += amount;
-  }
-
-  /**
-   * Vermindert den Wert der Statistik um 1
-   */
-  public void decrementValue() {
-    decrementValue(1);
   }
 
   /**
@@ -66,11 +52,11 @@ public abstract class Statistic {
   }
 
   /**
-   * Berechnet wie viel die Statistik wert ist
+   * Veraendert den Wert der Statistik
    *
    * @param objects Parameter
    */
-  public abstract void calculate(Object... objects);
+  public abstract void modify(Object... objects);
 
   /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
