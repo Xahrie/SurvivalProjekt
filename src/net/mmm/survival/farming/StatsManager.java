@@ -35,8 +35,9 @@ public class StatsManager {
   }
 
   private static void replaceStatsToMoney(final SurvivalPlayer playerToSave) {
-    Arrays.asList(Type.values()).forEach(type -> playerToSave.setMoney((int) playerToSave.getStats()
-        .getStatistic(type).getMoney() + playerToSave.getMoney()));
+    for (final Type type : Type.values()) {
+      playerToSave.setMoney(playerToSave.getStats().getStatistic(type).getMoney() + playerToSave.getMoney());
+    }
   }
 
   private static void resetStats(final SurvivalPlayer playerToSave) {

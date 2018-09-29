@@ -34,7 +34,7 @@ public class Money implements CommandExecutor {
 
   private void evaluateZeroArguments(final SurvivalPlayer executor) {
     executor.getPlayer().sendMessage(Messages.PREFIX + "Kontostand von §e" + executor.getPlayer()
-        .getDisplayName() + "§7: §e" + executor.getMoney() + Konst.CURRENCY + "§7.");
+        .getDisplayName() + "§7: §e" + Math.round(executor.getMoney() * 100) / 100.0 + Konst.CURRENCY + "§7.");
   }
 
   private void evaluateOneArgument(final String[] strings, final Player executor) {

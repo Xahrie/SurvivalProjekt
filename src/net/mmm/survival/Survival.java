@@ -16,6 +16,7 @@ import net.mmm.survival.commands.SetHome;
 import net.mmm.survival.commands.SetSpawn;
 import net.mmm.survival.commands.Spawn;
 import net.mmm.survival.commands.Tame;
+import net.mmm.survival.commands.Tp;
 import net.mmm.survival.commands.Vote;
 import net.mmm.survival.commands.Zone;
 import net.mmm.survival.dynmap.DynmapWorldGuardPlugin;
@@ -28,8 +29,6 @@ import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
-import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Bukkit;
@@ -111,7 +110,7 @@ public class Survival extends JavaPlugin {
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(),
         new Gamemode(), new Home(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(),
-        new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
+        new SetSpawn(), new Spawn(), new Tame(), new Tp(), new Vote(), new Zone());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
         .substring(26).toLowerCase()).setExecutor(commandExecutor));
   }
@@ -129,10 +128,10 @@ public class Survival extends JavaPlugin {
             StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
           }
           if (counter.get() % 5 == 0) { //dauerhaft Geldwert anzeigen
-            Bukkit.getOnlinePlayers().forEach(player ->
+            /*Bukkit.getOnlinePlayers().forEach(player ->
                 SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
                     "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
-                        .getMoney() + Konst.CURRENCY));
+                        .getMoney() + Konst.CURRENCY));*/
           }
           counter.getAndIncrement();
         }

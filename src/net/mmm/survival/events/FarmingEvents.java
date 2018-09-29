@@ -5,7 +5,7 @@ import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
@@ -25,7 +25,7 @@ public class FarmingEvents implements Listener {
    * @see org.bukkit.event.player.PlayerEvent
    */
   @EventHandler
-  public void onAction(final PlayerEvent event) {
+  public void onAction(final PlayerMoveEvent event) { //TODO (Abgie) 30.09.2018: AENDERN
     final SurvivalPlayer handlingPlayer = SurvivalPlayer
         .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
     handlingPlayer.getStats().getStatistic(Type.ONLINE_TIME).update(handlingPlayer);
@@ -40,7 +40,7 @@ public class FarmingEvents implements Listener {
     final SurvivalPlayer teleported = SurvivalPlayer
         .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
 
-    if (event.getFrom().getWorld().equals(SurvivalWorld.FARMWELT.get()) && // Teleport aus der Farmwelt
+    if (event.getFrom().getWorld().equals(SurvivalWorld.FARMWELT.get()) && // Teleport aus der Tp
         !event.getTo().getWorld().equals(SurvivalWorld.FARMWELT.get())) {
       teleported.getStats().getStatistic(Type.WALK_LENGTH_CM).update(teleported); // Speichere Statistik
     }

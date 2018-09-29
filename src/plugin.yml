@@ -22,5 +22,6 @@ commands:
   setspawn:
   spawn:
   tame:
+  tp:
   vote:
   zone:

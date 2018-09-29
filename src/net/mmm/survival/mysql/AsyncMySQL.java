@@ -106,7 +106,7 @@ public class AsyncMySQL {
   }
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
-    final int money = resultSet.getInt(2);
+    final double money = resultSet.getDouble(2);
     final List<Complaint> complaints = determineComplaints(uuid);
     final List<Licence> licences = determineLicences(resultSet.getString(3));
     final short votes = (short) resultSet.getInt(4);
@@ -264,7 +264,7 @@ public class AsyncMySQL {
   private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer,
                                          final StringBuilder licences, final String home)
       throws SQLException {
-    statement.setInt(1, survivalPlayer.getMoney());
+    statement.setDouble(1, survivalPlayer.getMoney());
     statement.setString(2, licences.toString());
     statement.setInt(3, survivalPlayer.getVotes());
     statement.setInt(4, survivalPlayer.getMaxzone());
@@ -291,7 +291,7 @@ public class AsyncMySQL {
     try (final PreparedStatement statement = sql.connection
         .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE) VALUES (?, ?, ?, ?)")) {
       statement.setString(1, survivalPlayer.getUuid().toString());
-      statement.setInt(2, survivalPlayer.getMoney());
+      statement.setDouble(2, survivalPlayer.getMoney());
       statement.setInt(3, survivalPlayer.getVotes());
       statement.setInt(4, survivalPlayer.getMaxzone());
       statement.executeUpdate();
@@ -352,7 +352,7 @@ public class AsyncMySQL {
       queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID varchar(40) NOT NULL, Time varchar(10)" +
           " NOT NULL, Website varchar(40) NOT NULL);");
       queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer (UUID varchar(40) NOT NULL, MONEY " +
-          "int(11), LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
+          "double, LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
       queryUpdate("CREATE TABLE IF NOT EXISTS Playerstatus (id int PRIMARY KEY AUTO_INCREMENT, " +
           "UUID VARCHAR(45), name VARCHAR(20), online int(1), lastonline timestamp, firstjoin " +
           "timestamp, ip VARCHAR(20));");
