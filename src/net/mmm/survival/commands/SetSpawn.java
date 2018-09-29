@@ -13,18 +13,15 @@ import org.bukkit.entity.Player;
  */
 public class SetSpawn implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command cmd, final String s, final String[] args) {
-    if (sender instanceof Player) {
-      final Player player = (Player) sender;
-
-      if (CommandUtils.isOperator(player)) {
-        final World world = player.getWorld();
-
-        world.setSpawnLocation(player.getLocation());
-        player.sendMessage(Messages.SPAWN_SET);
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (commandSender instanceof Player) {
+      final Player teleported = (Player) commandSender;
+      if (CommandUtils.isOperator(teleported)) {
+        final World world = teleported.getWorld();
+        world.setSpawnLocation(teleported.getLocation());
+        teleported.sendMessage(Messages.SPAWN_SET);
       }
     }
-
     return false;
   }
 

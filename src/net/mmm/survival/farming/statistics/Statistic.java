@@ -12,7 +12,7 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public abstract class Statistic {
-  private Type type;
+  private final Type type;
   private int value;
 
   /**
@@ -21,7 +21,7 @@ public abstract class Statistic {
    * @param type Typ der Statistik
    * @param value Wert der Statistik
    */
-  Statistic(Type type, int value) {
+  Statistic(final Type type, final int value) {
     this.type = type;
     this.value = value;
   }
@@ -38,7 +38,7 @@ public abstract class Statistic {
    *
    * @param amount Faktor der Erhöhung
    */
-  void incrementValue(int amount) {
+  void incrementValue(final int amount) {
     this.value += amount;
   }
 
@@ -49,13 +49,12 @@ public abstract class Statistic {
     decrementValue(1);
   }
 
-
   /**
    * Vermindert den Wert der Statistik um den Faktor <code>amount</code>
    *
    * @param amount Faktor der Verminderung
    */
-  void decrementValue(int amount) {
+  void decrementValue(final int amount) {
     this.value -= amount;
   }
 
@@ -68,11 +67,15 @@ public abstract class Statistic {
 
   /**
    * Berechnet wie viel die Statistik wert ist
+   *
+   * @param objects Parameter
    */
   public abstract void calculate(Object... objects);
 
   /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
+   *
+   * @param survivalPlayer Spieler der Statistik
    */
   public abstract void update(SurvivalPlayer survivalPlayer);
 
@@ -82,16 +85,16 @@ public abstract class Statistic {
   public abstract float getMoney();
   //<editor-fold desc="getter and setter">
 
-  public void setValue(int value) {
-    this.value = value;
-  }
-
   public Type getType() {
     return this.type;
   }
 
   public Integer getValue() {
     return this.value;
+  }
+
+  public void setValue(final int value) {
+    this.value = value;
   }
 
   //</editor-fold>

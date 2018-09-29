@@ -1,10 +1,11 @@
 package net.mmm.survival.farming.statistics;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.mmm.survival.farming.Farming;
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
-import org.bukkit.Location;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 /**
  * WalkLength: Beschreibung der Klasse moeglichst praezise, aber nicht zu lang.
@@ -16,7 +17,14 @@ import org.bukkit.event.player.PlayerMoveEvent;
  * @since JDK 8
  */
 public class WalkLength extends Statistic {
-  private Location lastLocation;
+  private int lengthInCm;
+  private final List<org.bukkit.Statistic> statistics = Arrays.asList(org.bukkit.Statistic.WALK_ON_WATER_ONE_CM,
+      org.bukkit.Statistic.WALK_ONE_CM, org.bukkit.Statistic.WALK_UNDER_WATER_ONE_CM,
+      org.bukkit.Statistic.SPRINT_ONE_CM, org.bukkit.Statistic.CROUCH_ONE_CM,
+      org.bukkit.Statistic.HORSE_ONE_CM, org.bukkit.Statistic.AVIATE_ONE_CM,
+      org.bukkit.Statistic.BOAT_ONE_CM, org.bukkit.Statistic.CLIMB_ONE_CM,
+      org.bukkit.Statistic.FLY_ONE_CM, org.bukkit.Statistic.MINECART_ONE_CM,
+      org.bukkit.Statistic.PIG_ONE_CM, org.bukkit.Statistic.SWIM_ONE_CM);
 
   /**
    * Konstruktor
@@ -30,32 +38,31 @@ public class WalkLength extends Statistic {
    *
    * @param value Wert der Statistik
    */
-  public WalkLength(int value) {
+  private WalkLength(final int value) {
     super(Type.WALK_LENGTH_CM, value);
   }
 
   /**
    * Berechnet wie viel die Statistik wert ist
    *
-   * @param objects
+   * @param objects Parameter
    */
   @Override
-  public void calculate(Object... objects) {
-    PlayerMoveEvent event = (PlayerMoveEvent) objects[0];
-    if (event.getPlayer().getWorld().getName().equals("farmwelt")) {
-      if (event.getPlayer().isSprinting() && lastLocation == null) {
-        this.lastLocation = event.getPlayer().getLocation();
-      } else if (!event.getPlayer().isSprinting()) {
-
-      }
-    }
+  public void calculate(final Object... objects) {
+    final SurvivalPlayer target = (SurvivalPlayer) objects[0];
+    statistics.forEach(statistic -> lengthInCm += target.getPlayer().getStatistic(statistic));
   }
 
+  /**
+   * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
+   *
+   * @param survivalPlayer Spieler der Statistik
+   */
   @Override
-  public void update(SurvivalPlayer survivalPlayer) {
-    Location currentLocation = survivalPlayer.getPlayer().getLocation();
-    int distance = (int) this.lastLocation.distance(currentLocation);
-    this.lastLocation = null;
+  public void update(final SurvivalPlayer survivalPlayer) {
+    final int actualLength = statistics.stream().mapToInt(statistic -> survivalPlayer.getPlayer().getStatistic(statistic)).sum();
+    final int distance = actualLength - lengthInCm;
+    this.lengthInCm = actualLength;
     incrementValue(distance);
   }
 

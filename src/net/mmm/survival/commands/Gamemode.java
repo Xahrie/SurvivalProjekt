@@ -13,15 +13,14 @@ import org.bukkit.entity.Player;
  * /gamemode Command
  */
 public class Gamemode implements CommandExecutor {
-
   private Integer gamemode;
   private Player executor, target;
   private String executorMessage;
 
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final Player executor = (Player) sender;
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final Player executor = (Player) commandSender;
 
       if (CommandUtils.isOperator(executor)) {
         checkArgumentLength(args, executor);
@@ -40,9 +39,9 @@ public class Gamemode implements CommandExecutor {
 
   }
 
-  private boolean checkArguments(final String[] strings, final Player player) {
-    if (!(strings.length == 1 || strings.length == 2)) {
-      player.sendMessage(Messages.USAGE_GAMEMODE_COMMAND);
+  private boolean checkArguments(final String[] args, final Player executor) {
+    if (!(args.length == 1 || args.length == 2)) {
+      executor.sendMessage(Messages.USAGE_GAMEMODE_COMMAND);
       return false;
     }
 
@@ -67,7 +66,6 @@ public class Gamemode implements CommandExecutor {
   private void evaluateTwoArguments(final String[] args, final Player executor) {
     this.executor = executor;
     final Player target = UUIDUtils.getPlayer(args[1]);
-
     if (isOnline(target)) {
       final String mode = args[0];
       checkInput(mode);
@@ -76,8 +74,8 @@ public class Gamemode implements CommandExecutor {
   }
 
   private void sendExecutorMessage() {
-    this.executor.sendMessage(Messages.PREFIX + " §7Du hast §e" + this.target.getDisplayName() + " §7in den Spielmodus§8: " + this.executorMessage +
-        " §7gesetzt.");
+    this.executor.sendMessage(Messages.PREFIX + " §7Du hast §e" + this.target.getDisplayName() +
+        " §7in den Spielmodus§8: " + this.executorMessage + " §7gesetzt.");
   }
 
   private boolean isOnline(final Player target) {

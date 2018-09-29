@@ -27,7 +27,6 @@ public class Economy implements CommandExecutor {
         checkCommandLength(args, executor);
       }
     }
-
     return false;
   }
 
@@ -41,7 +40,7 @@ public class Economy implements CommandExecutor {
     }
   }
 
-  private void evaluateOneArgument(final String string, final Player executor) { /* /eco <Name> */
+  private void evaluateOneArgument(final String string, final Player executor) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, string);
     if (survivalPlayer != null) {
       final int money = survivalPlayer.getMoney();

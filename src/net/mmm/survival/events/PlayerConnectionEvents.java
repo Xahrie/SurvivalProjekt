@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.farming.StatsManager;
-import net.mmm.survival.player.Complaint;
+import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Scoreboards;
-import net.mmm.survival.vote.VotifierPlugin;
+import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,68 +27,73 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerConnectionEvents implements Listener {
 
   /**
-   * Wenn ein Spieler den Server betritt
-   *
-   * @param e PlayerJoinEvent
+   * @param event PlayerJoinEvent -> Wenn ein Spieler den Server betritt
    * @see org.bukkit.event.player.PlayerJoinEvent
    */
   @EventHandler
-  public void onJoin(final PlayerJoinEvent e) {
-    SurvivalData.getInstance().getAsyncMySQL().updatePlayer(e.getPlayer()); // muss oben stehen
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
+  public void onJoin(final PlayerJoinEvent event) {
+    SurvivalData.getInstance().getAsyncMySQL().updatePlayer(event.getPlayer()); // muss oben stehen
+    final SurvivalPlayer joined = SurvivalPlayer
+        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
 
-    isFirstJoin(survivalPlayer, e);
-    e.setJoinMessage(null);
-    Scoreboards.setScoreboard(e.getPlayer()); //Scoreboard initialisieren
-    verarbeiteVotes(e, survivalPlayer);     //Vote-Plugin
-    verarbeiteComplaints(survivalPlayer);
+    isFirstJoin(joined, event);
+    event.setJoinMessage(null);
+    Scoreboards.setScoreboard(event.getPlayer()); //Scoreboard initialisieren
+    handleVotes(event, joined);     //Vote-Plugin
+    handleComplaints(joined);
+    checkWorld(joined);
   }
 
-  private void isFirstJoin(SurvivalPlayer survivalPlayer, final PlayerJoinEvent event) {
-    if (survivalPlayer == null) { // First-Join
-      survivalPlayer = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(), (short) 0,
-          Konst.ZONE_SIZE_DEFAULT, null);
-      SurvivalData.getInstance().getAsyncMySQL().createPlayer(survivalPlayer);
-      SurvivalData.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), survivalPlayer);
+  private void checkWorld(final SurvivalPlayer joined) {
+    final World joinedWorld = joined.getPlayer().getWorld();
+    if (joinedWorld.equals(SurvivalWorld.FARMWELT.get())) {
+      joined.getStats().getStatistic(Type.WALK_LENGTH_CM).calculate(joined);
     }
   }
 
-  private void verarbeiteVotes(final PlayerJoinEvent e, final SurvivalPlayer survivalPlayer) {
-    if (VotifierPlugin.votes.containsKey(e.getPlayer().getName().toLowerCase())) {
-      VotifierPlugin.votes.get(e.getPlayer().getName().toLowerCase()).forEach(vote -> {
-        e.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" + vote.getServiceName() + "§8]");
-        survivalPlayer.setMoney(survivalPlayer.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
-        VotifierPlugin.vote(e.getPlayer().getUniqueId(), vote.getServiceName());
-        e.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze", Collections.singletonList("§7§oDu kannst " +
-            "diese Münzen beim Markt eintauschen.")));
+  private void handleComplaints(final SurvivalPlayer joined) {
+    if (joined.getComplaints().size() > 0) {
+      joined.getPlayer().sendMessage(Messages.COMPLAINT_INFO);
+      joined.getComplaints().forEach(joined::outputComplaint);
+    }
+  }
+
+  private void handleVotes(final PlayerJoinEvent event, final SurvivalPlayer joined) {
+    if (VoteEvents.getVotes().containsKey(joined.getPlayer().getName().toLowerCase())) {
+      VoteEvents.getVotes().get(event.getPlayer().getName().toLowerCase()).forEach(vote -> {
+        joined.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" +
+            vote.getServiceName() + "§8]");
+        joined.setMoney(joined.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
+        VoteEvents.addVote(joined.getUuid(), vote.getServiceName());
+        joined.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze",
+            Collections.singletonList(Messages.VOTE_REWARD)));
       });
 
-      VotifierPlugin.votes.remove(e.getPlayer().getName().toLowerCase());
+      VoteEvents.getVotes().remove(joined.getPlayer().getName().toLowerCase());
     }
   }
 
-  private void verarbeiteComplaints(final SurvivalPlayer survivalPlayer) {
-    if (survivalPlayer.getComplaints().size() > 0) {
-      survivalPlayer.getPlayer().sendMessage(Messages.COMPLAINT_INFO);
-      for (final Complaint complaint : survivalPlayer.getComplaints()) {
-        survivalPlayer.outputComplaint(complaint);
-      }
+  private void isFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
+    if (joined == null) { // First-Join
+      joined = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(),
+          new ArrayList<>(), (short) 0, Konst.ZONE_SIZE_DEFAULT, null);
+      SurvivalData.getInstance().getAsyncMySQL().createPlayer(joined);
+      SurvivalData.getInstance().getPlayers().put(joined.getUuid(), joined);
     }
   }
 
   /**
    * Wenn ein Spieler den Server verlaesst
    *
-   * @param e PlayerQuitEvent
+   * @param event PlayerQuitEvent
    * @see org.bukkit.event.player.PlayerQuitEvent
    */
   @EventHandler
-  public void onQuit(final PlayerQuitEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
-
-    survivalPlayer.setZonensearch(false);
-    StatsManager.saveStats(survivalPlayer);
-    e.setQuitMessage(null);
+  public void onQuit(final PlayerQuitEvent event) {
+    final SurvivalPlayer quited = SurvivalPlayer
+        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    quited.setZonensearch(false);
+    event.setQuitMessage(null);
   }
 
 }

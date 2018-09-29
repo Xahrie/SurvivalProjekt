@@ -14,25 +14,26 @@ import org.bukkit.entity.Player;
  */
 public class Vote implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final Player executor = (Player) sender;
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final Player executor = (Player) commandSender;
       sendMessagge(executor);
     }
-
     return false;
   }
 
   private void sendMessagge(final Player executor) {
     executor.sendMessage(Messages.VOTE_PAGES);
-    executor.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Server.eu", "https://minecraft-server.eu/"));
-    executor.spigot().sendMessage(getTextComponent("§7» §eMinecraft-Serverliste.net", "https://www.minecraft-serverlist.net/serverlist"));
+    executor.spigot()
+        .sendMessage(getTextComponent(
+            "§7» §eMinecraft-Server.eu", "https://minecraft-server.eu/"));
+    executor.spigot().sendMessage(getTextComponent(
+        "§7» §eMinecraft-Serverliste.net", "https://www.minecraft-serverlist.net/serverlist"));
   }
 
   private TextComponent getTextComponent(final String message, final String url) {
     final TextComponent msg = new TextComponent(message);
     msg.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url));
-
     return msg;
   }
 }

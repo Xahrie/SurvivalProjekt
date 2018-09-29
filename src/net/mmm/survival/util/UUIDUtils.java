@@ -25,12 +25,12 @@ public class UUIDUtils {
    * Bestimme die UUID, mit des Namens, mit dem sich der Spieler der gesuchten
    * UUID zuletzt verbunden hat.
    *
-   * @param name letzer bekannter Name des Spielers
+   * @param playerName letzer bekannter Name des Spielers
    * @return Universally Unique Identifier des Spielers
    */
-  public static UUID getUUID(final String name) {
+  public static UUID getUUID(final String playerName) {
     return SurvivalData.getInstance().getPlayerCache().keySet().stream().filter(id -> SurvivalData
-        .getInstance().getPlayerCache().get(id).equalsIgnoreCase(name)).findFirst().orElse(null);
+        .getInstance().getPlayerCache().get(id).equalsIgnoreCase(playerName)).findFirst().orElse(null);
   }
 
   /**
@@ -63,13 +63,13 @@ public class UUIDUtils {
    * Bestimme den Spieler, mithilfe des Namens, mit dem sich der gesuchte Spieler
    * zuletzt verbunden hat.
    *
-   * @param name letzer bekannter Name des Spielers
+   * @param playerName letzer bekannter Name des Spielers
    * @return org.bukkit.entity.Player des Spielers
    */
-  public static Player getPlayer(final String name) {
-    Player player = Bukkit.getPlayer(getUUID(name));
+  public static Player getPlayer(final String playerName) {
+    Player player = Bukkit.getPlayer(getUUID(playerName));
     if (player == null) {
-      player = Bukkit.getOfflinePlayer(getUUID(name)).getPlayer();
+      player = Bukkit.getOfflinePlayer(getUUID(playerName)).getPlayer();
     }
     return player;
   }
@@ -77,20 +77,20 @@ public class UUIDUtils {
   /**
    * Bestimme die UUID aus dem String, der eine UUID Darstellen soll
    *
-   * @param name UUID als String
+   * @param playerName UUID als String
    * @return Universally Unique Identifier
    */
-  public static UUID uuidFromString(final String name) {
-    return UUID.fromString(name);
+  public static UUID uuidFromString(final String playerName) {
+    return UUID.fromString(playerName);
   }
 
   /**
    * Ueberfruefe, ob der Spieler mit diesem Namen jemals auif diesem Server war
    *
-   * @param name letzer bekannter Name des Spielers
+   * @param playerName letzer bekannter Name des Spielers
    * @return (ja | nein) - Der Spieler war (bereits | noch nie) auf dem Server.
    */
-  public static boolean wasOnline(final String name) {
-    return cache.keySet().stream().anyMatch(uuid -> cache.get(uuid).equalsIgnoreCase(name));
+  public static boolean wasOnline(final String playerName) {
+    return cache.keySet().stream().anyMatch(uuid -> cache.get(uuid).equalsIgnoreCase(playerName));
   }
 }

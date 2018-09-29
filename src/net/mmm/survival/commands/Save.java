@@ -14,12 +14,10 @@ import org.bukkit.entity.Player;
  */
 public class Save implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.isOperator((Player) sender)) {
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.isOperator((Player) commandSender)) {
       Survival.getInstance().save();
     }
-
     return false;
   }
-
 }

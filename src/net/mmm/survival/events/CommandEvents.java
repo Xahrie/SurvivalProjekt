@@ -20,21 +20,25 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 public class CommandEvents implements Listener {
   @EventHandler(priority = EventPriority.HIGHEST)
   public void onCommandExecute(final PlayerCommandPreprocessEvent event) {
-    final Player player = event.getPlayer();
-    final String msg = event.getMessage().split(" ")[0];
+    final Player executor = event.getPlayer();
+    final String message = event.getMessage().split(" ")[0];
 
-    if (msg.equalsIgnoreCase("/info")) {
-      Commands.info(player);
+    if (message.equalsIgnoreCase("/info")) {
+      Commands.info(executor);
     }
   }
 
   private static class Commands {
     static void info(final CommandSender commandSender) {
       if (CommandUtils.checkPlayer(commandSender)) {
-        commandSender.sendMessage(Messages.PREFIX + " Name: §8" + Survival.getInstance().getDescription().getName());
-        commandSender.sendMessage(Messages.PREFIX + " Version: §8" + Survival.getInstance().getDescription().getVersion());
-        commandSender.sendMessage(Messages.PREFIX + " Autoren: §8" + Survival.getInstance().getDescription().getAuthors().get(0));
-        commandSender.sendMessage(Messages.PREFIX + " MC-Build: §8" + Survival.getInstance().getDescription().getAPIVersion());
+        commandSender.sendMessage(Messages.PREFIX + " Name: §8" +
+            Survival.getInstance().getDescription().getName());
+        commandSender.sendMessage(Messages.PREFIX + " Version: §8" +
+            Survival.getInstance().getDescription().getVersion());
+        commandSender.sendMessage(Messages.PREFIX + " Autoren: §8" +
+            Survival.getInstance().getDescription().getAuthors().get(0));
+        commandSender.sendMessage(Messages.PREFIX + " MC-Build: §8" +
+            Survival.getInstance().getDescription().getAPIVersion());
       }
     }
   }

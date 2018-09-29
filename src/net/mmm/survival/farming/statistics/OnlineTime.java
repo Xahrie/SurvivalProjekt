@@ -17,7 +17,7 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public class OnlineTime extends Statistic {
-  private Set<Long> activeMinutes;
+  private final Set<Long> activeMinutes;
 
   /**
    * Konstruktor
@@ -31,20 +31,29 @@ public class OnlineTime extends Statistic {
    *
    * @param value Wert der Statistik
    */
-  public OnlineTime(int value) {
+  private OnlineTime(final int value) {
     super(Type.ONLINE_TIME, value);
     this.activeMinutes = new HashSet<>();
   }
 
-
+  /**
+   * Berechnet wie viel die Statistik wert ist
+   *
+   * @param objects Parameter
+   */
   @Override
-  public void calculate(Object... objects) {
+  public void calculate(final Object... objects) {
     this.activeMinutes.add((Long) objects[0]);
   }
 
+  /**
+   * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
+   *
+   * @param survivalPlayer Spieler der Statistik
+   */
   @Override
-  public void update(SurvivalPlayer survivalPlayer) {
-    incrementValue(this.activeMinutes.size());
+  public void update(final SurvivalPlayer survivalPlayer) {
+    incrementValue(this.activeMinutes.size() - 1);
     this.activeMinutes.clear();
   }
 
@@ -55,4 +64,5 @@ public class OnlineTime extends Statistic {
   public float getMoney() {
     return getValue() * Farming.MONEY_PER_ACTIVE_MINUTE;
   }
+
 }

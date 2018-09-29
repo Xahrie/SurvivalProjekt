@@ -53,8 +53,8 @@ public class Complain implements CommandExecutor {
       final SurvivalPlayer targetSurvivalPlayer = SurvivalPlayer.findSurvivalPlayer(sender, args[1]);
       if (targetSurvivalPlayer != null) {
         targetSurvivalPlayer.getComplaints().clear();
-        sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden des Spielers §e" + targetSurvivalPlayer.getPlayer().getDisplayName() +
-            " §f wurden gelöscht.");
+        sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden des Spielers §e" +
+            targetSurvivalPlayer.getPlayer().getDisplayName() + " §f wurden gelöscht.");
       }
     } else {
       info(sender);
@@ -129,7 +129,7 @@ public class Complain implements CommandExecutor {
     for (final SurvivalPlayer targetCheck : SurvivalData.getInstance().getPlayers().values()) {
       if (targetCheck.getUuid().equals(target.getUuid())) {
         for (final Complaint complaint : targetCheck.getComplaints()) {
-          if (complaint.getOperator().equals(executor.getUuid()) && now.getTime() - complaint.getDate().getTime() < EIN_TAG) {
+          if (complaint.getExecutor().equals(executor.getUuid()) && now.getTime() - complaint.getDate().getTime() < EIN_TAG) {
             executor.getPlayer().sendMessage(Messages.COMPLAINT_TOO_FAST_PLAYER);
             return false;
           }

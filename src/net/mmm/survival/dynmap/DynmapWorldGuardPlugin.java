@@ -20,7 +20,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
 import net.mmm.survival.Survival;
 import net.mmm.survival.SurvivalData;
-import org.bukkit.Bukkit;
+import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,7 +59,7 @@ public class DynmapWorldGuardPlugin {
    */
   public DynmapWorldGuardPlugin() {
     try {
-      this.regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(Bukkit.getWorld("world")));
+      this.regionManager = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(SurvivalWorld.BAUWELT.get()));
     } catch (final NullPointerException ex) {
       System.err.println("Platform is Null");
     }

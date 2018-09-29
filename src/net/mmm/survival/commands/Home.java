@@ -13,16 +13,14 @@ import org.bukkit.entity.Player;
  */
 public class Home extends Teleport implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final Player player = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
-
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer
+          .findSurvivalPlayer((Player) commandSender, commandSender.getName());
       if (checkHome(survivalPlayer) && CommandUtils.checkTeleport(survivalPlayer)) {
-        super.teleport(player, survivalPlayer.getHome());
+        super.teleport((Player) commandSender, survivalPlayer.getHome());
       }
     }
-
     return false;
   }
 
@@ -37,8 +35,6 @@ public class Home extends Teleport implements CommandExecutor {
       survivalPlayer.getPlayer().sendMessage(Messages.NO_HOME_SET);
       return false;
     }
-
     return true;
   }
-
 }

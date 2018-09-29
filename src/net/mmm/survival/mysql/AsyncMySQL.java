@@ -22,8 +22,8 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.Licence;
 import net.mmm.survival.player.SurvivalPlayer;
+import net.mmm.survival.util.SurvivalWorld;
 import org.apache.commons.lang3.EnumUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -31,7 +31,6 @@ import org.bukkit.entity.Player;
  * Verwaltung der MySQL-Datenbank-Verbindung
  */
 public class AsyncMySQL {
-
   /**
    * Verbindungsdaten
    */
@@ -63,14 +62,14 @@ public class AsyncMySQL {
    * @return Name des Spielers
    */
   public String getName(final UUID uuid) {
-    try (final ResultSet rs = getMySQL().query("SELECT name FROM Playerstatus where UUID = " + uuid + "")) {
+    try (final ResultSet rs = getMySQL()
+        .query("SELECT name FROM Playerstatus where UUID = " + uuid + "")) {
       if (rs.next()) {
         return rs.getString("name");
       }
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-
     return null;
   }
 
@@ -81,7 +80,8 @@ public class AsyncMySQL {
    * @param website Webseite
    */
   public void addVote(final UUID uuid, final String website) {
-    sql.update("INSERT INTO Votes (UUID, Time, Website) VALUES (" + uuid + ", " + System.currentTimeMillis() + ", " + website + ")");
+    sql.update("INSERT INTO Votes (UUID, Time, Website) VALUES (" + uuid + ", " +
+        System.currentTimeMillis() + ", " + website + ")");
   }
 
   /**
@@ -90,19 +90,19 @@ public class AsyncMySQL {
    * @return Playerliste
    */
   public Map<UUID, SurvivalPlayer> getPlayers() {
-    final Map<UUID, SurvivalPlayer> players = new HashMap<>();
+    final Map<UUID, SurvivalPlayer> survivalPlayers = new HashMap<>();
 
-    try (final Statement statement = getMySQL().conn.createStatement();
-         final ResultSet resultSet = statement.executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME FROM SurvivalPlayer")) {
+    try (final Statement statement = getMySQL().connection.createStatement();
+         final ResultSet resultSet = statement
+             .executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME FROM SurvivalPlayer")) {
       while (resultSet.next()) {
         final UUID uuid = UUID.fromString(resultSet.getString(1));
-        players.put(uuid, determinePlayer(resultSet, uuid));
+        survivalPlayers.put(uuid, determinePlayer(resultSet, uuid));
       }
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-
-    return players;
+    return survivalPlayers;
   }
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
@@ -119,8 +119,9 @@ public class AsyncMySQL {
   private List<Complaint> determineComplaints(final UUID uuid) {
     final ArrayList<Complaint> complaints = new ArrayList<>();
 
-    try (final Statement statement = getMySQL().conn.createStatement();
-         final ResultSet resultSet = statement.executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
+    try (final Statement statement = getMySQL().connection.createStatement();
+         final ResultSet resultSet = statement
+             .executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
       while (resultSet.next()) {
         final UUID uuidComplaint = UUID.fromString(resultSet.getString(1));
         final int id = resultSet.getInt(2);
@@ -155,7 +156,7 @@ public class AsyncMySQL {
       final double x = Double.parseDouble(homeString.split("/")[0]);
       final double y = Double.parseDouble(homeString.split("/")[1]);
       final double z = Double.parseDouble(homeString.split("/")[2]);
-      location = new Location(Bukkit.getWorld("world"), x, y, z);
+      location = new Location(SurvivalWorld.BAUWELT.get(), x, y, z);
     }
     return location;
   }
@@ -168,8 +169,9 @@ public class AsyncMySQL {
   public Map<UUID, String> getPlayerCache() {
     final Map<UUID, String> cache = new HashMap<>();
 
-    try (final Statement statement = getMySQL().conn.createStatement();
-         final ResultSet resultSet = statement.executeQuery("SELECT UUID, name FROM Playerstatus")) {
+    try (final Statement statement = getMySQL().connection.createStatement();
+         final ResultSet resultSet = statement.
+             executeQuery("SELECT UUID, name FROM Playerstatus")) {
       while (resultSet.next()) {
         final UUID uuid = UUID.fromString(resultSet.getString(1));
         final String name = resultSet.getString(2);
@@ -178,23 +180,29 @@ public class AsyncMySQL {
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-
     return cache;
   }
 
-  public void updatePlayer(final Player player) {
-    final String qry = SurvivalData.getInstance().getPlayers().containsKey(player.getUniqueId()) ?
-        "UPDATE Playerstatus SET name=? WHERE UUID=?" : "INSERT INTO Playerstatus (name, UUID) VALUES (?, ?)";
+  /**
+   * Setzt einen Spieler nach dem Join in den Speicher (Playerstatus) bzw.
+   * aendert dessen Namen nach Nickaenderung
+   *
+   * @param target gejointer Spieler
+   */
+  public void updatePlayer(final Player target) {
+    final String qry = SurvivalData.getInstance().getPlayers().containsKey(target.getUniqueId()) ?
+        "UPDATE Playerstatus SET name=? WHERE UUID=?" :
+        "INSERT INTO Playerstatus (name, UUID) VALUES (?, ?)";
 
-    try (final PreparedStatement statement = sql.conn
+    try (final PreparedStatement statement = sql.connection
         .prepareStatement(qry)) {
-      statement.setString(1, player.getName());
-      statement.setString(2, player.getUniqueId().toString());
+      statement.setString(1, target.getName());
+      statement.setString(2, target.getUniqueId().toString());
       statement.executeUpdate();
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-    SurvivalData.getInstance().getPlayerCache().put(player.getUniqueId(), player.getName());
+    SurvivalData.getInstance().getPlayerCache().put(target.getUniqueId(), target.getName());
   }
 
   /**
@@ -203,16 +211,15 @@ public class AsyncMySQL {
   public void storePlayers() {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
-    try (final PreparedStatement statement = sql.conn
+    try (final PreparedStatement statement = sql.connection
         .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=? WHERE UUID=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
         final StringBuilder licences = determineLicences(survivalPlayer);
-        final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" + survivalPlayer.getHome().getY() + "/" +
-            survivalPlayer.getHome().getZ() : "";
+        final String home = survivalPlayer.getHome() != null ? survivalPlayer.getHome().getX() + "/" +
+            survivalPlayer.getHome().getY() + "/" + survivalPlayer.getHome().getZ() : "";
         updateAndExecuteStatement(statement, survivalPlayer, licences, home);
       }
-
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
@@ -222,7 +229,7 @@ public class AsyncMySQL {
   private void storeComplaints() {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
-    try (final PreparedStatement statement = sql.conn
+    try (final PreparedStatement statement = sql.connection
         .prepareStatement("DELETE FROM SurvivalPlayerComplaints")) {
       statement.executeUpdate();
     } catch (final SQLException ex) {
@@ -230,7 +237,7 @@ public class AsyncMySQL {
     }
 
 
-    try (final PreparedStatement statement = sql.conn
+    try (final PreparedStatement statement = sql.connection
         .prepareStatement("INSERT INTO SurvivalPlayerComplaints (UUID, ID, REASON, OPERATOR, DATE) VALUES ( ?, ?, ?, ?, ?)")) {
       for (final SurvivalPlayer player : players) {
         for (final Complaint complaint : player.getComplaints()) {
@@ -238,7 +245,7 @@ public class AsyncMySQL {
             statement.setString(1, complaint.getUuid().toString());
             statement.setInt(2, complaint.getId());
             statement.setString(3, complaint.getReason());
-            statement.setString(4, complaint.getOperator().toString());
+            statement.setString(4, complaint.getExecutor().toString());
             final java.util.Date utilDate = complaint.getDate();
             final java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
             final DateFormat df = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
@@ -249,11 +256,9 @@ public class AsyncMySQL {
           }
         }
       }
-
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-
   }
 
   private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer,
@@ -283,7 +288,7 @@ public class AsyncMySQL {
    * @param survivalPlayer SurvivalPlayer
    */
   public void createPlayer(final SurvivalPlayer survivalPlayer) {
-    try (final PreparedStatement statement = sql.conn
+    try (final PreparedStatement statement = sql.connection
         .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE) VALUES (?, ?, ?, ?)")) {
       statement.setString(1, survivalPlayer.getUuid().toString());
       statement.setInt(2, survivalPlayer.getMoney());
@@ -306,12 +311,9 @@ public class AsyncMySQL {
    */
   public class MySQL {
 
-    final String database;
-    final String host;
-    final String password;
-    final String user;
+    final String database, host, password, user;
     private final int port;
-    private Connection conn;
+    private Connection connection;
 
     /**
      * Konstruktor
@@ -319,8 +321,7 @@ public class AsyncMySQL {
      * @throws SQLException SQL-Ausnahme
      * @throws ClassNotFoundException Driver wurde nicht gefunden
      */
-    MySQL()
-        throws SQLException, ClassNotFoundException {
+    MySQL() throws SQLException, ClassNotFoundException {
       this.host = AsyncMySQL.HOST;
       this.port = AsyncMySQL.PORT;
       this.user = AsyncMySQL.USER;
@@ -337,7 +338,7 @@ public class AsyncMySQL {
      */
     void queryUpdate(final String query) {
       checkConnection();
-      try (final PreparedStatement statement = conn.prepareStatement(query)) {
+      try (final PreparedStatement statement = connection.prepareStatement(query)) {
         queryUpdate(statement);
       } catch (final SQLException ex) {
         ex.printStackTrace();
@@ -348,13 +349,13 @@ public class AsyncMySQL {
      * Erstellung einer Tabelle
      */
     public void createTables() {
-      queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID varchar(40) NOT NULL, Time varchar(10) " +
-          "NOT NULL, Website varchar(40) NOT NULL);");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID varchar(40) NOT NULL, Time varchar(10)" +
+          " NOT NULL, Website varchar(40) NOT NULL);");
       queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer (UUID varchar(40) NOT NULL, MONEY " +
           "int(11), LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
-      queryUpdate("CREATE TABLE IF NOT EXISTS Playerstatus (id int PRIMARY KEY AUTO_INCREMENT, UUID" +
-          " VARCHAR(45), name VARCHAR(20), online int(1), lastonline timestamp, firstjoin timestamp" +
-          ", ip VARCHAR(20));");
+      queryUpdate("CREATE TABLE IF NOT EXISTS Playerstatus (id int PRIMARY KEY AUTO_INCREMENT, " +
+          "UUID VARCHAR(45), name VARCHAR(20), online int(1), lastonline timestamp, firstjoin " +
+          "timestamp, ip VARCHAR(20));");
     }
 
     /**
@@ -383,7 +384,7 @@ public class AsyncMySQL {
     ResultSet query(final String query) {
       checkConnection();
       try {
-        return query(conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS));
+        return query(connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS));
       } catch (final SQLException ex) {
         ex.printStackTrace();
       }
@@ -412,7 +413,7 @@ public class AsyncMySQL {
 
     private void checkConnection() {
       try {
-        if (this.conn == null || !this.conn.isValid(10) || this.conn.isClosed()) {
+        if (this.connection == null || !this.connection.isValid(10) || this.connection.isClosed()) {
           openConnection();
         }
       } catch (final SQLException | ClassNotFoundException ex) {
@@ -428,8 +429,8 @@ public class AsyncMySQL {
      */
     void openConnection() throws ClassNotFoundException, SQLException {
       Class.forName("com.mysql.jdbc.Driver");
-      this.conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database,
-          this.user, this.password);
+      this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port +
+          "/" + this.database, this.user, this.password);
     }
 
     /**
@@ -438,9 +439,9 @@ public class AsyncMySQL {
      * !!! WICHTIG
      */
     public void closeConnection() {
-      if (conn != null) {
+      if (connection != null) {
         try {
-          conn.close();
+          connection.close();
         } catch (final SQLException e) {
           e.printStackTrace();
         }

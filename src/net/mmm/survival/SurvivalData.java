@@ -19,8 +19,8 @@ public class SurvivalData {
    * Konstruktor
    */
   public SurvivalData() {
-    players = async.getPlayers();
-    playerCache = async.getPlayerCache();
+    players = async.getPlayers(); // Lade Spieler(SurvivalPlayer) von MySQL
+    playerCache = async.getPlayerCache(); // Lade Spielerdatenbank von MySQL
   }
 
   /**
@@ -42,16 +42,16 @@ public class SurvivalData {
     return dynmap;
   }
 
+  void setDynmap(final DynmapWorldGuardPlugin dynmap) {
+    this.dynmap = dynmap;
+  }
+
   public Map<UUID, String> getPlayerCache() {
     return playerCache;
   }
 
   public Map<UUID, SurvivalPlayer> getPlayers() {
     return players;
-  }
-
-  void setDynmap(final DynmapWorldGuardPlugin dynmap) {
-    this.dynmap = dynmap;
   }
   //</editor-fold>
 }

@@ -18,7 +18,7 @@ public enum Type {
 
   private final Statistic statistic;
 
-  Type(Statistic statistic) {
+  Type(final Statistic statistic) {
     this.statistic = statistic;
   }
 

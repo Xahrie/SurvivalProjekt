@@ -15,7 +15,7 @@ import net.mmm.survival.farming.statistics.Statistic;
  * @since JDK 8
  */
 public class PlayerStats {
-  private Set<Statistic> statistics;
+  private final Set<Statistic> statistics;
 
   /**
    * Konstruktor zur Erstellung von PlayerStats
@@ -29,16 +29,16 @@ public class PlayerStats {
     Arrays.asList(Type.values()).forEach(type -> statistics.add(StatsManager.create(type)));
   }
 
-  public Set<Statistic> getStatistics() {
+  Set<Statistic> getStatistics() {
     return statistics;
   }
 
-  protected Statistic get(Type statisticType) {
+  protected Statistic get(final Type statisticType) {
     return statistics.stream().filter(statistic ->
         statistic.getType().equals(statisticType)).findFirst().orElse(null);
   }
 
-  public boolean isEmpty() {
+  boolean isEmpty() {
     return statistics.stream().allMatch(statistic -> statistic.getValue() == 0);
   }
 }

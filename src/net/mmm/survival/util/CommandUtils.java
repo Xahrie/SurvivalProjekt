@@ -18,7 +18,8 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean checkPlayer(final CommandSender commandSender) {
-    if (!(commandSender instanceof Player) || SurvivalPlayer.findSurvivalPlayer(((Player) commandSender), commandSender.getName()) == null) {
+    if (!(commandSender instanceof Player) ||
+        SurvivalPlayer.findSurvivalPlayer(((Player) commandSender), commandSender.getName()) == null) {
       commandSender.sendMessage(Messages.NOT_A_PLAYER);
       return false;
     }
@@ -34,7 +35,8 @@ public final class CommandUtils {
    */
   public static boolean isOperator(final Player player) {
     final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
-    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
+    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) &&
+        !group.equals(Group.ADMIN)) {
       player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
       return false;
     }
@@ -64,7 +66,7 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean checkWorld(final Player player) {
-    if (!player.getWorld().getName().equals("world")) {
+    if (!player.getWorld().equals(SurvivalWorld.BAUWELT.get())) {
       player.sendMessage(Messages.NO_VALID_WORLD);
       return false;
     }

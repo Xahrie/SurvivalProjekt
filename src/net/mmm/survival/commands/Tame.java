@@ -13,25 +13,25 @@ import org.bukkit.entity.Player;
  */
 public class Tame implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) sender, sender.getName());
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) commandSender, commandSender.getName());
       editTameStatus(executor);
     }
 
     return false;
   }
 
-  private void editTameStatus(final SurvivalPlayer survivalPlayer) {
-    survivalPlayer.setTamed(!survivalPlayer.isTamed());
-    checkTame(survivalPlayer);
+  private void editTameStatus(final SurvivalPlayer executor) {
+    executor.setTamed(!executor.isTamed());
+    checkTame(executor);
   }
 
-  private void checkTame(final SurvivalPlayer survivalPlayer) {
-    if (survivalPlayer.isTamed()) {
-      survivalPlayer.getPlayer().sendMessage(Messages.TAME_DISABLE);
+  private void checkTame(final SurvivalPlayer executor) {
+    if (executor.isTamed()) {
+      executor.getPlayer().sendMessage(Messages.TAME_DISABLE);
     } else {
-      survivalPlayer.getPlayer().sendMessage(Messages.TAME_ENABLE);
+      executor.getPlayer().sendMessage(Messages.TAME_ENABLE);
     }
   }
 

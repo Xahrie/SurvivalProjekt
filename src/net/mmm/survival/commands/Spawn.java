@@ -12,17 +12,14 @@ import org.bukkit.entity.Player;
  */
 public class Spawn extends Teleport implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final Player executor = (Player) sender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, executor.getName());
-
-      if (CommandUtils.checkTeleport(survivalPlayer)) {
-        super.teleport(executor, executor.getWorld().getSpawnLocation());
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final SurvivalPlayer teleported = SurvivalPlayer
+          .findSurvivalPlayer((Player) commandSender, commandSender.getName());
+      if (CommandUtils.checkTeleport(teleported)) {
+        super.teleport(teleported.getPlayer(), teleported.getPlayer().getWorld().getSpawnLocation());
       }
     }
-
     return false;
   }
-
 }

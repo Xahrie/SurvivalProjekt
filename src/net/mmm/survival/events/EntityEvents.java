@@ -1,5 +1,6 @@
 package net.mmm.survival.events;
 
+import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -14,50 +15,46 @@ import org.bukkit.event.entity.EntityTargetEvent;
  * Events, die sich auf ein Entity (nicht Spieler) beziehen
  *
  * @see org.bukkit.event.entity.CreatureSpawnEvent
+ * @see org.bukkit.event.entity.EntityTargetEvent
  */
 public class EntityEvents implements Listener {
 
   /**
-   * Wenn ein Entity gespawnt wird
-   *
-   * @param e CreatureSpawnEvent
+   * @param event CreatureSpawnEvent -> Wenn ein Entity gespawnt wird
    * @see org.bukkit.event.entity.CreatureSpawnEvent
    */
   @EventHandler
-  public void onCreatureSpawn(final CreatureSpawnEvent e) {
-    if (e.getEntity() instanceof Wither) {
-      witherSpawn(e);
-    } else if (e.getEntity() instanceof Monster) {
-      monsterSpawn(e);
+  public void onCreatureSpawn(final CreatureSpawnEvent event) {
+    if (event.getEntity() instanceof Wither) {
+      witherSpawn(event);
+    } else if (event.getEntity() instanceof Monster) {
+      monsterSpawn(event);
     }
   }
 
-  private void monsterSpawn(final CreatureSpawnEvent e) {
-    if (!e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
-      e.setCancelled(true);
+  private void monsterSpawn(final CreatureSpawnEvent event) {
+    if (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
+      event.setCancelled(true);
     }
   }
 
-  private void witherSpawn(final CreatureSpawnEvent e) {
-    if (e.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER)) {
-      if (!e.getLocation().getWorld().getName().equals("world_nether")) {
-        e.setCancelled(true);
-      }
+  private void witherSpawn(final CreatureSpawnEvent event) {
+    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER) &&
+        !event.getLocation().getWorld().equals(SurvivalWorld.NETHER.get())) {
+      event.setCancelled(true);
     }
   }
 
   /**
-   * Wenn ein Entity ein anderes Entity als Target setzt
-   *
-   * @param e EntityTargetEvent
+   * @param event EntityTargetEvent -> Wenn ein Entity ein anderes Entity als Target setzt
    * @see org.bukkit.event.entity.EntityTargetEvent
    */
   @EventHandler
-  public void onTarget(final EntityTargetEvent e) {
-    if (e.getEntity().getWorld().getName().equals("world") && e.getTarget() instanceof Player && (e.getEntity() instanceof IronGolem || e
-        .getEntity() instanceof Wolf) && e.getTarget() instanceof Player) {
-      e.setCancelled(true);
+  public void onTarget(final EntityTargetEvent event) {
+    if (event.getEntity().getWorld().equals(SurvivalWorld.BAUWELT.get()) &&
+        event.getTarget() instanceof Player && (event.getEntity() instanceof IronGolem ||
+        event.getEntity() instanceof Wolf) && event.getTarget() instanceof Player) {
+      event.setCancelled(true);
     }
   }
-
 }

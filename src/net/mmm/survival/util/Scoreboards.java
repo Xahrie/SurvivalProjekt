@@ -12,34 +12,37 @@ import org.bukkit.scoreboard.Scoreboard;
  */
 public class Scoreboards {
   /**
-   * Setzt fuer einen spezifischen Spieler <code>p</code> das Scoreboard
+   * Setzt fuer einen spezifischen Spieler <code>p</code> das Scoreboard um den Rang anzeigen zu lassen
    *
-   * @param player Owner des Scoreboards
+   * @param owner Owner des Scoreboards
    */
-  public static void setScoreboard(final Player player) {
+  public static void setScoreboard(final Player owner) {
     final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
-    manager.tablist.keySet().forEach(group -> scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(manager.getKurzel(group)));
-    player.setScoreboard(scoreboard);
-    setPrefix(player);
+    manager.tablist.keySet().forEach(group -> scoreboard.registerNewTeam("" + manager.tablist
+        .get(group)).setPrefix(manager.getKurzel(group)));
+    owner.setScoreboard(scoreboard);
+    setPrefix(owner);
   }
 
   /**
    * Setzt fuer einen spezifischen Spieler <code>p</code> den Prefix
    *
-   * @param player Owner des Prefix
+   * @param owner Owner des Prefix
    */
   @SuppressWarnings("deprecation")
-  private static void setPrefix(final Player player) {
+  private static void setPrefix(final Player owner) {
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
-    Bukkit.getOnlinePlayers().forEach(all -> {
-      all.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(player.getUniqueId()))).addPlayer(player);
-      player.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(all.getUniqueId()))).addPlayer(all);
+    Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
+      onlinePlayer.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(owner
+          .getUniqueId()))).addPlayer(owner);
+      owner.getScoreboard().getTeam("" + manager.tablist.get(manager.getGroup(onlinePlayer
+          .getUniqueId()))).addPlayer(onlinePlayer);
     });
-    player.setDisplayName(manager.getPrefix(player) + player.getName());
-    player.setPlayerListName(manager.getPrefix(player) + player.getName());
+    owner.setDisplayName(manager.getPrefix(owner) + owner.getName());
+    owner.setPlayerListName(manager.getPrefix(owner) + owner.getName());
 
   }
 

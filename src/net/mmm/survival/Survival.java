@@ -23,6 +23,7 @@ import net.mmm.survival.events.ChatEvents;
 import net.mmm.survival.events.CommandEvents;
 import net.mmm.survival.events.DeathEvents;
 import net.mmm.survival.events.EntityEvents;
+import net.mmm.survival.events.FarmingEvents;
 import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
@@ -30,8 +31,8 @@ import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
+import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,7 +43,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author PAS123
  * @author BlueIronGirl
  * @author Abgie
- * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch BlueIronGirl und Abgie
+ * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch
+ * BlueIronGirl und Abgie
  */
 public class Survival extends JavaPlugin {
   private static Survival server = null;
@@ -60,14 +62,15 @@ public class Survival extends JavaPlugin {
   public void onEnable() {
     final SurvivalData survivalData = createInstanceAndData();
     setupPlugin(survivalData);
-    createFarmwelt();
+    checkAndCreateWorlds();
   }
 
   /**
    * Wird bei der Deaktivierung des Servers durchgefuehrt
    */
   public void onDisable() {
-    Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet."));
+    Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX +
+        "Der Server wird neugestartet."));
     save();
     SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
     if (SurvivalData.getInstance().getDynmap() != null) {
@@ -76,7 +79,7 @@ public class Survival extends JavaPlugin {
   }
 
   public void save() {
-    StatsManager.saveStats();
+    StatsManager.saveStats(); /* Statistiken der Spieler speichern bzw. in Geld umwandeln */
     SurvivalData.getInstance().getAsyncMySQL().storePlayers(); /* Spielerdaten speichern */
   }
 
@@ -93,22 +96,24 @@ public class Survival extends JavaPlugin {
     execScheduler(); // Starte den Counter
   }
 
-  private void createFarmwelt() {
-    if (Bukkit.getWorlds().contains(Bukkit.getWorld("farmwelt"))) {
-      Bukkit.createWorld(new WorldCreator("farmwelt"));
-    }
+  @SuppressWarnings("ResultOfMethodCallIgnored")
+  private void checkAndCreateWorlds() {
+    Arrays.asList(SurvivalWorld.values()).forEach(SurvivalWorld::get);
   }
 
   private void registerEvents() {
-    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(), new PlayerConnectionEvents(), new DeathEvents(),
-        new EntityEvents(), new InteractEvents(), new LocationChangeEvents());
+    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(),
+        new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
+        new LocationChangeEvents(), new PlayerConnectionEvents());
     listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
   private void registerCommands() {
-    final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(), new Money(), new Navi(),
-        new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
-    commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName().substring(26).toLowerCase()).setExecutor(commandExecutor));
+    final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(),
+        new Gamemode(), new Home(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(),
+        new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
+    commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
+        .substring(26).toLowerCase()).setExecutor(commandExecutor));
   }
 
   private void registerDynmap(final SurvivalData survivalData) {
@@ -118,17 +123,17 @@ public class Survival extends JavaPlugin {
   }
 
   private void execScheduler() {
-    AtomicInteger counter = new AtomicInteger();
+    final AtomicInteger counter = new AtomicInteger();
     Bukkit.getScheduler().scheduleSyncRepeatingTask(Survival.getInstance(), () -> {
           if (counter.get() % 60 == 0) {
-            StatsManager.saveStats();
+            StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
           }
           if (counter.get() % 5 == 0) {
             Bukkit.getOnlinePlayers().forEach(player ->
-                SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage("Money: " +
-                    SurvivalPlayer.findSurvivalPlayer(player, player.getName()).getMoney() + Konst.CURRENCY));
+                SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
+                    "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
+                        .getMoney() + Konst.CURRENCY));
           }
-
           counter.getAndIncrement();
         }
 

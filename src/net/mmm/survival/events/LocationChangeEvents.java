@@ -1,7 +1,7 @@
 package net.mmm.survival.events;
 
 import net.mmm.survival.player.SurvivalPlayer;
-import org.bukkit.Bukkit;
+import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -15,11 +15,8 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  * @see org.bukkit.event.player.PlayerPortalEvent
  */
 public class LocationChangeEvents implements Listener {
-
   /**
-   * Wenn ein Spieler durch ein Portal geht
-   *
-   * @param e PlayerPortalEvent
+   * @param e PlayerPortalEvent -> Wenn ein Spieler durch ein Portal geht
    * @see org.bukkit.event.player.PlayerPortalEvent
    */
   @EventHandler
@@ -27,31 +24,28 @@ public class LocationChangeEvents implements Listener {
     if (e.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
       e.setCancelled(true);
       e.useTravelAgent(false);
-
       checkWorld(e);
     }
-
   }
 
-  private void checkWorld(PlayerPortalEvent e) {
-    if (e.getFrom().getWorld().getName().equals("world")) {
-      e.getPlayer().teleport(Bukkit.getWorld("world_nether").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+  private void checkWorld(final PlayerPortalEvent event) {
+    if (event.getFrom().getWorld().equals(SurvivalWorld.BAUWELT.get())) {
+      event.getPlayer().teleport(SurvivalWorld.NETHER.get().getSpawnLocation(),
+          PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
     } else {
-      e.getPlayer().teleport(Bukkit.getWorld("world").getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+      event.getPlayer().teleport(SurvivalWorld.BAUWELT.get().getSpawnLocation(),
+          PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
     }
   }
 
   /**
-   * Wenn ein Spieler sich bewegt
-   *
-   * @param e PlayerMoveEvent
+   * @param event PlayerMoveEvent -> Wenn ein Spieler sich bewegt
    * @see org.bukkit.event.player.PlayerMoveEvent
    */
   @EventHandler
-  public void onMove(final PlayerMoveEvent e) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(e.getPlayer(), e.getPlayer().getName());
-
+  public void onMove(final PlayerMoveEvent event) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer
+        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
     survivalPlayer.setTeleport(false);
   }
-
 }

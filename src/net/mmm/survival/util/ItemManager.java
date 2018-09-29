@@ -1,12 +1,11 @@
 package net.mmm.survival.util;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
-import com.mojang.authlib.GameProfile;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -18,35 +17,36 @@ public class ItemManager {
   /**
    * Build-Methode fuer Item mit folgenden Angaben
    *
-   * @param ma Material
+   * @param material Material
    * @param name Displayname
    * @param lore Eigenschaften der Lore
    * @return Item
    */
-  public static ItemStack build(final Material ma, final String name, final List<String> lore) {
-    final ItemStack item = new ItemStack(ma);
-    final ItemMeta meta = item.getItemMeta();
+  public static ItemStack build(final Material material, final String name, final List<String> lore) {
+    final ItemStack itemStack = new ItemStack(material);
+    final ItemMeta itemMeta = itemStack.getItemMeta();
 
-    meta.setDisplayName(name);
-    meta.setLore(lore);
-    item.setItemMeta(meta);
+    itemMeta.setDisplayName(name);
+    itemMeta.setLore(lore);
+    itemStack.setItemMeta(itemMeta);
 
-    return item;
+    return itemStack;
   }
 
   /**
    * Build-Methode fuer Item mit folgenden Angaben
    *
-   * @param ma Material
+   * @param material Material
    * @param damage Schadenswert
    * @param name Displayname
    * @param lore Eigenschaften der Lore
    * @return Item
    */
-  public static ItemStack build(final Material ma, final int damage, final String name, final List<String> lore) {
-    final ItemStack item = new ItemStack(ma, 1, (short) damage);
+  public static ItemStack build(final Material material, final int damage, final String name, final List<String> lore) {
+    final ItemStack item = new ItemStack(material);
     final ItemMeta meta = item.getItemMeta();
 
+    ((Damageable) meta).setDamage(damage);
     meta.setDisplayName(name);
     meta.setLore(lore);
     item.setItemMeta(meta);
@@ -57,18 +57,19 @@ public class ItemManager {
   /**
    * Build-Methode fuer Item mit folgenden Angaben
    *
-   * @param ma Material
-   * @param ench Verzauberung
+   * @param material Material
+   * @param enchantment Verzauberung
    * @param level Level der Verzauberung
    * @param name Displayname
    * @param lore Eigenschaften der Lore
    * @return Item
    */
-  public static ItemStack build(final Material ma, final Enchantment ench, final int level, final String name, final List<String> lore) {
-    final ItemStack item = build(ma, name, lore);
+  public static ItemStack build(final Material material, final Enchantment enchantment, final int level, final String name,
+                                final List<String> lore) {
+    final ItemStack item = build(material, name, lore);
     final ItemMeta meta = item.getItemMeta();
 
-    meta.addEnchant(ench, level, true);
+    meta.addEnchant(enchantment, level, true);
     item.setItemMeta(meta);
 
     return item;
@@ -77,41 +78,19 @@ public class ItemManager {
   /**
    * Build-Methode fuer Kopf mit folgenden Angaben
    *
-   * @param profile Spielprofil
-   * @param name Name
+   * @param playerName Name
    * @param lore Eigenschaften der Lore
    * @return Kopf
    */
-  @SuppressWarnings("deprecation")
-  public static ItemStack getSkull(final GameProfile profile, final String name, final List<String> lore) {
-    final ItemStack skull = new ItemStack(Material.LEGACY_SKULL_ITEM, 1, (short) 3);
-    final SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+  public static ItemStack getSkull(final String playerName, final List<String> lore) {
+    final ItemStack playerSkull = new ItemStack(Material.PLAYER_HEAD);
+    final SkullMeta skullMeta = (SkullMeta) playerSkull.getItemMeta();
 
-    skullMeta.setDisplayName(name);
-    skullMeta.setLore(lore);
+    ((Damageable) skullMeta).setDamage(3);
+    skullMeta.setOwningPlayer(UUIDUtils.getPlayer(playerName));
+    playerSkull.setItemMeta(skullMeta);
 
-    Field profileField = null;
-
-    try {
-      profileField = skullMeta.getClass().getDeclaredField("profile");
-    } catch (final NoSuchFieldException | SecurityException ignored) {
-    }
-
-    if (profileField != null) {
-      profileField.setAccessible(true);
-    }
-
-    try {
-      if (profileField != null) {
-        profileField.set(skullMeta, profile);
-      }
-    } catch (final IllegalArgumentException | IllegalAccessException ex) {
-      ex.printStackTrace();
-    }
-
-    skull.setItemMeta(skullMeta);
-
-    return skull;
+    return playerSkull;
   }
 
 }

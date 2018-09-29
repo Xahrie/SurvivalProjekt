@@ -11,35 +11,36 @@ import org.bukkit.entity.Player;
 
 public class Money implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] strings) {
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
-      final Player executor = (Player) commandSender;
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, executor.getName());
-
-      checkArgumentLength(strings, executor, survivalPlayer);
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer
+          .findSurvivalPlayer((Player) commandSender, commandSender.getName());
+      checkArgumentLength(args, survivalPlayer);
     }
 
     return false;
   }
 
-  private void checkArgumentLength(final String[] strings, final Player executor, final SurvivalPlayer survivalPlayer) {
+  private void checkArgumentLength(final String[] strings, final SurvivalPlayer executor) {
     if (strings.length == 0) {
-      evaluateZeroArguments(executor, survivalPlayer, executor.getDisplayName());
+      evaluateZeroArguments(executor);
     } else if (strings.length == 1) {
-      evaluateOneArgument(strings, executor);
+      evaluateOneArgument(strings, executor.getPlayer());
     } else {
-      executor.sendMessage((CommandUtils.isOperator(executor)) ? Messages.USAGE_MONEY_COMMAND : Messages.USAGE_MONEY_COMMAND_ADMIN);
+      executor.getPlayer().sendMessage((CommandUtils.isOperator(executor.getPlayer())) ?
+          Messages.USAGE_MONEY_COMMAND : Messages.USAGE_MONEY_COMMAND_ADMIN);
     }
   }
 
-  private void evaluateZeroArguments(final Player executor, final SurvivalPlayer survivalPlayer, final String displayName) {
-    executor.sendMessage(Messages.PREFIX + "Kontostand von §e" + displayName + "§7: §e" + survivalPlayer.getMoney() + Konst.CURRENCY + "§7.");
+  private void evaluateZeroArguments(final SurvivalPlayer executor) {
+    executor.getPlayer().sendMessage(Messages.PREFIX + "Kontostand von §e" + executor.getPlayer()
+        .getDisplayName() + "§7: §e" + executor.getMoney() + Konst.CURRENCY + "§7.");
   }
 
   private void evaluateOneArgument(final String[] strings, final Player executor) {
     final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(executor, strings[0]);
     if (target != null) {
-      evaluateZeroArguments(executor, target, target.getPlayer().getDisplayName());
+      evaluateZeroArguments(target);
     }
   }
 

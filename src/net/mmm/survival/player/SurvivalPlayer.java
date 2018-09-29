@@ -12,50 +12,22 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- * SurvivalPlayer speichert ueber die uuid den Geldbetrag, Beschwerden, Lizenzen, Votes, die
- * Maxzone und den Homepunkt
+ * SurvivalPlayer speichert ueber die uuid den Geldbetrag, Beschwerden,
+ * Lizenzen, Votes, Maxzone und Homepunkt
  *
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer extends HotbarMessager {
-  /**
-   * Ermittle den SurvivalPlayer aus dem SpielerCache
-   *
-   * @param executor Ausfuehrender Spieler
-   * @param playerName Spielername
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann <code>return null</code>
-   */
-  public static SurvivalPlayer findSurvivalPlayer(final Player executor, final String playerName) {
-    final SurvivalPlayer survivalPlayer = determinePlayer(playerName);
-    if (survivalPlayer == null) {
-      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
-    }
-    return survivalPlayer;
-  }
-
-  private static SurvivalPlayer determinePlayer(final String playerName) {
-    if (SurvivalData.getInstance().getPlayerCache().containsValue(playerName)) {
-      final UUID uuid = UUIDUtils.getUUID(playerName);
-      if (SurvivalData.getInstance().getPlayers().containsKey(uuid)) {
-        return SurvivalData.getInstance().getPlayers().get(uuid);
-      }
-    }
-    return null;
-  }
-
-  private boolean zonenedit, zonensearch, tamed, teleport;
   private final Date lastComplaint;
+  private final Statistics stats;
   private final List<Complaint> complaints;
   private final List<Licence> licences;
-  private final Statistics stats;
+  private boolean zonenedit, zonensearch, tamed, teleport;
   //<editor-fold desc="mysql parameter">
-  private UUID uuid;
   private short votes;
   private int money, maxzone;
   private Location home;
-  //</editor-fold>
-
-
+  private UUID uuid;
   /**
    * Konstruktor
    *
@@ -77,12 +49,35 @@ public class SurvivalPlayer extends HotbarMessager {
     this.maxzone = maxzone;
     this.home = home;
 
-    this.teleport = false;
-    this.zonenedit = false;
-    this.zonensearch = false;
-    this.tamed = false;
-    this.lastComplaint = new Date();
-    this.stats = new Statistics();
+    this.lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
+    this.stats = new Statistics(); // Erstelle Statistiken
+  }
+
+  /**
+   * Ermittle den SurvivalPlayer aus dem SpielerCache
+   *
+   * @param executor Ausfuehrender Spieler
+   * @param playerName Spielername
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann
+   * <code>return null</code>
+   */
+  public static SurvivalPlayer findSurvivalPlayer(final Player executor, final String playerName) {
+    final SurvivalPlayer survivalPlayer = determinePlayer(playerName);
+    if (survivalPlayer == null) {
+      executor.sendMessage(Messages.PLAYER_NOT_FOUND);
+    }
+    return survivalPlayer;
+  }
+  //</editor-fold>
+
+  private static SurvivalPlayer determinePlayer(final String playerName) {
+    if (SurvivalData.getInstance().getPlayerCache().containsValue(playerName)) {
+      final UUID uuid = UUIDUtils.getUUID(playerName);
+      if (SurvivalData.getInstance().getPlayers().containsKey(uuid)) {
+        return SurvivalData.getInstance().getPlayers().get(uuid);
+      }
+    }
+    return null;
   }
 
   public Player getPlayer() {
@@ -96,12 +91,12 @@ public class SurvivalPlayer extends HotbarMessager {
 
   public void outputComplaint(final Complaint complaint) {
     getPlayer().sendMessage(Messages.PREFIX + "§c Der Spieler: §e" + SurvivalData.getInstance().getPlayers()
-        .get(complaint.getOperator()).getPlayer().getDisplayName() + "§c hat sich am §e" +
+        .get(complaint.getExecutor()).getPlayer().getDisplayName() + "§c hat sich am §e" +
         complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
   public void sendHotbarMessage(final String message) {
-    sendHotBarMessage(getPlayer(), message);
+    sendHotbarMessage(getPlayer(), message);
   }
   //<editor-fold desc="getter and setter">
 
@@ -111,6 +106,10 @@ public class SurvivalPlayer extends HotbarMessager {
 
   public Location getHome() {
     return home;
+  }
+
+  public void setHome(final Location home) {
+    this.home = home;
   }
 
   public Date getLastComplaint() {
@@ -125,8 +124,16 @@ public class SurvivalPlayer extends HotbarMessager {
     return maxzone;
   }
 
+  public void setMaxzone(final int maxzone) {
+    this.maxzone = maxzone;
+  }
+
   public int getMoney() {
     return money;
+  }
+
+  public void setMoney(final int money) {
+    this.money = money;
   }
 
   public Statistics getStats() {
@@ -137,60 +144,48 @@ public class SurvivalPlayer extends HotbarMessager {
     return uuid;
   }
 
-  public short getVotes() {
-    return votes;
-  }
-
-  public boolean isTamed() {
-    return tamed;
-  }
-
-  public boolean isTeleport() {
-    return teleport;
-  }
-
-  public boolean isZonenedit() {
-    return zonenedit;
-  }
-
-  public boolean isZonensearch() {
-    return zonensearch;
-  }
-
-  public void setMaxzone(final int maxzone) {
-    this.maxzone = maxzone;
-  }
-
-  public void setMoney(final int money) {
-    this.money = money;
-  }
-
   public void setUuid(final UUID uuid) {
     this.uuid = uuid;
+  }
+
+  public short getVotes() {
+    return votes;
   }
 
   public void setVotes(final short votes) {
     this.votes = votes;
   }
 
+  public boolean isTamed() {
+    return tamed;
+  }
+
   public void setTamed(final boolean tamed) {
     this.tamed = tamed;
+  }
+
+  public boolean isTeleport() {
+    return teleport;
   }
 
   public void setTeleport(final boolean teleport) {
     this.teleport = teleport;
   }
 
+  public boolean isZonenedit() {
+    return zonenedit;
+  }
+
   public void setZonenedit(final boolean zonenedit) {
     this.zonenedit = zonenedit;
   }
 
-  public void setZonensearch(final boolean zonensearch) {
-    this.zonensearch = zonensearch;
+  public boolean isZonensearch() {
+    return zonensearch;
   }
 
-  public void setHome(final Location home) {
-    this.home = home;
+  public void setZonensearch(final boolean zonensearch) {
+    this.zonensearch = zonensearch;
   }
 
   //</editor-fold>

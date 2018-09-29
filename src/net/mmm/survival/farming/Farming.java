@@ -15,7 +15,6 @@ package net.mmm.survival.farming;
  * @since JDK 8
  */
 public class Farming {
-
   public static final float MONEY_PER_ACTIVE_MINUTE = 0.1F; // 0.1  = ca. 1 Euro pro 10 Minuten
   public static final float MONEY_PER_METER = 0.01F;        // 0.01 = ca. 1 Euro pro  1 Minuten
 }

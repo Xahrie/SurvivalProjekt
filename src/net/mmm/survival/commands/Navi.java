@@ -8,8 +8,8 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Regions;
+import net.mmm.survival.util.SurvivalWorld;
 import net.mmm.survival.util.UUIDFetcher;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,9 +21,9 @@ import org.bukkit.entity.Player;
  */
 public class Navi implements CommandExecutor {
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
-      final Player player = (Player) sender;
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      final Player player = (Player) commandSender;
       checkArguments(player, args);
     }
 
@@ -46,19 +46,22 @@ public class Navi implements CommandExecutor {
     }
   }
 
-  private void findPlayer(final String args, final Player player) {
-    UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, name -> checkRegion(player, uuid, name)));
+  private void findPlayer(final String args, final Player executor) {
+    UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, playerName -> checkRegion(executor, uuid, playerName)));
   }
 
-  private void checkRegion(final Player executor, final UUID uuid, final String name) {
+  private void checkRegion(final Player executor, final UUID uuid, final String playerName) {
     final ProtectedRegion region = getRegionWhenExists(uuid, executor);
     editCompassTarget(executor, region);
-    executor.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + name + " gesetzt.");
+    executor.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" +
+        playerName + " gesetzt.");
   }
 
   private ProtectedRegion getRegionWhenExists(final UUID uuid, final Player executor) {
-    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false) != null) {
-      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager()/*.getRegion()*/, uuid.toString(), false);
+    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager(),
+        uuid.toString(), false) != null) {
+      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager(),
+          uuid.toString(), false);
     } else {
       executor.sendMessage(Messages.ZONE_UNGUELTIG);
     }
@@ -66,8 +69,9 @@ public class Navi implements CommandExecutor {
   }
 
   private void editCompassTarget(final Player executor, final ProtectedRegion region) {
-    executor.setCompassTarget(new Location(Bukkit.getWorld("world"), Objects.requireNonNull(region).getMinimumPoint().getBlockX(),
-        region.getMinimumPoint().getBlockY(), region.getMinimumPoint().getBlockZ()));
+    executor.setCompassTarget(new Location(SurvivalWorld.BAUWELT.get(), Objects.requireNonNull(region)
+        .getMinimumPoint().getBlockX(), region.getMinimumPoint().getBlockY(), region.getMinimumPoint()
+        .getBlockZ()));
   }
 
 }

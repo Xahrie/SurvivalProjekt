@@ -14,18 +14,15 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class ChatEvents implements Listener {
   /**
-   * Wenn ein Spieler chattet
-   *
-   * @param e AsyncPlayerChatEvent
+   * @param event AsyncPlayerChatEvent -> Wenn ein Spieler chattet
    * @see org.bukkit.event.player.AsyncPlayerChatEvent
    */
   @EventHandler
-  public void onChat(final AsyncPlayerChatEvent e) {
-    final Player player = e.getPlayer();
-
-    e.setCancelled(true);
-    Bukkit.getOnlinePlayers().forEach(all -> all.sendMessage(BungeeGroupManager.getGroupManager().getPrefix(player) + player.getName() + " §7» §7" +
-        e.getMessage()));
+  public void onChat(final AsyncPlayerChatEvent event) {
+    final Player chatter = event.getPlayer();
+    event.setCancelled(true);
+    Bukkit.getOnlinePlayers().forEach(all -> all.sendMessage(BungeeGroupManager.getGroupManager()
+        .getPrefix(chatter) + chatter.getName() + " §7» §7" + event.getMessage()));
   }
 
 }
