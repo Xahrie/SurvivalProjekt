@@ -16,7 +16,6 @@ import net.mmm.survival.commands.SetHome;
 import net.mmm.survival.commands.SetSpawn;
 import net.mmm.survival.commands.Spawn;
 import net.mmm.survival.commands.Tame;
-import net.mmm.survival.commands.Tp;
 import net.mmm.survival.commands.Vote;
 import net.mmm.survival.commands.Zone;
 import net.mmm.survival.dynmap.DynmapWorldGuardPlugin;
@@ -110,7 +109,7 @@ public class Survival extends JavaPlugin {
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(),
         new Gamemode(), new Home(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(),
-        new SetSpawn(), new Spawn(), new Tame(), new Tp(), new Vote(), new Zone());
+        new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
         .substring(26).toLowerCase()).setExecutor(commandExecutor));
   }
