@@ -24,6 +24,7 @@ public class WalkLength extends Statistic {
       org.bukkit.Statistic.BOAT_ONE_CM, org.bukkit.Statistic.CLIMB_ONE_CM,
       org.bukkit.Statistic.FLY_ONE_CM, org.bukkit.Statistic.MINECART_ONE_CM,
       org.bukkit.Statistic.PIG_ONE_CM, org.bukkit.Statistic.SWIM_ONE_CM);
+  private int oldLength = 0;
 
   /**
    * Konstruktor
@@ -52,9 +53,9 @@ public class WalkLength extends Statistic {
     for (final org.bukkit.Statistic statistic : statistics) {
       lengthInCm += survivalPlayer.getPlayer().getStatistic(statistic);
     }
-    final int actualLength = statistics.stream().mapToInt(statistic -> survivalPlayer.getPlayer().getStatistic(statistic)).sum();
-    final int distance = actualLength - lengthInCm;
-    incrementValue(distance);
+    final int difference = lengthInCm - oldLength;
+    incrementValue(difference);
+    oldLength = lengthInCm;
   }
 
   /**

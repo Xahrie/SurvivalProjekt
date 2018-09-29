@@ -43,7 +43,7 @@ public class Economy implements CommandExecutor {
   private void evaluateOneArgument(final String string, final Player executor) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, string);
     if (survivalPlayer != null) {
-      final int money = survivalPlayer.getMoney();
+      final double money = survivalPlayer.getMoney();
       executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + survivalPlayer.getPlayer()
           .getDisplayName() + "§7 hat §e" + money + Konst.CURRENCY + "§7 auf dem Konto.");
     } else {
@@ -71,7 +71,7 @@ public class Economy implements CommandExecutor {
     }
   }
 
-  private void updateMoney(final Player executor, final Player target, final SurvivalPlayer survivalPlayer, final int amount) {
+  private void updateMoney(final Player executor, final Player target, final SurvivalPlayer survivalPlayer, final double amount) {
     survivalPlayer.setMoney(amount);
     if (target.isOnline()) {
       target.sendMessage(Messages.PREFIX + "Dein Kontostand wurde auf §e" + survivalPlayer.getMoney() +

@@ -25,7 +25,8 @@ public class SurvivalPlayer extends HotbarMessager {
   private boolean zonenedit, zonensearch, tamed, teleport;
   //<editor-fold desc="mysql parameter">
   private short votes;
-  private int money, maxzone;
+  private double money;
+  private int maxzone;
   private Location home;
   private UUID uuid;
 
@@ -40,7 +41,7 @@ public class SurvivalPlayer extends HotbarMessager {
    * @param maxzone Maximal zulaessige Groeße der Zone
    * @param home Homepunkt
    */
-  public SurvivalPlayer(final UUID uuid, final int money, final List<Complaint> complaints, final List<Licence> licences, final short votes,
+  public SurvivalPlayer(final UUID uuid, final double money, final List<Complaint> complaints, final List<Licence> licences, final short votes,
                         final int maxzone, final Location home) {
     this.uuid = uuid;
     this.money = money;
@@ -97,7 +98,7 @@ public class SurvivalPlayer extends HotbarMessager {
   }
 
   public void sendHotbarMessage(final String message) {
-    sendHotbarMessage(getPlayer(), message);
+    //sendHotbarMessage(getPlayer(), message);
   }
   //<editor-fold desc="getter and setter">
 
@@ -129,11 +130,11 @@ public class SurvivalPlayer extends HotbarMessager {
     this.maxzone = maxzone;
   }
 
-  public int getMoney() {
+  public double getMoney() {
     return money;
   }
 
-  public void setMoney(final int money) {
+  public void setMoney(final double money) {
     this.money = money;
   }
 

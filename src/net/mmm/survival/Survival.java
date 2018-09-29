@@ -28,8 +28,6 @@ import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
-import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Bukkit;
@@ -129,10 +127,10 @@ public class Survival extends JavaPlugin {
             StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
           }
           if (counter.get() % 5 == 0) { //dauerhaft Geldwert anzeigen
-            Bukkit.getOnlinePlayers().forEach(player ->
+            /*Bukkit.getOnlinePlayers().forEach(player ->
                 SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
                     "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
-                        .getMoney() + Konst.CURRENCY));
+                        .getMoney() + Konst.CURRENCY));*/
           }
           counter.getAndIncrement();
         }
