@@ -22,7 +22,7 @@ public enum Licence {
 	}
 	
 	/*
-	 *  
+	 *   Wichtig
 	 *   @return LizenzID
 	 */
 	public Integer getID() {
