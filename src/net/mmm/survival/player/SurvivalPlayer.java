@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.farming.Statistics;
+import net.mmm.survival.farming.PlayerStats;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Location;
@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
  */
 public class SurvivalPlayer extends HotbarMessager {
   private final Date lastComplaint;
-  private final Statistics stats;
+  private final PlayerStats stats;
   private final List<Complaint> complaints;
   private final List<Licence> licences;
   private boolean zonenedit, zonensearch, tamed, teleport;
@@ -28,6 +28,7 @@ public class SurvivalPlayer extends HotbarMessager {
   private int money, maxzone;
   private Location home;
   private UUID uuid;
+
   /**
    * Konstruktor
    *
@@ -50,7 +51,7 @@ public class SurvivalPlayer extends HotbarMessager {
     this.home = home;
 
     this.lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
-    this.stats = new Statistics(); // Erstelle Statistiken
+    this.stats = new PlayerStats(); // Erstelle Statistiken
   }
 
   /**
@@ -136,7 +137,7 @@ public class SurvivalPlayer extends HotbarMessager {
     this.money = money;
   }
 
-  public Statistics getStats() {
+  public PlayerStats getStats() {
     return stats;
   }
 

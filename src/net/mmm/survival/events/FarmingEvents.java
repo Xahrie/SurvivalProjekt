@@ -28,7 +28,7 @@ public class FarmingEvents implements Listener {
   public void onAction(final PlayerEvent event) {
     final SurvivalPlayer handlingPlayer = SurvivalPlayer
         .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
-    handlingPlayer.getStats().getStatistic(Type.ONLINE_TIME).calculate(event);
+    handlingPlayer.getStats().getStatistic(Type.ONLINE_TIME).update(handlingPlayer);
   }
 
   /**
@@ -40,10 +40,7 @@ public class FarmingEvents implements Listener {
     final SurvivalPlayer teleported = SurvivalPlayer
         .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
 
-    if (!event.getFrom().getWorld().equals(SurvivalWorld.FARMWELT.get()) && // Teleport in die Farmwelt
-        event.getTo().getWorld().equals(SurvivalWorld.FARMWELT.get())) {
-      teleported.getStats().getStatistic(Type.WALK_LENGTH_CM).calculate(teleported);
-    } else if (event.getFrom().getWorld().equals(SurvivalWorld.FARMWELT.get()) && // Teleport aus der Farmwelt
+    if (event.getFrom().getWorld().equals(SurvivalWorld.FARMWELT.get()) && // Teleport aus der Farmwelt
         !event.getTo().getWorld().equals(SurvivalWorld.FARMWELT.get())) {
       teleported.getStats().getStatistic(Type.WALK_LENGTH_CM).update(teleported); // Speichere Statistik
     }

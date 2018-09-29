@@ -3,7 +3,6 @@ package net.mmm.survival.farming;
 import java.util.Arrays;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.farming.statistics.Statistic;
 import net.mmm.survival.player.SurvivalPlayer;
 
 /**
@@ -30,16 +29,9 @@ public class StatsManager {
    *
    * @param playerToSave zu verarbeitender Spieler
    */
-  public static void saveStats(final SurvivalPlayer playerToSave) {
-    updateStats(playerToSave);
+  private static void saveStats(final SurvivalPlayer playerToSave) {
     replaceStatsToMoney(playerToSave);
     resetStats(playerToSave);
-  }
-
-
-  private static void updateStats(final SurvivalPlayer playerToSave) {
-    Arrays.asList(Type.values()).forEach(type ->
-        playerToSave.getStats().getStatistic(type).update(playerToSave));
   }
 
   private static void replaceStatsToMoney(final SurvivalPlayer playerToSave) {
@@ -48,19 +40,6 @@ public class StatsManager {
   }
 
   private static void resetStats(final SurvivalPlayer playerToSave) {
-    if (!playerToSave.getStats().isEmpty()) {
-      Arrays.asList(Type.values()).forEach(type -> playerToSave.getStats().getStatistic(type).resetValue());
-    }
-
-  }
-
-  static Statistic create(final Type type) {
-    return create(type, 0);
-  }
-
-  static Statistic create(final Type type, final int value) {
-    final Statistic statistic = type.get();
-    statistic.setValue(value);
-    return statistic;
+    Arrays.asList(Type.values()).forEach(type -> playerToSave.getStats().getStatistic(type).resetValue());
   }
 }

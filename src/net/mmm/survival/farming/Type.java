@@ -1,9 +1,5 @@
 package net.mmm.survival.farming;
 
-import net.mmm.survival.farming.statistics.OnlineTime;
-import net.mmm.survival.farming.statistics.Statistic;
-import net.mmm.survival.farming.statistics.WalkLength;
-
 /**
  * Type beschreibt die Typen der Statistiken die hier getrackt werden
  *
@@ -13,16 +9,16 @@ import net.mmm.survival.farming.statistics.WalkLength;
  * @since JDK 8
  */
 public enum Type {
-  ONLINE_TIME(new OnlineTime()),
-  WALK_LENGTH_CM(new WalkLength());
+  ONLINE_TIME("Online-Time"),
+  WALK_LENGTH_CM("Walk-Length");
 
-  private final Statistic statistic;
+  private final String statistic;
 
-  Type(final Statistic statistic) {
+  Type(final String statistic) {
     this.statistic = statistic;
   }
 
-  public Statistic get() {
+  public String get() {
     return statistic;
   }
 }

@@ -3,7 +3,7 @@ package net.mmm.survival.farming.statistics;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.mmm.survival.farming.Farming;
+import net.mmm.survival.farming.FarmingKonst;
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 
@@ -17,7 +17,7 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @since JDK 8
  */
 public class OnlineTime extends Statistic {
-  private final Set<Long> activeMinutes;
+  private final Set<Long> addedMinutes = new HashSet<>(); //Pro Minute nur einmal Wert erhoehen
 
   /**
    * Konstruktor
@@ -33,17 +33,6 @@ public class OnlineTime extends Statistic {
    */
   private OnlineTime(final int value) {
     super(Type.ONLINE_TIME, value);
-    this.activeMinutes = new HashSet<>();
-  }
-
-  /**
-   * Berechnet wie viel die Statistik wert ist
-   *
-   * @param objects Parameter
-   */
-  @Override
-  public void calculate(final Object... objects) {
-    this.activeMinutes.add((Long) objects[0]);
   }
 
   /**
@@ -53,8 +42,11 @@ public class OnlineTime extends Statistic {
    */
   @Override
   public void update(final SurvivalPlayer survivalPlayer) {
-    incrementValue(this.activeMinutes.size() - 1);
-    this.activeMinutes.clear();
+    final Long aktuelleSystemzeitMinuten = System.currentTimeMillis() / 60000;
+    if (!addedMinutes.contains(aktuelleSystemzeitMinuten)) {
+      incrementValue(1);
+      this.addedMinutes.add(aktuelleSystemzeitMinuten);
+    }
   }
 
   /**
@@ -62,7 +54,7 @@ public class OnlineTime extends Statistic {
    */
   @Override
   public float getMoney() {
-    return getValue() * Farming.MONEY_PER_ACTIVE_MINUTE;
+    return getValue() * FarmingKonst.MONEY_PER_ACTIVE_MINUTE;
   }
 
 }
