@@ -9,19 +9,28 @@ public enum Licence {
 	BAULIZENZ(2);
 	
   /*
-   *  
+   *  @param id LizenzID
    *
    */
   private final Integer id;
   
+  /*
+   * @param id LizenzID
+   */
 	Licence(final Integer id) {
 	  this.id = id;
 	}
 	
+	/*
+	 *  @return LizenzID
+	 */
 	public Integer getID() {
 	  return id;
 	}
 	
+	/*
+	 * @return Welten Name für die LizenzID
+	 */
 	public String getWorldName() {
 	  return id == 0 ? SurvivalWorld.NETHER.name() : id == 1 ? SurvivalWorld.END.name() : SurvivalWorld.BAUWELT.name();
 	}
