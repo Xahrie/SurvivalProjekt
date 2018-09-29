@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.Scoreboards;
-import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -41,14 +38,6 @@ public class PlayerConnectionEvents implements Listener {
     Scoreboards.setScoreboard(event.getPlayer()); //Scoreboard initialisieren
     handleVotes(event, joined);     //Vote-Plugin
     handleComplaints(joined);
-    checkWorld(joined);
-  }
-
-  private void checkWorld(final SurvivalPlayer joined) {
-    final World joinedWorld = joined.getPlayer().getWorld();
-    if (joinedWorld.equals(SurvivalWorld.FARMWELT.get())) {
-      joined.getStats().getStatistic(Type.WALK_LENGTH_CM).modify(joined);
-    }
   }
 
   private void handleComplaints(final SurvivalPlayer joined) {
