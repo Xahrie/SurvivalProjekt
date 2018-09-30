@@ -69,6 +69,16 @@ public final class Messages {
   static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
 
+  /*
+  Lizenz System
+   */
+  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz exestiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
+  public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
+  public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz erfolgreich erworben.";
+  public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz erfolgreich erworben.";
+  public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
+  public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
+  
   /**
    * Instanz
    */
