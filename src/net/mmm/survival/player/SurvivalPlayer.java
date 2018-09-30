@@ -18,11 +18,11 @@ import org.bukkit.entity.Player;
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer extends HotbarMessager {
-  private boolean tamed, teleport, zonenedit, zonensearch;
   private final Date lastComplaint;
   private final List<Complaint> complaints;
   private final List<Licence> licences;
   private final PlayerStats stats;
+  private boolean tamed, teleport, zonenedit, zonensearch;
   //<editor-fold desc="mysql parameter">
   private double money;
   private int maxzone;

@@ -18,19 +18,19 @@ public enum SurvivalWorld {
   NETHER("world_nether"),
   END("world_the_end");
 
-  public static SurvivalWorld getWorld(final String name) {
-    if(name.equals("world")) return BAUWELT;
-    if(name.equals("farmwelt")) return FARMWELT;
-    if(name.equals("world_nether")) return NETHER;
-    if(name.equals("world_the_end")) return END;
-    return BAUWELT; //TODO (Abgie) 30.09.2018: Ist das zulaessig?
-  }
-
   private final World world;
 
   SurvivalWorld(final String worldName) {
     this.world = Bukkit.getWorlds().contains(Bukkit.getWorld(worldName)) ? Bukkit.getWorld(worldName)
         : Bukkit.createWorld(new WorldCreator(worldName));
+  }
+
+  public static SurvivalWorld getWorld(final String name) {
+    if (name.equals("world")) return BAUWELT;
+    if (name.equals("farmwelt")) return FARMWELT;
+    if (name.equals("world_nether")) return NETHER;
+    if (name.equals("world_the_end")) return END;
+    return BAUWELT; //TODO (Abgie) 30.09.2018: Ist das zulaessig?
   }
 
   public World get() {

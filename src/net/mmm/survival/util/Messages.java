@@ -8,8 +8,6 @@ public final class Messages {
   public static final String HOME_SET = "§8┃ §eSurvival §7» Du hast deinen Home-Punkt gesetzt.";
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
   public static final String NOT_A_NUMBER = "§8┃ §eSurvival §7» §cDu musst eine Zahl eingeben.";
-  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
-  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";
   public static final String TAME_DISABLE = "§8┃ §eSurvival §7» Du kannst nun wieder normal mit den Tieren interagieren.";
   public static final String TAME_ENABLE = "§8┃ §eSurvival §7» Klicke auf das Tier, dass du freilassen möchtest.\nZum Abbrechen gebe erneut §e/tame §7ein.";
@@ -37,10 +35,6 @@ public final class Messages {
   public static final String GAMEMODE_SPECTATOR = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eZuschauermodus §7§o(Spectatormode) §7gesetzt.";
   public static final String GAMEMODE_UNGUELTIG = "§4┃ Der eingegebene Spielmodus ist ungueltig";
   public static final String USAGE_GAMEMODE_COMMAND = "§8┃ §eSurvival §7» §c/gm <0|1|2|3> <Spieler>";
-  /*
-  Teleport
-   */
-  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   public static final String SPAWN_SET = "§8┃ §eSurvival §7» Du hast den §eSpawn §7gesetzt.";
   public static final String TELEPORT_CANCELED = "§8┃ §eSurvival §7» §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.";
   public static final String TELEPORT_DONT_MOVE = "§8┃ §eSurvival §7» Du wirst teleportiert.. §e§o» Bewege dich nicht..";
@@ -54,7 +48,6 @@ public final class Messages {
   Zone-System
    */
   public static final String NO_DUPLICATE_ZONE = "§8┃ §eSurvival §7» Du kannst keine Zone in einer bereits bestehenden Zone erstellen.";
-  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
   public static final String SPAWNZONE_FOUND = "§8┃ §eSurvival §7» Es wurde die Zone §eSpawnzone §7gefunden.";
   public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/navi <Spieler>";
   public static final String ZONE_ALREADY_EXIST = "§8┃ §eSurvival §7» Du hast bereits eine Zone.";
@@ -68,6 +61,13 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§88┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
+  /*
+  Teleport
+   */
+  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
+  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
 
   /**
    * Instanz

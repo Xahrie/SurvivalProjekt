@@ -12,6 +12,14 @@ public enum Licence {
     this.id = id;
   }
 
+  /**
+   * @param sworld SurvivalWorld
+   * @return Returnt die Lizenz zur zugehoerigen Welt
+   */
+  public static Licence getLicence(final SurvivalWorld sworld) {
+    return sworld == SurvivalWorld.NETHER ? NETHERLIZENZ : sworld == SurvivalWorld.END ? ENDLIZENZ : null;
+  }
+
   public Integer getID() {
     return id;
   }
@@ -21,14 +29,6 @@ public enum Licence {
    */
   public String getWorldName() {
     return id == 1 ? SurvivalWorld.NETHER.name() : id == 2 ? SurvivalWorld.END.name() : SurvivalWorld.BAUWELT.name();
-  }
-
-  /**
-   * @param sworld SurvivalWorld
-   * @return Returnt die Lizenz zur zugehoerigen Welt
-   */
-  public static Licence getLicence(final SurvivalWorld sworld) {
-    return sworld == SurvivalWorld.NETHER ? NETHERLIZENZ : sworld == SurvivalWorld.END ? ENDLIZENZ : null;
   }
 
 }
