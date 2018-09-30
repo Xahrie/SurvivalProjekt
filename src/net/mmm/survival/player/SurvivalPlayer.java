@@ -55,6 +55,13 @@ public class SurvivalPlayer extends HotbarMessager {
     this.stats = new PlayerStats(); // Erstelle Statistiken
   }
 
+  /**
+   * Ermittle den SurvivalPlayer aus dem SpielerCache
+   *
+   * @param player Ausfuehrender Spieler -> Name des Spielers wird zur Ermittlung genommen
+   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann
+   * <code>return null</code>
+   */
   public static SurvivalPlayer findSurvivalPlayer(final Player player) {
     return findSurvivalPlayer(player, player.getName());
   }
