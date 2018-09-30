@@ -21,7 +21,7 @@ import org.bukkit.event.Listener;
  * @see com.vexsoftware.votifier.model.VotifierEvent
  */
 public class VoteEvents implements Listener {
-  private static final Map<String, List<Vote>> VOTES = new HashMap<>(); // Map mit allen Votes
+  private static final Map<String, List<Vote>> votes = new HashMap<>(); // Map mit allen Votes
 
   /**
    * @param event VotifierEvent -> Tritt ein, wenn fuer den Server gevotet wird
@@ -32,12 +32,12 @@ public class VoteEvents implements Listener {
     final Player player = UUIDUtils.getPlayer(event.getVote().getUsername());
 
     if (player != null) { // Gueltiger Spieler
-      if (VOTES.containsKey(event.getVote().getUsername().toLowerCase())) { //schon einmal gevotet
-        final List<Vote> voteList = VOTES.get(event.getVote().getUsername().toLowerCase());
+      if (votes.containsKey(event.getVote().getUsername().toLowerCase())) { //schon einmal gevotet
+        final List<Vote> voteList = votes.get(event.getVote().getUsername().toLowerCase());
         voteList.add(event.getVote());
-        VOTES.put(event.getVote().getUsername().toLowerCase(), voteList);
+        votes.put(event.getVote().getUsername().toLowerCase(), voteList);
       } else {
-        VOTES.put(event.getVote().getUsername().toLowerCase(),
+        votes.put(event.getVote().getUsername().toLowerCase(),
             Collections.singletonList(event.getVote()));
       }
       // Vote in Datenbank speichern
@@ -55,6 +55,6 @@ public class VoteEvents implements Listener {
   }
 
   static Map<String, List<Vote>> getVotes() {
-    return VOTES;
+    return votes;
   }
 }
