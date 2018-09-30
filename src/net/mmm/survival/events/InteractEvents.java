@@ -55,8 +55,7 @@ public class InteractEvents implements Listener {
   private static final Map<Player, List<Block>> show = new HashMap<>();
 
   private static void createRegion(final Player player) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
-
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
     new Thread(() -> {
       RegionManager manager = SurvivalData.getInstance().getDynmap().getRegionManager();
       ProtectedCuboidRegion cuboidRegion = new ProtectedCuboidRegion(survivalPlayer.getUuid().toString(),
@@ -148,14 +147,11 @@ public class InteractEvents implements Listener {
    * @param event PlayerInteractEvent -> Wenn ein Spieler interagiert
    * @see org.bukkit.event.player.PlayerInteractEvent
    */
-  @SuppressWarnings("deprecation")
   @EventHandler
   public void onInteract(final PlayerInteractEvent event) {
     final Player player = event.getPlayer();
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player, player.getName());
-
-    if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getItem() != null &&
-        event.getItem().getType().equals(Material.STICK)) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
+    if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && event.getItem() != null && event.getItem().getType().equals(Material.STICK)) {
       //Keine Zone vorhanden
       if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
         editZone(player, event);
@@ -165,9 +161,9 @@ public class InteractEvents implements Listener {
     }
   }
 
-  @SuppressWarnings("deprecation")
   private void editZone(final Player editor, final PlayerInteractEvent event) {
     final Location firstLocation = event.getClickedBlock().getLocation();
+
     firstLocation.setY(loc1.containsKey(editor) ? 256 : 0);
     isLocationSet(editor, firstLocation);
     editor.sendMessage(Messages.PREFIX + " §7Du hast Position §e" + (loc1.containsKey(editor) &&
@@ -190,10 +186,11 @@ public class InteractEvents implements Listener {
   private void zoneScheduler(final Player editor, final PlayerInteractEvent event) {
     Bukkit.getScheduler().scheduleAsyncDelayedTask(Survival.getInstance(), () -> {
       if (loc1.containsKey(editor) && !loc2.containsKey(editor)) {
-        final List<Block> blocks = new ArrayList<>();
         editor.sendBlockChange(event.getClickedBlock().getLocation(), Material.LIME_STAINED_GLASS, (byte) 0);
+        final List<Block> blocks = new ArrayList<>();
         final Location beacon = event.getClickedBlock().getLocation().subtract(0, 1, 0);
         final Location ironblock = event.getClickedBlock().getLocation().subtract(0, 2, 0);
+
         replaceBlocks(editor, blocks, beacon, ironblock);
         if (show.containsKey(editor)) {
           blocks.addAll(show.get(editor));
@@ -231,9 +228,11 @@ public class InteractEvents implements Listener {
   }
 
   private void checkNoZoneFound(final Player finder, final PlayerInteractEvent event) {
+    final RegionManager regionManager = SurvivalData.getInstance().getDynmap().getRegionManager();
+
     if (noZoneFound(finder, event)) {
-      final String name = Objects.requireNonNull(Regions.checkRegionLocationIn(SurvivalData.getInstance()
-          .getDynmap().getRegionManager(), event.getClickedBlock().getLocation())).getId();
+      final String name = Objects.requireNonNull(Regions.checkRegionLocationIn(regionManager,
+          event.getClickedBlock().getLocation())).getId();
       final UUID uuid = UUID.fromString(name);
       UUIDFetcher.getName(uuid, playerName -> finder.sendMessage(Messages.PREFIX +
           "§7Es wurde die Zone von §e" + playerName + " §7gefunden."));
@@ -245,11 +244,12 @@ public class InteractEvents implements Listener {
   }
 
   private boolean noZoneFound(final Player finder, final PlayerInteractEvent event) {
-    if (Regions.checkRegionLocationIn(SurvivalData.getInstance().getDynmap().getRegionManager(),
-        event.getClickedBlock().getLocation()) == null) {
+    final Location clickedLocation = event.getClickedBlock().getLocation();
+    final RegionManager regionManager = SurvivalData.getInstance().getDynmap().getRegionManager();
+
+    if (Regions.checkRegionLocationIn(regionManager, clickedLocation) == null) {
       finder.sendMessage(Messages.PREFIX + " §7Es wurde keine Zone bei §8(§e" +
-          event.getClickedBlock().getLocation().getBlockX() + "§7/§e" + event.getClickedBlock()
-          .getLocation().getBlockZ() + "§8) §7gefunden.");
+          clickedLocation.getBlockX() + "§7/§e" + clickedLocation.getBlockZ() + "§8) §7gefunden.");
       return false;
     }
     return true;
@@ -261,9 +261,9 @@ public class InteractEvents implements Listener {
    */
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
   public void onInteractButton(final PlayerInteractEvent event) {
-    if (event.getClickedBlock().getState() instanceof Button) {
-      final Block button = event.getClickedBlock()
-          .getRelative(((Button) event.getClickedBlock().getState()).getAttachedFace(), 2);
+    final Block clicked = event.getClickedBlock();
+    if (clicked.getState() instanceof Button) {
+      final Block button = clicked.getRelative(((Button) clicked.getState()).getAttachedFace(), 2);
       if (button.getState() instanceof CommandBlock) {
         final CommandBlock commandblock = (CommandBlock) button.getState();
         event.setCancelled(true);
@@ -305,8 +305,7 @@ public class InteractEvents implements Listener {
    */
   @EventHandler
   public void onInteractEntity(final PlayerInteractEntityEvent event) {
-    final SurvivalPlayer owner = SurvivalPlayer
-        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    final SurvivalPlayer owner = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     if (owner.isTamed()) {
       isTamed((Tameable) event.getRightClicked(), event, owner);
     }
@@ -317,7 +316,6 @@ public class InteractEvents implements Listener {
       tameable.setTamed(false);
       event.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast das Tier freigelassen.");
       owner.setTamed(false);
-
     } else {
       event.getPlayer().sendMessage(Messages.PREFIX + " §7Du hast dieses Tier nicht gezähmt.");
     }

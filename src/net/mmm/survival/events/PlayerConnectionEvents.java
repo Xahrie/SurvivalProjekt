@@ -30,8 +30,7 @@ public class PlayerConnectionEvents implements Listener {
   @EventHandler
   public void onJoin(final PlayerJoinEvent event) {
     SurvivalData.getInstance().getAsyncMySQL().updatePlayer(event.getPlayer()); // muss oben stehen
-    final SurvivalPlayer joined = SurvivalPlayer
-        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    final SurvivalPlayer joined = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
 
     isFirstJoin(joined, event);
     event.setJoinMessage(null);
@@ -79,8 +78,7 @@ public class PlayerConnectionEvents implements Listener {
    */
   @EventHandler
   public void onQuit(final PlayerQuitEvent event) {
-    final SurvivalPlayer quited = SurvivalPlayer
-        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    final SurvivalPlayer quited = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     quited.setZonensearch(false);
     event.setQuitMessage(null);
   }
