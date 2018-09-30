@@ -41,14 +41,14 @@ public class LicenceAccessEvent extends Event {
   }
 
   /**
-   * @return Returnt den Spieler als SurvivalPlayer8
+   * @return Returnt den Spieler als SurvivalPlayer
    */
   public SurvivalPlayer getSurvivalPlayer() {
     return this.survivalPlayer;
   }
 
   /**
-   * @return Returnt ob dem Spieler erlaubt ist
+   * @return Returnt ob der Spieler über die Lizenz verfügt
    */
   boolean hasAccess() {
     return this.access;
