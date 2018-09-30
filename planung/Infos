@@ -1,0 +1,4 @@
+Wichtige Informationen:
+
+ - Packagename net.mmm.survival.commands darf nicht geaendert werden
+ - Klasse eines Commands muss den selben Namen, wie der Command tragen
