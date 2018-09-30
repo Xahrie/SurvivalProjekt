@@ -13,7 +13,9 @@ In Arbeit:
 TODO Am Anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
 
 TODO Jobsystem fuer verschiedene Aufgaben (?)
-TODO Lizenzen Extraitems etc (Abgie warum hast du die Events von mir einfach umgeschrieben?)
+TODO Lizenzen Extraitems etc (?)
+
+TODO An Abgie; Warum hast du meine Events bearbeitet und wo soll ich die Preise der Lizenzen zwischenspeichern?
 
 
 Builden
