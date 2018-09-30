@@ -13,8 +13,7 @@ public class Money implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
-      final SurvivalPlayer survivalPlayer = SurvivalPlayer
-          .findSurvivalPlayer((Player) commandSender, commandSender.getName());
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer((Player) commandSender);
       checkArgumentLength(args, survivalPlayer);
     }
 

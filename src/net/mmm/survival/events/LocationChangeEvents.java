@@ -46,8 +46,7 @@ public class LocationChangeEvents implements Listener {
    */
   @EventHandler
   public void onMove(final PlayerMoveEvent event) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer
-        .findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     survivalPlayer.setTeleport(false);
   }
 
@@ -56,7 +55,7 @@ public class LocationChangeEvents implements Listener {
    */
   @EventHandler
   public void onTeleport(final PlayerTeleportEvent event) {
-    final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer(), event.getPlayer().getName());
+    final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     final String destinationWorldName = event.getTo().getWorld().getName();
     final SurvivalLicense needed = SurvivalLicense.getLicence(SurvivalWorld.getWorld(destinationWorldName));
     if (needed != null && !traveler.hasLicence(needed)) {

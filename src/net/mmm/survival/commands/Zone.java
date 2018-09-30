@@ -44,9 +44,9 @@ public class Zone implements CommandExecutor {
 
   private void evaluateOneArgument(final Player executor, final String[] args) {
     if (args[0].equalsIgnoreCase("create")) {
-      createZone(SurvivalPlayer.findSurvivalPlayer(executor, executor.getName()));
+      createZone(SurvivalPlayer.findSurvivalPlayer(executor));
     } else if (args[0].equalsIgnoreCase("search")) {
-      searchZone(SurvivalPlayer.findSurvivalPlayer(executor, executor.getName()));
+      searchZone(SurvivalPlayer.findSurvivalPlayer(executor));
     } else if (args[0].equalsIgnoreCase("delete")) {
       delete(executor);
     } else if (args[0].equalsIgnoreCase("info")) {

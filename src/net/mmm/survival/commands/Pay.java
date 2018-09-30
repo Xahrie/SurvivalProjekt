@@ -13,8 +13,7 @@ public class Pay implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
-      final SurvivalPlayer executor = SurvivalPlayer
-          .findSurvivalPlayer((Player) commandSender, commandSender.getName());
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) commandSender);
       checkArgumentLength(args, executor);
     }
     return false;

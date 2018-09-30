@@ -53,7 +53,7 @@ public class VoteEvents implements Listener {
   }
 
   private void updateVotes(final Player voter) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(voter, voter.getName());
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(voter);
     survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
     rewardVoter(voter, survivalPlayer);
   }

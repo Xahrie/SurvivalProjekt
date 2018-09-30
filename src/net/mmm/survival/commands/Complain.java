@@ -63,7 +63,7 @@ public class Complain implements CommandExecutor {
 
   private void list(final Player sender, final String[] args) {
     if (args.length == 1 || !CommandUtils.isOperator(sender)) {
-      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender, sender.getName());
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
       sender.sendMessage(Messages.COMPLAINT_INFO);
       if (executor.getComplaints().size() > 0) {
         for (final Complaint complaint : executor.getComplaints()) {
@@ -79,7 +79,7 @@ public class Complain implements CommandExecutor {
       }
     } else {
 
-      final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(sender, sender.getName());
+      final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(sender);
       if (target != null) {
         outputComplaint(target, sender);
       }
@@ -101,7 +101,7 @@ public class Complain implements CommandExecutor {
 
   private void add(final Player sender, final String[] args) {
     if (args.length == 3) {
-      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender, sender.getName());
+      final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
       final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(sender, args[1]);
       if (target != null) {
         final String reason = args[2];
