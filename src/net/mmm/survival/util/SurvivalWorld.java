@@ -26,12 +26,12 @@ public enum SurvivalWorld {
   }
 
   public static SurvivalWorld getWorld(final String name) {
-    if (name.equals("world")) return BAUWELT;
-    if (name.equals("farmwelt")) return FARMWELT;
-    if (name.equals("world_nether")) return NETHER;
-    if (name.equals("world_the_end")) return END;
-    return BAUWELT; //TODO (Abgie) 30.09.2018: Ist das zulaessig?
-                    //TODO (Mario) 30.09.2018 17:30 Eine Alternative?
+    for (final SurvivalWorld survivalWorld : SurvivalWorld.values()) {
+      if (survivalWorld.get().getName().equalsIgnoreCase(name)) {
+        return survivalWorld;
+      }
+    }
+    return null;
   }
 
   public World get() {
