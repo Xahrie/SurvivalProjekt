@@ -17,18 +17,15 @@ public enum SurvivalLicense {
    * @return Returnt die Lizenz zur zugehoerigen Welt
    */
   public static SurvivalLicense getLicence(final SurvivalWorld sworld) {
-    return sworld == SurvivalWorld.NETHER ? NETHERLIZENZ : sworld == SurvivalWorld.END ? ENDLIZENZ : null;
+    if (sworld == SurvivalWorld.NETHER) {
+      return NETHERLIZENZ;
+    } else if (sworld == SurvivalWorld.END) {
+      return ENDLIZENZ;
+    }
+    return null;
   }
 
   public Integer getID() {
     return id;
   }
-
-  /**
-   * @return Welten Name fuer die LizenzID
-   */
-  public String getWorldName() {
-    return id == 1 ? SurvivalWorld.NETHER.name() : id == 2 ? SurvivalWorld.END.name() : SurvivalWorld.BAUWELT.name();
-  }
-
 }

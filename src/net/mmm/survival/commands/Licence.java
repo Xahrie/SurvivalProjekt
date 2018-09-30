@@ -10,11 +10,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/* 
+/**
  * @author Suders
  * Date: 30.09.2018
  * Time: 17:14:05
- * Location: SurvivalProjekt 
+ * Location: SurvivalProjekt
 */
 
 public class Licence implements CommandExecutor {
@@ -35,11 +35,11 @@ public class Licence implements CommandExecutor {
           if(currentMoney >= cost) {
             currentMoney -= cost;
           } else {
-            
+
             return true;
           }
         } else if(args[1].equalsIgnoreCase("end")) {
-          
+
         } else {
           sendSyntax(sender, true);
         }
@@ -53,7 +53,7 @@ public class Licence implements CommandExecutor {
     }
     return false;
   }
-  
+
   /*
    * Sendet @param sender den Syntax
    * @param sender Sender des Befehls
@@ -62,5 +62,5 @@ public class Licence implements CommandExecutor {
   private void sendSyntax(final CommandSender sender, final boolean error) {
     sender.sendMessage(error ? Messages.LICENCE_SYNTAX_ERROR : Messages.LICENCE_SYNTAX);
   }
-  
+
 }
