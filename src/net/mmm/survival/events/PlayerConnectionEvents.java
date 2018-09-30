@@ -52,7 +52,6 @@ public class PlayerConnectionEvents implements Listener {
         joined.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" +
             vote.getServiceName() + "§8]");
         joined.setMoney(joined.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
-        VoteEvents.addVote(joined.getUuid(), vote.getServiceName());
         joined.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze",
             Collections.singletonList(Messages.VOTE_REWARD)));
       });
