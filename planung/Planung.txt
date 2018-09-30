@@ -17,6 +17,8 @@ TODO Lizenzen Extraitems etc (?)
 
 TODO An Abgie; Warum hast du meine Events bearbeitet und wo soll ich die Preise der Lizenzen zwischenspeichern?
 
+TODO Am besten im Enum selbst wuerde ich sagen -> hab Code aufgeraeumt und einige nicht sinnvolle Methoden/Klassen geloescht
+
 
 Builden
 TODO Hotel (Abgie, Alice)
