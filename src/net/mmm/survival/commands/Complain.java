@@ -21,21 +21,21 @@ public class Complain implements CommandExecutor {
   private static final int MINDESTANZ_ZEICHEN = 10;
 
   @Override
-  public boolean onCommand(final CommandSender sender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) {
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
       if (args.length < 1) {
-        info(sender);
+        info(commandSender);
         return true;
       }
       final String commandToExecute = args[0];
       if (commandToExecute.equals("add")) {
-        add((Player) sender, args);
+        add((Player) commandSender, args);
       } else if (commandToExecute.equals("list")) {
-        list((Player) sender, args);
+        list((Player) commandSender, args);
       } else if (commandToExecute.equals("delete")) {
-        delete((Player) sender, args);
+        delete((Player) commandSender, args);
       } else { //info
-        info(sender);
+        info(commandSender);
       }
     }
     return true;
@@ -137,7 +137,7 @@ public class Complain implements CommandExecutor {
       }
     }
 
-    //Grund mindestens 10 Zeichen
+    //Grund mindestens X Zeichen
     if (reason.length() < MINDESTANZ_ZEICHEN) {
       executor.getPlayer().sendMessage(Messages.COMPLAINT_TOOSHORT);
       return false;

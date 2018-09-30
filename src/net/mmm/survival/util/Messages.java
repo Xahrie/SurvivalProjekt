@@ -11,6 +11,7 @@ public final class Messages {
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";
   public static final String TAME_DISABLE = "§8┃ §eSurvival §7» Du kannst nun wieder normal mit den Tieren interagieren.";
   public static final String TAME_ENABLE = "§8┃ §eSurvival §7» Klicke auf das Tier, dass du freilassen möchtest.\nZum Abbrechen gebe erneut §e/tame §7ein.";
+
   /*
   Beschwerden
    */
@@ -18,6 +19,7 @@ public final class Messages {
   public static final String COMPLAINT_TOO_FAST_PLAYER = "§8┃ §eSurvival §7» §4┃ Du kannst dich über diesen Spieler nur einmal pro Tag beschweren.";
   public static final String COMPLAINT_TOOSHORT = "§8┃ §eSurvival §7» §4┃ Eine Beschwerde muss mindestens 10 Zeichen lang sein.";
   public static final String COMPLAINT_INFO = "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
+
   /*
   Economy-System
    */
@@ -26,6 +28,7 @@ public final class Messages {
   public static final String USAGE_MONEY_COMMAND = "§8┃ §eSurvival §7» §c/money";
   public static final String USAGE_MONEY_COMMAND_ADMIN = "§8┃ §eSurvival §7» §c/money <Spieler>";
   public static final String USAGE_PAY_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/pay <Spieler> <Amount>";
+
   /*
   Gamemode
    */
@@ -39,11 +42,13 @@ public final class Messages {
   public static final String TELEPORT_CANCELED = "§8┃ §eSurvival §7» §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.";
   public static final String TELEPORT_DONT_MOVE = "§8┃ §eSurvival §7» Du wirst teleportiert.. §e§o» Bewege dich nicht..";
   public static final String TELEPORT_FARMWELT = "§8┃ §eSurvival §7» §7Du wurdest zum §eFarmwelt-Spawn §7teleportiert.";
+
   /*
   Vote-System
    */
   public static final String VOTE_PAGES = "§8┃ §eSurvival §7» Unsere Vote-Seiten:";
   public static final String VOTE_REWARD = "§7§oDu kannst diese Münzen beim Markt eintauschen.";
+
   /*
   Zone-System
    */
@@ -63,6 +68,7 @@ public final class Messages {
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
   public static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
   public static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
+
   /*
   Teleport
    */
@@ -72,7 +78,7 @@ public final class Messages {
   /*
   Lizenz System
    */
-  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz exestiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
+  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz exestiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
   public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
   public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz erfolgreich erworben.";
   public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz erfolgreich erworben.";

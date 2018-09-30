@@ -22,3 +22,4 @@ Builden:
 "Kommunikation"
   Akzeptiert: An Abgie; Warum hast du meine Events bearbeitet und wo soll ich die Preise der Lizenzen zwischenspeichern?
   Abgie: Am besten im Enum selbst wuerde ich sagen -> hab Code aufgeraeumt und einige nicht sinnvolle Methoden/Klassen geloescht
+  Alice: Hallo Akzeptiert, bitte mal deine Codierung deines Projekts auf UTF-8 ändern, wir kriegen sonst Probleme. Bitte auch bei deinen bisher erstellten/geänderten Klassen wieder zurück machen. Danke :)
