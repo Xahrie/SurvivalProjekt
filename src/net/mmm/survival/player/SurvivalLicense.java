@@ -2,13 +2,13 @@ package net.mmm.survival.player;
 
 import net.mmm.survival.util.SurvivalWorld;
 
-public enum Licence {
+public enum SurvivalLicense {
   NETHERLIZENZ(1),
   ENDLIZENZ(2);
 
   private final Integer id;
 
-  Licence(final Integer id) {
+  SurvivalLicense(final Integer id) {
     this.id = id;
   }
 
@@ -16,7 +16,7 @@ public enum Licence {
    * @param sworld SurvivalWorld
    * @return Returnt die Lizenz zur zugehoerigen Welt
    */
-  public static Licence getLicence(final SurvivalWorld sworld) {
+  public static SurvivalLicense getLicence(final SurvivalWorld sworld) {
     return sworld == SurvivalWorld.NETHER ? NETHERLIZENZ : sworld == SurvivalWorld.END ? ENDLIZENZ : null;
   }
 
