@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
  * Location: SurvivalProjekt 
 */
 
-public class BuyLicence implements CommandExecutor {
+public class Licence implements CommandExecutor {
 
   public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
     if (sender instanceof Player) {  //TODO (Abgie) 30.09.2018: Hierfuer haben wir CommandUtils.checkPlayer(CommandSender) : boolean
