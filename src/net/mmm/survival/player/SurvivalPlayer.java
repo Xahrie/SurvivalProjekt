@@ -18,15 +18,15 @@ import org.bukkit.entity.Player;
  * @author BlueIronGirl, Abgie
  */
 public class SurvivalPlayer extends HotbarMessager {
+  private boolean tamed, teleport, zonenedit, zonensearch;
   private final Date lastComplaint;
-  private final PlayerStats stats;
   private final List<Complaint> complaints;
-  private List<Licence> licences;
-  private boolean zonenedit, zonensearch, tamed, teleport;
+  private final List<Licence> licences;
+  private final PlayerStats stats;
   //<editor-fold desc="mysql parameter">
-  private short votes;
   private double money;
   private int maxzone;
+  private short votes;
   private Location home;
   private UUID uuid;
 
@@ -189,11 +189,7 @@ public class SurvivalPlayer extends HotbarMessager {
   public void setZonensearch(final boolean zonensearch) {
     this.zonensearch = zonensearch;
   }
-  
-  public void setLicences(final List<Licence> licences) {
-    this.licences = licences;
-  }
-  
+
   public boolean hasLicence(final Licence licence) {
     return licences.contains(licence);
   }
