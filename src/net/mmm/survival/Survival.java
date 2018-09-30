@@ -27,7 +27,6 @@ import net.mmm.survival.events.FarmingEvents;
 import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
-import net.mmm.survival.events.TeleportEvents;
 import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.SurvivalWorld;
@@ -103,7 +102,7 @@ public class Survival extends JavaPlugin {
   private void registerEvents() {
     final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(),
         new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
-        new LocationChangeEvents(), new PlayerConnectionEvents(), new TeleportEvents());
+        new LocationChangeEvents(), new PlayerConnectionEvents());
     listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
