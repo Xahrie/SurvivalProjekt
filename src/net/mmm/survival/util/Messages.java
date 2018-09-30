@@ -61,8 +61,8 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§88┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
-  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
-  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
+  public static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  public static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   /*
   Teleport
    */
