@@ -25,7 +25,6 @@ public enum SurvivalLicence {
     }
     return null;
   }
-
   public Double getPrice() {
     return this.price;
   }
