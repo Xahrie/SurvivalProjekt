@@ -2,21 +2,22 @@ package net.mmm.survival.player;
 
 import net.mmm.survival.util.SurvivalWorld;
 
-public enum SurvivalLicense {
-  NETHERLIZENZ(1),
-  ENDLIZENZ(2);
+public enum SurvivalLicence {
+  
+  NETHERLIZENZ(500D),
+  ENDLIZENZ(750D);
 
-  private final Integer id;
+  private final Double price;
 
-  SurvivalLicense(final Integer id) {
-    this.id = id;
+  SurvivalLicence(final Double price) {
+    this.price = price;
   }
 
   /**
    * @param sworld SurvivalWorld
    * @return Returnt die Lizenz zur zugehoerigen Welt
    */
-  public static SurvivalLicense getLicence(final SurvivalWorld sworld) {
+  public static SurvivalLicence getLicence(final SurvivalWorld sworld) {
     if (sworld == SurvivalWorld.NETHER) {
       return NETHERLIZENZ;
     } else if (sworld == SurvivalWorld.END) {
@@ -25,7 +26,8 @@ public enum SurvivalLicense {
     return null;
   }
 
-  public Integer getID() {
-    return id;
+  public Double getPrice() {
+    return this.price;
   }
+  
 }

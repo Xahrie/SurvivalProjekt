@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
-import net.mmm.survival.player.SurvivalLicense;
+import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.SurvivalWorld;
 import org.apache.commons.lang3.EnumUtils;
@@ -108,7 +108,7 @@ public class AsyncMySQL {
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final double money = resultSet.getDouble(2);
     final List<Complaint> complaints = determineComplaints(uuid);
-    final List<SurvivalLicense> licences = determineLicences(resultSet.getString(3));
+    final List<SurvivalLicence> licences = determineLicences(resultSet.getString(3));
     final short votes = (short) resultSet.getInt(4);
     final int maxzone = resultSet.getInt(5);
     final Location location = determineLocation(resultSet.getString(6));
@@ -139,12 +139,12 @@ public class AsyncMySQL {
     return complaints;
   }
 
-  private List<SurvivalLicense> determineLicences(final String licencesString) {
+  private List<SurvivalLicence> determineLicences(final String licencesString) {
     if (licencesString != null && !licencesString.isEmpty()) {
       final List<String> licencesList = Arrays.asList(licencesString.split(","));
-      final List<SurvivalLicense> licences = new ArrayList<>();
-      licencesList.stream().filter(licence -> EnumUtils.isValidEnum(SurvivalLicense.class, licence))
-          .forEach(licence -> licences.add(SurvivalLicense.valueOf(licence)));
+      final List<SurvivalLicence> licences = new ArrayList<>();
+      licencesList.stream().filter(licence -> EnumUtils.isValidEnum(SurvivalLicence.class, licence))
+          .forEach(licence -> licences.add(SurvivalLicence.valueOf(licence)));
       return licences;
     }
     return new ArrayList<>();

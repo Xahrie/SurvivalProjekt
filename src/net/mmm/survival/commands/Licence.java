@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.player.SurvivalLicense;
+import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
@@ -29,11 +29,11 @@ public class Licence implements CommandExecutor {
       if(args[0].equalsIgnoreCase("buy")) {
         final SurvivalPlayer sp = SurvivalData.getInstance().getPlayers().get(p.getUniqueId());
         if(args[1].equalsIgnoreCase("nether")) {
-          if(sp.hasLicence(SurvivalLicense.NETHERLIZENZ)) {
+          if(sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
             sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
             return true;
           }
-          final Double cost = 1000D;
+          final Double cost = SurvivalLicence.NETHERLIZENZ.getPrice();
           Double currentMoney = sp.getMoney();
           if(currentMoney >= cost) {
             currentMoney -= cost;
@@ -42,9 +42,28 @@ public class Licence implements CommandExecutor {
             return true;
           }
           List<SurvivalLicence> licences = sp.getLicences();
-          
+          licences.add(SurvivalLicence.NETHERLIZENZ);
+          sp.setLicence(licences);
+          sp.setMoney(currentMoney);
+          sender.sendMessage(Messages.LICENCE_BUYING_NETHER);
         } else if(args[1].equalsIgnoreCase("end")) {
-
+          if(sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
+            sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
+            return true;
+          }
+          final Double cost = SurvivalLicence.ENDLIZENZ.getPrice();
+          Double currentMoney = sp.getMoney();
+          if(currentMoney >= cost) {
+            currentMoney -= cost;
+          } else {
+            sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
+            return true;
+          }
+          List<SurvivalLicence> licences = sp.getLicences();
+          licences.add(SurvivalLicence.ENDLIZENZ);
+          sp.setLicence(licences);
+          sp.setMoney(currentMoney);
+          sender.sendMessage(Messages.LICENCE_BUYING_END);
         } else {
           sendSyntax(sender, true);
         }
