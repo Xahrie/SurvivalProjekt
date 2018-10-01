@@ -20,7 +20,7 @@ import org.bukkit.entity.Player;
 public class SurvivalPlayer extends HotbarMessager {
   private final Date lastComplaint;
   private final List<Complaint> complaints;
-  private List<SurvivalLicense> licences;
+  private List<SurvivalLicence> licences;
   private final PlayerStats stats;
   private boolean tamed, teleport, zonenedit, zonensearch;
   //<editor-fold desc="mysql parameter">
@@ -41,7 +41,7 @@ public class SurvivalPlayer extends HotbarMessager {
    * @param maxzone Maximal zulaessige Groeße der Zone
    * @param home Homepunkt
    */
-  public SurvivalPlayer(final UUID uuid, final double money, final List<Complaint> complaints, final List<SurvivalLicense> licences, final short votes,
+  public SurvivalPlayer(final UUID uuid, final double money, final List<Complaint> complaints, final List<SurvivalLicence> licences, final short votes,
                         final int maxzone, final Location home) {
     this.uuid = uuid;
     this.money = money;
@@ -129,7 +129,7 @@ public class SurvivalPlayer extends HotbarMessager {
     return lastComplaint;
   }
 
-  public List<SurvivalLicense> getLicences() {
+  public List<SurvivalLicence> getLicences() {
     return licences;
   }
 
@@ -201,11 +201,11 @@ public class SurvivalPlayer extends HotbarMessager {
     this.zonensearch = zonensearch;
   }
 
-  public boolean hasLicence(final SurvivalLicense licence) {
+  public boolean hasLicence(final SurvivalLicence licence) {
     return licences.contains(licence);
   }
   
-  public void setLicence(final List<SurvivalLicense> licences) {
+  public void setLicence(final List<SurvivalLicence> licences) {
     this.licences = licences;
   }
   

@@ -1,6 +1,6 @@
 package net.mmm.survival.events;
 
-import net.mmm.survival.player.SurvivalLicense;
+import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.event.EventHandler;
@@ -58,7 +58,7 @@ public class LocationChangeEvents implements Listener {
     try {
       final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
       final String destinationWorldName = event.getTo().getWorld().getName();
-      final SurvivalLicense needed = SurvivalLicense.getLicence(SurvivalWorld.getWorld(destinationWorldName));
+      final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorldName));
       if (needed != null && !traveler.hasLicence(needed)) {
         event.setCancelled(true);
       }
