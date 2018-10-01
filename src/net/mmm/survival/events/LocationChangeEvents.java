@@ -68,8 +68,6 @@ public class LocationChangeEvents implements Listener {
        * Ich halte es für Sinnvoll, denn es kann auch ein Teleport innerhalb der Farmwelt 
        * stattfinden und unnötig eine NullPointerException ausgeben
        */
-    } catch(NullPointerException exc) {
-      event.setCancelled(true);
-    }
+    } catch(NullPointerException exc) {}
   }
 }
