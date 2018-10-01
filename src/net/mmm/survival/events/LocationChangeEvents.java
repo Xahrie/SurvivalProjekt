@@ -69,7 +69,7 @@ public class LocationChangeEvents implements Listener {
        * stattfinden und unnötig eine NullPointerException ausgeben
        */
     } catch(NullPointerException exc) {
-//    event.setCancelled(true);
+      event.setCancelled(true);
     }
   }
 }
