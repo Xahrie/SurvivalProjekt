@@ -20,8 +20,8 @@ import org.bukkit.entity.Player;
 public class SurvivalPlayer extends HotbarMessager {
   private final Date lastComplaint;
   private final List<Complaint> complaints;
-  private List<SurvivalLicence> licences;
   private final PlayerStats stats;
+  private List<SurvivalLicence> licences;
   private boolean tamed, teleport, zonenedit, zonensearch;
   //<editor-fold desc="mysql parameter">
   private double money;
@@ -204,10 +204,10 @@ public class SurvivalPlayer extends HotbarMessager {
   public boolean hasLicence(final SurvivalLicence licence) {
     return licences.contains(licence);
   }
-  
+
   public void setLicence(final List<SurvivalLicence> licences) {
     this.licences = licences;
   }
-  
+
   //</editor-fold>
 }

@@ -23,6 +23,10 @@ import org.bukkit.event.Listener;
 public class VoteEvents implements Listener {
   private static final Map<String, List<Vote>> votes = new HashMap<>(); // Map mit allen Votes
 
+  static Map<String, List<Vote>> getVotes() {
+    return votes;
+  }
+
   /**
    * @param event VotifierEvent -> Tritt ein, wenn fuer den Server gevotet wird
    * @see com.vexsoftware.votifier.model.VotifierEvent
@@ -52,9 +56,5 @@ public class VoteEvents implements Listener {
   private void updateVotes(final Player voter) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(voter);
     survivalPlayer.setVotes((short) (survivalPlayer.getVotes() + 1));
-  }
-
-  static Map<String, List<Vote>> getVotes() {
-    return votes;
   }
 }

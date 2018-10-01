@@ -3,7 +3,7 @@ package net.mmm.survival.player;
 import net.mmm.survival.util.SurvivalWorld;
 
 public enum SurvivalLicence {
-  
+
   NETHERLIZENZ(500D),
   ENDLIZENZ(750D);
 
@@ -25,8 +25,9 @@ public enum SurvivalLicence {
     }
     return null;
   }
+
   public Double getPrice() {
     return this.price;
   }
-  
+
 }

@@ -70,23 +70,21 @@ public final class Messages {
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
   public static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
   public static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
-
+  /*
+  Lizenz System
+   */
+  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz exestiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
+  public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
+  public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz f�r §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
+  public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz f�r §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
+  public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
+  public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
   /*
   Teleport
    */
   static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
 
-  /*
-  Lizenz System
-   */
-  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz exestiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
-  public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
-  public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz f�r §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
-  public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz f�r §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
-  public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
-  public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
-  
   /**
    * Instanz
    */

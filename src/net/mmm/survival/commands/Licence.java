@@ -2,40 +2,39 @@ package net.mmm.survival.commands;
 
 import java.util.List;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 /**
  * @author Suders
  * Date: 30.09.2018
  * Time: 17:14:05
  * Location: SurvivalProjekt
-*/
+ */
 
 public class Licence implements CommandExecutor {
 
   public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-    if(CommandUtils.checkPlayer(sender)) return true;
+    if (CommandUtils.checkPlayer(sender)) return true;
     final Player p = (Player) sender;
-    if(args.length == 2) {
-      if(args[0].equalsIgnoreCase("buy")) {
+    if (args.length == 2) {
+      if (args[0].equalsIgnoreCase("buy")) {
         final SurvivalPlayer sp = SurvivalData.getInstance().getPlayers().get(p.getUniqueId());
-        if(args[1].equalsIgnoreCase("nether")) {
-          if(sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
+        if (args[1].equalsIgnoreCase("nether")) {
+          if (sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
             sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
             return true;
           }
           final Double cost = SurvivalLicence.NETHERLIZENZ.getPrice();
           Double currentMoney = sp.getMoney();
-          if(currentMoney >= cost) {
+          if (currentMoney >= cost) {
             currentMoney -= cost;
           } else {
             sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
@@ -46,14 +45,14 @@ public class Licence implements CommandExecutor {
           sp.setLicence(licences);
           sp.setMoney(currentMoney);
           sender.sendMessage(Messages.LICENCE_BUYING_NETHER);
-        } else if(args[1].equalsIgnoreCase("end")) {
-          if(sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
+        } else if (args[1].equalsIgnoreCase("end")) {
+          if (sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
             sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
             return true;
           }
           final Double cost = SurvivalLicence.ENDLIZENZ.getPrice();
           Double currentMoney = sp.getMoney();
-          if(currentMoney >= cost) {
+          if (currentMoney >= cost) {
             currentMoney -= cost;
           } else {
             sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
@@ -67,7 +66,7 @@ public class Licence implements CommandExecutor {
         } else {
           sendSyntax(sender, true);
         }
-      } else if(args[0].equalsIgnoreCase("help")) {
+      } else if (args[0].equalsIgnoreCase("help")) {
         sendSyntax(sender, false);
       } else {
         sendSyntax(sender, true);

@@ -65,9 +65,10 @@ public class LocationChangeEvents implements Listener {
       /*
        * (Mario:)
        * Falls die Welt oder Licence null sein sollte, wird der Teleport unterbrochen
-       * Ich halte es für Sinnvoll, denn es kann auch ein Teleport innerhalb der Farmwelt 
-       * stattfinden und unnötig eine NullPointerException ausgeben
+       * Ich halte es fï¿½r Sinnvoll, denn es kann auch ein Teleport innerhalb der Farmwelt
+       * stattfinden und unnï¿½tig eine NullPointerException ausgeben
        */
-    } catch(NullPointerException exc) {}
+    } catch (NullPointerException exc) {
+    }
   }
 }
