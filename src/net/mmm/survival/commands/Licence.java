@@ -40,7 +40,7 @@ public class Licence implements CommandExecutor {
             sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
             return true;
           }
-          List<SurvivalLicence> licences = sp.getLicences();
+          final List<SurvivalLicence> licences = sp.getLicences();
           licences.add(SurvivalLicence.NETHERLIZENZ);
           sp.setLicence(licences);
           sp.setMoney(currentMoney);
@@ -58,7 +58,7 @@ public class Licence implements CommandExecutor {
             sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
             return true;
           }
-          List<SurvivalLicence> licences = sp.getLicences();
+          final List<SurvivalLicence> licences = sp.getLicences();
           licences.add(SurvivalLicence.ENDLIZENZ);
           sp.setLicence(licences);
           sp.setMoney(currentMoney);
@@ -77,7 +77,7 @@ public class Licence implements CommandExecutor {
     return false;
   }
 
-  /*
+  /**
    * Sendet @param sender den Syntax
    * @param sender Sender des Befehls
    * @param error Ob der Syntax als Fehler ausgegeben werden soll
