@@ -1,14 +1,17 @@
 package net.mmm.survival.commands;
 
+import java.util.List;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalLicense;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * @author Suders
@@ -20,7 +23,7 @@ import org.bukkit.entity.Player;
 public class Licence implements CommandExecutor {
 
   public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-    CommandUtils.checkPlayer(sender);
+    if(CommandUtils.checkPlayer(sender)) return true;
     final Player p = (Player) sender;
     if(args.length == 2) {
       if(args[0].equalsIgnoreCase("buy")) {
@@ -35,9 +38,11 @@ public class Licence implements CommandExecutor {
           if(currentMoney >= cost) {
             currentMoney -= cost;
           } else {
-
+            sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
             return true;
           }
+          List<SurvivalLicence> licences = sp.getLicences();
+          
         } else if(args[1].equalsIgnoreCase("end")) {
 
         } else {
