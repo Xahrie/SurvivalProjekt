@@ -25,3 +25,8 @@ Builden:
          Hi Akzeptiert: In LocationChangeEvents:57 kommt es nie zu einer NullPointerException und bitte stell dein Encoding unter Window
          -> Preferences -> General -> Workspace : Text file encoding auf UTF-8
   Alice: Hallo Akzeptiert, bitte mal deine Codierung deines Projekts auf UTF-8 ändern, wir kriegen sonst Probleme. Bitte auch bei deinen bisher erstellten/geänderten Klassen wieder zurück machen. Danke :)
+  Mario: Ich habe meine Codierung auf UTF-8 geändert, ich hoffe Eclipse hat es auch für alles übernommen.
+  		 An Abgie, weshalb sollte da keine NullPointerException entstehen?
+  		 Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
+  		 Bitte begründe.
+  		
