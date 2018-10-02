@@ -29,4 +29,7 @@ Builden:
   		 An Abgie, weshalb sollte da keine NullPointerException entstehen?
   		 Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
   		 Bitte begründe.
+  Mario: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen sich nicht nutzen.
+  		 Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
+  		 Kann man mir sagen woran es liegt oder fehlt ein Plugin?
   		
