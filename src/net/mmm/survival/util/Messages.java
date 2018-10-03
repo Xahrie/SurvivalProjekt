@@ -8,6 +8,7 @@ import net.mmm.survival.player.SurvivalLicence;
 public final class Messages {
   public static final String PREFIX = "§8┃ §eSurvival §7» ";
   public static final String HOME_SET = "§8┃ §eSurvival §7» Du hast deinen Home-Punkt gesetzt.";
+  public static final String LOG_CREATED = "§8┃ §eSurvival §7» Log successful created.";
   public static final String NO_HOME_SET = "§8┃ §eSurvival §7» Du hast noch keinen Home-Punkt gesetzt.";
   public static final String NOT_A_NUMBER = "§8┃ §eSurvival §7» §cDu musst eine Zahl eingeben.";
   public static final String PLAYER_NOT_FOUND = "§8┃ §eSurvival §7» §cDer Spieler wurde nicht gefunden.";

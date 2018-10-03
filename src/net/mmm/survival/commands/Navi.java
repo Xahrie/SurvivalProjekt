@@ -5,10 +5,10 @@ import java.util.UUID;
 
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.regions.Regions;
+import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.Regions;
-import net.mmm.survival.util.SurvivalWorld;
 import net.mmm.survival.util.UUIDFetcher;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

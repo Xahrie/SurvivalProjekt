@@ -1,6 +1,6 @@
 package net.mmm.survival.events;
 
-import net.mmm.survival.util.SurvivalWorld;
+import net.mmm.survival.regions.SurvivalWorld;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;

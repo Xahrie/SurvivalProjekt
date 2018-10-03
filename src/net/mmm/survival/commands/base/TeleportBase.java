@@ -28,24 +28,15 @@ public abstract class TeleportBase {
   private void countdown(final Location location, final SurvivalPlayer teleported) {
     new BukkitRunnable() {
       int i = 3;
-
       @Override
       public void run() {
         if (teleported.isTeleport()) {
           if (i == 3) {
             teleported.getPlayer().sendMessage(Messages.TELEPORT_DONT_MOVE);
-          }
-          if (i == 2) {
-            teleported.getPlayer().playSound(teleported.getPlayer().getLocation(),
-                Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
-          }
-          if (i == 1) {
-            teleported.getPlayer().playSound(teleported.getPlayer().getLocation(),
-                Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
-          }
-          if (i == 0) {
-            teleported.getPlayer().playSound(teleported.getPlayer().getLocation(),
-                Sound.ENTITY_ENDERMAN_TELEPORT, 4.0F, 5.0F);
+          } else if (i == 2 || i == 1) {
+            teleported.getPlayer().playSound(teleported.getPlayer().getLocation(), Sound.UI_BUTTON_CLICK, 4.0F, 5.0F);
+          } else if (i == 0) {
+            teleported.getPlayer().playSound(teleported.getPlayer().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 4.0F, 5.0F);
             teleported.getPlayer().teleport(location);
             teleported.setTeleport(false);
             cancel();
