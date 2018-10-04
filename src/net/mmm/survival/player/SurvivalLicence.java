@@ -1,6 +1,6 @@
 package net.mmm.survival.player;
 
-import net.mmm.survival.util.SurvivalWorld;
+import net.mmm.survival.regions.SurvivalWorld;
 
 public enum SurvivalLicence {
 

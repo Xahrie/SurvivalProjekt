@@ -1,4 +1,4 @@
-package net.mmm.survival.util;
+package net.mmm.survival.regions;
 
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.Vector;

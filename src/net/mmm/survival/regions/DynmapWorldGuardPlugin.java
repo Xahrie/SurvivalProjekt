@@ -1,4 +1,4 @@
-package net.mmm.survival.dynmap;
+package net.mmm.survival.regions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionType;
 import net.mmm.survival.Survival;
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -317,7 +316,7 @@ public class DynmapWorldGuardPlugin {
    */
   public void onEnable() {
     final PluginManager pm = Survival.getInstance().getServer().getPluginManager();
-    dynmap = pm.getPlugin("dynmap"); /* Get dynmap */
+    dynmap = pm.getPlugin("regions"); /* Get regions */
     checkDynmap(pm);
   }
 
@@ -325,7 +324,7 @@ public class DynmapWorldGuardPlugin {
     if (this.dynmap != null) {
       checkWorldGuard(pluginManager.getPlugin("WorldGuard"));
     } else {
-      severe("Cannot find dynmap!");
+      severe("Cannot find regions!");
     }
   }
 
@@ -348,7 +347,7 @@ public class DynmapWorldGuardPlugin {
       addMarkerForMobs(markerapi, configuration);
       checkSet(configuration);
     } else {
-      severe("Error loading dynmap marker API!");
+      severe("Error loading regions marker API!");
     }
   }
 
@@ -504,7 +503,7 @@ public class DynmapWorldGuardPlugin {
     public void onPluginEnable(final PluginEnableEvent event) {
       final Plugin p = event.getPlugin();
       final String name = p.getDescription().getName();
-      if (name.equals("dynmap") || name.equals("WorldGuard")) {
+      if (name.equals("regions") || name.equals("WorldGuard")) {
         if (dynmap.isEnabled() && wg.isEnabled())
           activate();
       }

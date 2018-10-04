@@ -108,7 +108,7 @@ public class SurvivalPlayer extends HotbarMessager {
         complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
-  public void sendHotbarMessage(final String message) {
+  public void sendHotbarMessage(final String message) { //TODO (Abgie) 03.10.2018: HotbarMessager is not working
     //sendHotbarMessage(getPlayer(), message);
   }
   //<editor-fold desc="getter and setter">

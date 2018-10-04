@@ -79,6 +79,7 @@ public class Licence implements CommandExecutor {
 
   /**
    * Sendet @param sender den Syntax
+   *
    * @param sender Sender des Befehls
    * @param error Ob der Syntax als Fehler ausgegeben werden soll
    */

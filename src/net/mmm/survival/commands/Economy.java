@@ -2,7 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
-import net.mmm.survival.util.Konst;
+import net.mmm.survival.util.Constants;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.command.Command;
@@ -45,7 +45,7 @@ public class Economy implements CommandExecutor {
     if (survivalPlayer != null) {
       final double money = survivalPlayer.getMoney();
       executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + survivalPlayer.getPlayer()
-          .getDisplayName() + "§7 hat §e" + money + Konst.CURRENCY + "§7 auf dem Konto.");
+          .getDisplayName() + "§7 hat §e" + money + Constants.CURRENCY + "§7 auf dem Konto.");
     } else {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
@@ -75,9 +75,9 @@ public class Economy implements CommandExecutor {
     survivalPlayer.setMoney(amount);
     if (target.isOnline()) {
       target.sendMessage(Messages.PREFIX + "Dein Kontostand wurde auf §e" + survivalPlayer.getMoney() +
-          Konst.CURRENCY + "§7 gesetzt.");
+          Constants.CURRENCY + "§7 gesetzt.");
     }
     executor.sendMessage(Messages.PREFIX + "Du hast den Kontostand von " + target.getDisplayName() +
-        " auf " + survivalPlayer.getMoney() + Konst.CURRENCY + " gesetzt.");
+        " auf " + survivalPlayer.getMoney() + Constants.CURRENCY + " gesetzt.");
   }
 }

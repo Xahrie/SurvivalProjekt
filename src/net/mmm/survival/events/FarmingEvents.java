@@ -2,7 +2,7 @@ package net.mmm.survival.events;
 
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.SurvivalWorld;
+import net.mmm.survival.regions.SurvivalWorld;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

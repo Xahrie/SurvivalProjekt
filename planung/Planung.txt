@@ -22,16 +22,21 @@ Builden:
   TODO Spawn (Abgie, Alice, Pas)
 
 "Kommunikation"
-  Akzeptiert: An Abgie; Warum hast du meine Events bearbeitet und wo soll ich die Preise der Lizenzen zwischenspeichern?
-  Abgie: Am besten im Enum selbst wuerde ich sagen -> hab Code aufgeraeumt und einige nicht sinnvolle Methoden/Klassen geloescht
-         Hi Akzeptiert: In LocationChangeEvents:57 kommt es nie zu einer NullPointerException und bitte stell dein Encoding unter Window
-         -> Preferences -> General -> Workspace : Text file encoding auf UTF-8
-  Alice: Hallo Akzeptiert, bitte mal deine Codierung deines Projekts auf UTF-8 ändern, wir kriegen sonst Probleme. Bitte auch bei deinen bisher erstellten/geänderten Klassen wieder zurück machen. Danke :)
-  Mario: Ich habe meine Codierung auf UTF-8 geändert, ich hoffe Eclipse hat es auch für alles übernommen.
-  		 An Abgie, weshalb sollte da keine NullPointerException entstehen?
-  		 Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
-  		 Bitte begründe.
+  Mario: An Abgie, weshalb sollte da keine NullPointerException entstehen?
+  		   Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
+  		   Bitte begründe.
+  Abgie: Eine NullPointerException entsteht immer dann, wenn man einen Wert, der mit "null" initialisiert wurde weiterverwendet hat. Um
+         dies zu verhindern wird "assert obj!=null", "Objects.requireNonNull(obj)" oder "(obj!=null)?<then>:<else>" eingefuehrt. Bei uns
+         ist eine solche Abfrage vorhanden. Eine auftretende NullPointerException ist immer ein Zeichen dafuer, dass der Entwickler einen
+         schlechten Code testet. Deswegen sollte man auch NIEMALS Error, Exception, alles von RuntimeException bis auf wenige Ausnahmen und
+         Throwable catchen und auch nie Exceptions ignorieren oder zumindest loggen.
+
   Mario: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen sich nicht nutzen.
-  		 Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
-  		 Kann man mir sagen woran es liegt oder fehlt ein Plugin?
-  		
+  		   Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
+  		   Kann man mir sagen woran es liegt oder fehlt ein Plugin?
+  Abgie: Es sollte funktionieren alle jars von libs in den plugins-Ordner ausser spigot-1.13.jar. -> spigot-1.13.jar bitte in den
+         Wurzelordner
+
+  Abgie: Noch ein kleiner Tipp am Rande. Ich wuerde eigentlich Daten immer versuchen als Primitiv zu speichern. Da kanns bei fehlender
+         Initialisierung auch ne NullPointerException geben. Aber dann ersparst du der JVM auch das Autoboxing und es ist etwas
+         ressourcensparender und du musst bei der initialisierung kein neues Objekt erzeugen.

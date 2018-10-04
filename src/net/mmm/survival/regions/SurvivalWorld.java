@@ -1,4 +1,6 @@
-package net.mmm.survival.util;
+package net.mmm.survival.regions;
+
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -21,17 +23,14 @@ public enum SurvivalWorld {
   private final World world;
 
   SurvivalWorld(final String worldName) {
-    this.world = Bukkit.getWorlds().contains(Bukkit.getWorld(worldName)) ? Bukkit.getWorld(worldName)
-        : Bukkit.createWorld(new WorldCreator(worldName));
+    this.world = Bukkit.getWorlds().contains(Bukkit.getWorld(worldName)) ? Bukkit.getWorld(worldName) :
+        Bukkit.createWorld(new WorldCreator(worldName));
   }
 
   public static SurvivalWorld getWorld(final String name) {
-    for (final SurvivalWorld survivalWorld : SurvivalWorld.values()) {
-      if (survivalWorld.get().getName().equalsIgnoreCase(name)) {
-        return survivalWorld;
-      }
-    }
-    return null;
+    final SurvivalWorld[] worlds = SurvivalWorld.values();
+    return Arrays.stream(worlds).filter(survivalWorld ->
+        survivalWorld.get().getName().equalsIgnoreCase(name)).findFirst().orElse(null);
   }
 
   public World get() {

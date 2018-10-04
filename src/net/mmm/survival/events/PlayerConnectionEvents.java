@@ -6,11 +6,11 @@ import java.util.Collections;
 import com.vexsoftware.votifier.model.Vote;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
+import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
+import net.mmm.survival.util.Constants;
 import net.mmm.survival.util.ItemManager;
-import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.Scoreboards;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,7 +56,7 @@ public class PlayerConnectionEvents implements Listener {
       for (final Vote vote : VoteEvents.getVotes().get(event.getPlayer().getName().toLowerCase())) {
         joined.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" +
             vote.getServiceName() + "§8]");
-        joined.setMoney(joined.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
+        joined.setMoney(joined.getMoney() + Constants.VOTE_REWARD); //wenn Player-UUID in Players
         joined.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze",
             Collections.singletonList(Messages.VOTE_REWARD)));
       }
@@ -67,7 +67,7 @@ public class PlayerConnectionEvents implements Listener {
   private void isFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
     if (joined == null) { // First-Join
       joined = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(),
-          new ArrayList<>(), (short) 0, Konst.ZONE_SIZE_DEFAULT, null);
+          new ArrayList<>(), (short) 0, Constants.ZONE_SIZE_DEFAULT, null);
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(joined);
       SurvivalData.getInstance().getPlayers().put(joined.getUuid(), joined);
     }

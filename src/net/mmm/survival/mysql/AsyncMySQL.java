@@ -22,7 +22,7 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.SurvivalWorld;
+import net.mmm.survival.regions.SurvivalWorld;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

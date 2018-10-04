@@ -18,7 +18,6 @@ import net.mmm.survival.commands.Spawn;
 import net.mmm.survival.commands.Tame;
 import net.mmm.survival.commands.Vote;
 import net.mmm.survival.commands.Zone;
-import net.mmm.survival.dynmap.DynmapWorldGuardPlugin;
 import net.mmm.survival.events.ChatEvents;
 import net.mmm.survival.events.CommandEvents;
 import net.mmm.survival.events.DeathEvents;
@@ -28,8 +27,9 @@ import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
+import net.mmm.survival.regions.DynmapWorldGuardPlugin;
+import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.SurvivalWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
@@ -107,9 +107,9 @@ public class Survival extends JavaPlugin {
   }
 
   private void registerCommands() {
-    final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(),
-        new Gamemode(), new Home(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(),
-        new SetSpawn(), new Spawn(), new Tame(), new Vote(), new Zone());
+    final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
+        new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(), new Tame(),
+        new Vote(), new Zone());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
         .substring(26).toLowerCase()).setExecutor(commandExecutor));
   }
@@ -130,7 +130,7 @@ public class Survival extends JavaPlugin {
             /*Bukkit.getOnlinePlayers().forEach(player ->
                 SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
                     "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
-                        .getMoney() + Konst.CURRENCY));*/
+                        .getMoney() + Constants.CURRENCY));*/
           }
           counter.getAndIncrement();
         }

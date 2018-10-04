@@ -8,9 +8,9 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
+import net.mmm.survival.regions.Regions;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.Regions;
 import net.mmm.survival.util.UUIDFetcher;
 import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Bukkit;
@@ -173,8 +173,6 @@ public class Zone implements CommandExecutor {
         updateLength(executor, args[1], Integer.valueOf(args[2]));
       } catch (final NumberFormatException ignored) {
         executor.sendMessage(Messages.NOT_A_NUMBER);
-      } catch (final Exception ignored) {
-        executor.sendMessage(Messages.PLAYER_NOT_FOUND);
       }
     }
   }
@@ -182,9 +180,14 @@ public class Zone implements CommandExecutor {
   private void updateLength(final Player executor, final String arg, final Integer max) {
     UUIDFetcher.getUUID(arg, uuid -> {
       final SurvivalPlayer toUpdate = SurvivalData.getInstance().getPlayers().get(uuid);
-      toUpdate.setMaxzone(max);
-      UUIDFetcher.getName(uuid, name -> executor.sendMessage(Messages.PREFIX + " §e" + name +
-          " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen."));
+      if (toUpdate != null) {
+        toUpdate.setMaxzone(max);
+        UUIDFetcher.getName(uuid, name -> executor.sendMessage(Messages.PREFIX + " §e" + name +
+            " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen."));
+      } else {
+        executor.sendMessage(Messages.PLAYER_NOT_FOUND);
+      }
+
     });
   }
 
