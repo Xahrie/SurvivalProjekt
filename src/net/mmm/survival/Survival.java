@@ -8,6 +8,7 @@ import net.mmm.survival.commands.Complain;
 import net.mmm.survival.commands.Economy;
 import net.mmm.survival.commands.Gamemode;
 import net.mmm.survival.commands.Home;
+import net.mmm.survival.commands.Licence;
 import net.mmm.survival.commands.Money;
 import net.mmm.survival.commands.Navi;
 import net.mmm.survival.commands.Pay;
@@ -108,8 +109,8 @@ public class Survival extends JavaPlugin {
 
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
-        new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(), new Tame(),
-        new Vote(), new Zone());
+        new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
+        new Tame(), new Vote(), new Zone());
     commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
         .substring(26).toLowerCase()).setExecutor(commandExecutor));
   }
