@@ -55,20 +55,11 @@ public class LocationChangeEvents implements Listener {
    */
   @EventHandler
   public void onTeleport(final PlayerTeleportEvent event) {
-    try {
-      final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
-      final String destinationWorldName = event.getTo().getWorld().getName();
-      final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorldName));
-      if (needed != null && !traveler.hasLicence(needed)) {
-        event.setCancelled(true);
-      }
-      /*
-       * (Mario:)
-       * Falls die Welt oder Licence null sein sollte, wird der Teleport unterbrochen
-       * Ich halte es f�r Sinnvoll, denn es kann auch ein Teleport innerhalb der Farmwelt
-       * stattfinden und unn�tig eine NullPointerException ausgeben
-       */
-    } catch (NullPointerException exc) {
+    final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
+    final String destinationWorldName = event.getTo().getWorld().getName();
+    final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorldName));
+    if (needed != null && !traveler.hasLicence(needed)) {
+      event.setCancelled(true);
     }
   }
 }
