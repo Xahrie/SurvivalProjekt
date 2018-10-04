@@ -2,3 +2,67 @@ Wichtige Informationen:
 
  - Packagename net.mmm.survival.commands darf nicht geaendert werden
  - Klasse eines Commands muss den selben Namen, wie der Command tragen
+ 
+ 
+ public void error(final Object message) {
+     severe(message.toString());
+   }
+ 
+   public void error(final String message) {
+     severe(message);
+   }
+ 
+   public void error(final Player player) {
+     final String msg = "Player: " + player.getDisplayName();
+     severe(msg);
+   }
+ 
+   public void error(final Throwable t) {
+     severe(t.toString());
+   }
+ 
+   public void error(final Object message, final Throwable t) {
+     final String msg = message.toString() + "\n" + t.toString();
+     severe(msg);
+   }
+ 
+   public void error(final Player player, final Throwable t) {
+     final String msg = "Player: " + player.getDisplayName() + "\n" + t.toString();
+     severe(msg);
+   }
+ 
+   public void error(final String message, final Object o) {
+     final String msg = message + "\n" + o.toString();
+     severe(msg);
+   }
+ 
+   public void error(final String message, final Player player) {
+     final String msg = message + "\nPlayer: " + player.getDisplayName();
+     severe(msg);
+   }
+ 
+   public void error(final String message, final Throwable t) {
+     final String msg = message + "\n" + t.toString();
+     severe(msg);
+   }
+ 
+   public void error(final String message, final Object... params) {
+     final String msg = message + "\n" + Arrays.toString(params);
+     severe(msg);
+   }
+ 
+   public void error(final String message, final Player... players) {
+     final List<String> pl = new ArrayList<>();
+     Arrays.asList(players).forEach(player -> pl.add(player.getDisplayName()));
+ 
+     final String msg = message + "\nPlayers: " + pl;
+     severe(msg);
+   }
+   
+   public void error(final String message, final Throwable t, final Player... players) {
+     final List<String> pl = new ArrayList<>();
+     Arrays.asList(players).forEach(player -> pl.add(player.getDisplayName()));
+ 
+     final String msg = message + "\n" + t.toString() + "\nPlayers: " + pl;
+     severe(msg);
+   }
