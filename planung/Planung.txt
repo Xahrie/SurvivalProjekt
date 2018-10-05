@@ -40,3 +40,7 @@ Builden:
   Abgie: Noch ein kleiner Tipp am Rande. Ich wuerde eigentlich Daten immer versuchen als Primitiv zu speichern. Da kanns bei fehlender
          Initialisierung auch ne NullPointerException geben. Aber dann ersparst du der JVM auch das Autoboxing und es ist etwas
          ressourcensparender und du musst bei der initialisierung kein neues Objekt erzeugen.
+
+  Alice An Mario: Ich hab deine Klasse LevelPlayer mal ein wenig aufgeräumt. Ich hab da ein paar Attribute gelöscht und durch Methodenaufrufe ersetzt, sodass es etwas weniger
+         kompliziert ist. Auch das mit der UUID hab ich geändert, weil das nicht so viel Sinn macht die in dieser Klasse zu speichern, dann kann man die besser immer übergeben wenn man sie sie braucht.
+         P.S.: lieber float statt Float :)

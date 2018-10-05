@@ -2,7 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
-import net.mmm.survival.util.Constants;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,7 +39,7 @@ public class Pay implements CommandExecutor {
       target.setMoney(target.getMoney() + amount);
       executor.setMoney(executor.getMoney() - amount);
       executor.getPlayer().sendMessage(Messages.PREFIX + "Du hast " + target.getPlayer()
-          .getDisplayName() + amount + Constants.CURRENCY + " gezahlt.");
+          .getDisplayName() + amount + Konst.CURRENCY + " gezahlt.");
     } else {
       executor.getPlayer().sendMessage(Messages.NOT_ENOUGH_MONEY);
     }

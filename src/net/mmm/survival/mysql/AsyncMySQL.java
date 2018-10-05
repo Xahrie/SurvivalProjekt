@@ -113,7 +113,7 @@ public class AsyncMySQL {
     final short votes = (short) resultSet.getInt(4);
     final int maxzone = resultSet.getInt(5);
     final Location location = determineLocation(resultSet.getString(6));
-    final LevelPlayer levelPlayer = new LevelPlayer(uuid, resultSet.getFloat(7));
+    final LevelPlayer levelPlayer = new LevelPlayer(resultSet.getFloat(7));
     
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location, levelPlayer);
   }
@@ -204,7 +204,6 @@ public class AsyncMySQL {
     } catch (final SQLException ex) {
       ex.printStackTrace();
     }
-    SurvivalData.getInstance().getPlayerCache().put(target.getUniqueId(), target.getName());
   }
 
   /**

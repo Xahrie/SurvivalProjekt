@@ -2,7 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
-import net.mmm.survival.util.Constants;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +33,7 @@ public class Money implements CommandExecutor {
 
   private void evaluateZeroArguments(final SurvivalPlayer executor) {
     executor.getPlayer().sendMessage(Messages.PREFIX + "Kontostand von §e" + executor.getPlayer()
-        .getDisplayName() + "§7: §e" + Math.round(executor.getMoney() * 100) / 100.0 + Constants.CURRENCY + "§7.");
+        .getDisplayName() + "§7: §e" + Math.round(executor.getMoney() * 100) / 100.0 + Konst.CURRENCY + "§7.");
   }
 
   private void evaluateOneArgument(final String[] strings, final Player executor) {

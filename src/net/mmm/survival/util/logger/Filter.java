@@ -12,26 +12,26 @@ import java.util.List;
  * @since JDK 8
  */
 public final class Filter {
-  private final List<String> filter;
+  private final List<String> filters;
 
   Filter() {
-    this.filter = new ArrayList<>();
+    this.filters = new ArrayList<>();
   }
 
   public void add(final String filter) {
-    this.filter.add(filter);
+    this.filters.add(filter);
   }
 
   public void remove(final String filter) {
-    this.filter.remove(filter);
+    this.filters.remove(filter);
   }
 
   public void clear() {
-    this.filter.clear();
+    this.filters.clear();
   }
 
   public List<String> get() {
-    return filter;
+    return filters;
   }
 
 }
