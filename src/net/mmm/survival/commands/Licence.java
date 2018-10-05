@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  * Time: 17:14:05
  * Location: SurvivalProjekt
  */
-
+//TODO (BlueIronGirl) 05.10.2018: hier koennte man n bisschen was in Methoden auslagern das waere deutlich schoener :)
 public class Licence implements CommandExecutor {
 
   public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
