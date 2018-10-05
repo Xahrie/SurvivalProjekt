@@ -1,0 +1,19 @@
+Level Multiplikator:
+
+Das ist eine Tabelle für den Algorithmus um die Steigerung der Level automatisch zu errechnen
+Es ist NICHT das Endprodukt und kann demnach bearbeitet werden, sprich es ist erwünscht die Prozentsätze zu verbessern, dann aber auch bitte in der Enum Klasse
+
+lvl: 1-20
+7% 
+
+lvl: 21-40
+9%
+
+lvl: 41-70
+7%
+
+lvl: 71-90
+5%
+
+lvl: 91-99
+1%
