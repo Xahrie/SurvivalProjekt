@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
+import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
@@ -94,7 +95,7 @@ public class AsyncMySQL {
 
     try (final Statement statement = getMySQL().connection.createStatement();
          final ResultSet resultSet = statement
-             .executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME FROM SurvivalPlayer")) {
+             .executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME, EXP FROM SurvivalPlayer")) {
       while (resultSet.next()) {
         final UUID uuid = UUID.fromString(resultSet.getString(1));
         survivalPlayers.put(uuid, determinePlayer(resultSet, uuid));
@@ -112,10 +113,11 @@ public class AsyncMySQL {
     final short votes = (short) resultSet.getInt(4);
     final int maxzone = resultSet.getInt(5);
     final Location location = determineLocation(resultSet.getString(6));
-
-    return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location);
+    final LevelPlayer levelPlayer = new LevelPlayer(uuid, resultSet.getFloat(7));
+    
+    return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location, levelPlayer);
   }
-
+  
   private List<Complaint> determineComplaints(final UUID uuid) {
     final ArrayList<Complaint> complaints = new ArrayList<>();
 
@@ -212,7 +214,7 @@ public class AsyncMySQL {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.connection
-        .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=? WHERE UUID=?")) {
+        .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=?, EXP=? WHERE UUID=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
         final StringBuilder licences = determineLicences(survivalPlayer);
@@ -289,11 +291,12 @@ public class AsyncMySQL {
    */
   public void createPlayer(final SurvivalPlayer survivalPlayer) {
     try (final PreparedStatement statement = sql.connection
-        .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE) VALUES (?, ?, ?, ?)")) {
+        .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE, EXP) VALUES (?, ?, ?, ?, ?)")) {
       statement.setString(1, survivalPlayer.getUuid().toString());
       statement.setDouble(2, survivalPlayer.getMoney());
       statement.setInt(3, survivalPlayer.getVotes());
       statement.setInt(4, survivalPlayer.getMaxzone());
+      statement.setFloat(5, survivalPlayer.getLevelPlayer().getExp());
       statement.executeUpdate();
     } catch (final SQLException ex) {
       ex.printStackTrace();
@@ -352,7 +355,7 @@ public class AsyncMySQL {
       queryUpdate("CREATE TABLE IF NOT EXISTS Votes (UUID varchar(40) NOT NULL, Time varchar(10)" +
           " NOT NULL, Website varchar(40) NOT NULL);");
       queryUpdate("CREATE TABLE IF NOT EXISTS SurvivalPlayer (UUID varchar(40) NOT NULL, MONEY " +
-          "double, LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64))");
+          "double, LICENCES varchar(10000), VOTES int(11), MAXZONE int(11), HOME varchar(64), EXP float)");
       queryUpdate("CREATE TABLE IF NOT EXISTS Playerstatus (id int PRIMARY KEY AUTO_INCREMENT, " +
           "UUID VARCHAR(45), name VARCHAR(20), online int(1), lastonline timestamp, firstjoin " +
           "timestamp, ip VARCHAR(20));");
