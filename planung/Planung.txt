@@ -3,15 +3,17 @@ ToDo-Liste Survival-Projekt:
 Testphase:
   Beschwerdesystem (Alice)
   PaymentSystem (Abgie)
+  Lizenzsystem, Lizenzen Portale (SrAkzeptiert)
 
 In Arbeit:
   Abgie          Autogeld fuer Farming etc
   Alice          Gefaengnis
   PAS123         Grundstueck kann man spaeter mit Geld erweitern
-  SrAkzeptiert   Lizenzsystem, Lizenzen Portale
+  SrAkzeptiert   Levelsystem, Skillsystem
 
 Zu Programmieren:
   TODO Am Anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
+  TODO Levelsystem, Skillsystem (SrAkzeptiert)
   TODO Jobsystem fuer verschiedene Aufgaben (?)
   TODO Lizenzen Extraitems etc (?)
 

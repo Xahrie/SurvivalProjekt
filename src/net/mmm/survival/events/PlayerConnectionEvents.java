@@ -6,6 +6,7 @@ import java.util.Collections;
 import com.vexsoftware.votifier.model.Vote;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
+import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.Constants;
@@ -67,7 +68,7 @@ public class PlayerConnectionEvents implements Listener {
   private void isFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
     if (joined == null) { // First-Join
       joined = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(),
-          new ArrayList<>(), (short) 0, Constants.ZONE_SIZE_DEFAULT, null);
+          new ArrayList<>(), (short) 0, Constants.ZONE_SIZE_DEFAULT, null, new LevelPlayer(event.getPlayer().getUniqueId(), 100F));
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(joined);
       SurvivalData.getInstance().getPlayers().put(joined.getUuid(), joined);
     }
