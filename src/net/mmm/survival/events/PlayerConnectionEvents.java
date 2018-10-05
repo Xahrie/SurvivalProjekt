@@ -9,10 +9,11 @@ import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
-import net.mmm.survival.util.Constants;
 import net.mmm.survival.util.ItemManager;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -32,14 +33,32 @@ public class PlayerConnectionEvents implements Listener {
    */
   @EventHandler
   public void onJoin(final PlayerJoinEvent event) {
-    SurvivalData.getInstance().getAsyncMySQL().updatePlayer(event.getPlayer()); // muss oben stehen
-    final SurvivalPlayer joined = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
+    Player player = event.getPlayer();
+    SurvivalPlayer joinedPlayer = updatePlayer(player);
 
-    isFirstJoin(joined, event);
     event.setJoinMessage(null);
-    Scoreboards.setScoreboard(event.getPlayer()); //Scoreboard initialisieren
-    handleVotes(event, joined); //Vote-Plugin
-    handleComplaints(joined); //Beschwerden
+
+    handleFirstJoin(joinedPlayer, event);
+
+    //Scoreboard initialisieren
+    Scoreboards.setScoreboard(event.getPlayer());
+
+    //Vote-Plugin
+    handleVotes(event, joinedPlayer);
+
+    //Beschwerden
+    handleComplaints(joinedPlayer);
+  }
+
+  private SurvivalPlayer updatePlayer(Player player) {
+    //Datenbankinfos aktualisieren
+    SurvivalData.getInstance().getAsyncMySQL().updatePlayer(player);
+
+    //Globale Liste aktualisieren
+    SurvivalData.getInstance().getPlayerCache().put(player.getUniqueId(), player.getName());
+
+    //Listen Objekt zurueckliefern
+    return SurvivalPlayer.findSurvivalPlayer(player);
   }
 
   private void handleComplaints(final SurvivalPlayer joined) {
@@ -57,7 +76,7 @@ public class PlayerConnectionEvents implements Listener {
       for (final Vote vote : VoteEvents.getVotes().get(event.getPlayer().getName().toLowerCase())) {
         joined.getPlayer().sendMessage(Messages.PREFIX + " §7Danke das du für uns gevotest hast. §8[§e" +
             vote.getServiceName() + "§8]");
-        joined.setMoney(joined.getMoney() + Constants.VOTE_REWARD); //wenn Player-UUID in Players
+        joined.setMoney(joined.getMoney() + Konst.VOTE_REWARD); //wenn Player-UUID in Players
         joined.getPlayer().getInventory().addItem(ItemManager.build(Material.IRON_NUGGET, "§cMünze",
             Collections.singletonList(Messages.VOTE_REWARD)));
       }
@@ -65,10 +84,10 @@ public class PlayerConnectionEvents implements Listener {
     }
   }
 
-  private void isFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
+  private void handleFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
     if (joined == null) { // First-Join
       joined = new SurvivalPlayer(event.getPlayer().getUniqueId(), 0, new ArrayList<>(),
-          new ArrayList<>(), (short) 0, Constants.ZONE_SIZE_DEFAULT, null, new LevelPlayer(event.getPlayer().getUniqueId(), 100F));
+          new ArrayList<>(), (short) 0, Konst.ZONE_SIZE_DEFAULT, null, new LevelPlayer(100F));
       SurvivalData.getInstance().getAsyncMySQL().createPlayer(joined);
       SurvivalData.getInstance().getPlayers().put(joined.getUuid(), joined);
     }

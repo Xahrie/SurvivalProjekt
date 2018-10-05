@@ -32,6 +32,7 @@ import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,7 +62,6 @@ public class Survival extends JavaPlugin {
   public void onEnable() {
     final SurvivalData survivalData = createInstanceAndData();
     setupPlugin(survivalData);
-    checkAndCreateWorlds();
   }
 
   /**
@@ -70,7 +70,10 @@ public class Survival extends JavaPlugin {
   public void onDisable() {
     Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX +
         "Der Server wird neugestartet."));
+
+    //Alle Werte in Datenbank speichern
     save();
+
     SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
     if (SurvivalData.getInstance().getDynmap() != null) {
       SurvivalData.getInstance().getDynmap().onDisable(); /* Disable von Dynmap */
@@ -78,8 +81,11 @@ public class Survival extends JavaPlugin {
   }
 
   public void save() {
-    StatsManager.saveStats(); /* Statistiken der Spieler speichern bzw. in Geld umwandeln */
-    SurvivalData.getInstance().getAsyncMySQL().storePlayers(); /* Spielerdaten speichern */
+    // Statistiken der Spieler speichern bzw. in Geld umwandeln
+    StatsManager.saveStats();
+
+    //Spielerdaten speichern
+    SurvivalData.getInstance().getAsyncMySQL().storePlayers();
   }
 
   private SurvivalData createInstanceAndData() {
@@ -89,15 +95,12 @@ public class Survival extends JavaPlugin {
 
   private void setupPlugin(final SurvivalData survivalData) {
     survivalData.getAsyncMySQL().getMySQL().createTables(); // Tabellen erzeugen
+
     registerEvents(); // Events registrieren
     registerCommands(); // Commands registrieren
     registerDynmap(survivalData); // Dynmap registrieren
-    execScheduler(); // Starte den Counter
-  }
 
-  @SuppressWarnings("ResultOfMethodCallIgnored")
-  private void checkAndCreateWorlds() {
-    Arrays.asList(SurvivalWorld.values()).forEach(SurvivalWorld::get);
+    execScheduler(); // Starte den Counter
   }
 
   private void registerEvents() {

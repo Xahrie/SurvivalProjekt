@@ -21,7 +21,7 @@ public class SurvivalPlayer extends HotbarMessager {
   private final Date lastComplaint;
   private final List<Complaint> complaints;
   private final PlayerStats stats;
-  private LevelPlayer levelPlayer;
+  private final LevelPlayer levelPlayer;
   private List<SurvivalLicence> licences;
   private boolean tamed, teleport, zonenedit, zonensearch;
   //<editor-fold desc="mysql parameter">
@@ -161,10 +161,6 @@ public class SurvivalPlayer extends HotbarMessager {
   
   public LevelPlayer getLevelPlayer() {
     return this.levelPlayer;
-  }
-  
-  public void setLevelPlayer(final LevelPlayer levelPlayer) {
-    this.levelPlayer = levelPlayer;
   }
 
   public void setUuid(final UUID uuid) {

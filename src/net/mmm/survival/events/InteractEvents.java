@@ -24,7 +24,7 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.Regions;
 import net.mmm.survival.regions.SurvivalWorld;
-import net.mmm.survival.util.Constants;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.UUIDFetcher;
 import net.mmm.survival.worldedit.CuboidIterator;
@@ -277,13 +277,13 @@ public class InteractEvents implements Listener {
     if (args[0].equals("FARMWELT")) {
       performFarmwelt(event);
     } else if (args[0].equals("FACEBOOK")) {
-      performSocial(event, " §7Klicke §ehier §7zu unserem Facebook Profil.", Constants.FACEBOOK);
+      performSocial(event, " §7Klicke §ehier §7zu unserem Facebook Profil.", Konst.FACEBOOK);
     } else if (args[0].equals("WEBSEITE")) {
-      performSocial(event, " §7Klicke §ehier §7zu unserer Webseite.", Constants.WEBSITE);
+      performSocial(event, " §7Klicke §ehier §7zu unserer Webseite.", Konst.WEBSITE);
     } else if (args[0].equals("YOUTUBE")) {
-      performSocial(event, " §7Klicke §ehier §7zu unserem Youtube Kanal.", Constants.YOUTUBE);
+      performSocial(event, " §7Klicke §ehier §7zu unserem Youtube Kanal.", Konst.YOUTUBE);
     } else if (args[0].equals("TWITTER")) {
-      performSocial(event, " §7Klicke §ehier §7zu unserem Twitter Profil.", Constants.TWITTER);
+      performSocial(event, " §7Klicke §ehier §7zu unserem Twitter Profil.", Konst.TWITTER);
     }
   }
 

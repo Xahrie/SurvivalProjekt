@@ -39,14 +39,6 @@ public class Logger implements Exitable {
     this.logManager.exit();
   }
 
-  public void showError(final String errorMessage) {
-    System.out.println(errorMessage);
-  }
-
-  public void showInfo(final String infoMessage) {
-    System.out.println(infoMessage);
-  }
-
   private void toLog(final Level level, final String msg) {
     final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date() + " " + name + "\n" + msg);
     if (filter.get().stream().anyMatch(item -> msg.toLowerCase().contains(item.toLowerCase())) || filter.get().isEmpty()) {

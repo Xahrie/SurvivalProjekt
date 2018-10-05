@@ -25,11 +25,15 @@ public class SurvivalData {
     players = async.getPlayers(); // Lade Spieler(SurvivalPlayer) von MySQL
     playerCache = async.getPlayerCache(); // Lade Spielerdatenbank von MySQL
     levels = new HashMap<Integer, Float>();
-    Float exp = 100F;
-    for(int i = 1; i<100;i++) {
+    levelsBerechnen();
+  }
+
+  private void levelsBerechnen() {
+    float exp = 100F;
+    for (int i = 1; i < 100; i++) {
       final LevelState state = LevelState.LEVEL_1_BETWEEN_20.getLevelState(i);
       exp += state.getFactor() * exp;
-      levels.put(i, exp); 
+      levels.put(i, exp);
     }
   }
 
@@ -55,11 +59,11 @@ public class SurvivalData {
   void setDynmap(final DynmapWorldGuardPlugin dynmap) {
     this.dynmap = dynmap;
   }
-  
+
   public Map<Integer, Float> getLevels() {
     return levels;
   }
-  
+
   public Map<UUID, String> getPlayerCache() {
     return playerCache;
   }
