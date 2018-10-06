@@ -78,7 +78,7 @@ public final class Messages {
   /*
   Lizenz System
    */
-  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz existiert nicht. Es exestieren nur die §cNETHER §7und die §5END �7Lizenz.";
+  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz existiert nicht. Es existieren nur die §cNETHER §7und die §5END §7Lizenz.";
   public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
   public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz für §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
   public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz für §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
@@ -91,6 +91,19 @@ public final class Messages {
   static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
 
+  /*
+  Level System
+   */
+  public static final String LEVEL_ADDED_EXP = "§8┃ §eSurvival §7» Du hast §e? §7Erfahrung(en) erhalten.";
+  public static final String LEVEL_LEVEL_UP = "§8┃ §eSurvival §7» Du bist im Level aufgestiegen. Dein aktuelles Level ist: §e?§7, §aGlückwunsch.";
+
+  /*
+  Skill System
+   */
+  public static final String SKILL_ADDED_SKILLPOINTS = "§8┃ §eSurvival §7» Du erhälst §e? §7Skillpunkte.";
+  public static final String SKILL_NOT_ENOUGH_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast nicht genügend Skillpunkte.";
+  public static final String SKILL_CURRENT_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast aktuell §e? §7Skillpunkte.";
+  
   /**
    * Instanz
    */

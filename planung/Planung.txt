@@ -22,21 +22,6 @@ Builden:
   TODO Spawn (Abgie, Alice, Pas)
 
 "Kommunikation"
-  Mario: An Abgie, weshalb sollte da keine NullPointerException entstehen?
-  		   Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
-  		   Bitte begründe.
-  Abgie: Eine NullPointerException entsteht immer dann, wenn man einen Wert, der mit "null" initialisiert wurde weiterverwendet hat. Um
-         dies zu verhindern wird "assert obj!=null", "Objects.requireNonNull(obj)" oder "(obj!=null)?<then>:<else>" eingefuehrt. Bei uns
-         ist eine solche Abfrage vorhanden. Eine auftretende NullPointerException ist immer ein Zeichen dafuer, dass der Entwickler einen
-         schlechten Code testet. Deswegen sollte man auch NIEMALS Error, Exception, alles von RuntimeException bis auf wenige Ausnahmen und
-         Throwable catchen und auch nie Exceptions ignorieren oder zumindest loggen.
-
-  Mario: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen sich nicht nutzen.
-  		   Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
-  		   Kann man mir sagen woran es liegt oder fehlt ein Plugin?
-  Abgie: Es sollte funktionieren alle jars von libs in den plugins-Ordner ausser spigot-1.13.jar. -> spigot-1.13.jar bitte in den
-         Wurzelordner
-
   Abgie: Noch ein kleiner Tipp am Rande. Ich wuerde eigentlich Daten immer versuchen als Primitiv zu speichern. Da kanns bei fehlender
          Initialisierung auch ne NullPointerException geben. Aber dann ersparst du der JVM auch das Autoboxing und es ist etwas
          ressourcensparender und du musst bei der initialisierung kein neues Objekt erzeugen.
@@ -44,3 +29,8 @@ Builden:
   Alice An Mario: Ich hab deine Klasse LevelPlayer mal ein wenig aufgeräumt. Ich hab da ein paar Attribute gelöscht und durch Methodenaufrufe ersetzt, sodass es etwas weniger
          kompliziert ist. Auch das mit der UUID hab ich geändert, weil das nicht so viel Sinn macht die in dieser Klasse zu speichern, dann kann man die besser immer übergeben wenn man sie sie braucht.
          P.S.: lieber float statt Float :)
+  
+  Mario an Alice: Danke erstmal für die Aufräumung. Nebenbei habe ich ein paar Rechtschreibfehler bemerkt wie z.b "existiert" statt "exestiert" xD
+  				  Bei der UUID habe ich mir was schon gedacht, aber genau weiß ich es nicht mehr.
+  				  Ich sollte außerdem mehr mit Methoden arbeiten, da diese übersichtlicher sind.
+  				  Danke für deine Kritik wie ich es nennen würde.
