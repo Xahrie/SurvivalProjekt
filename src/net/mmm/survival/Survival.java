@@ -30,10 +30,8 @@ import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
-import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,26 +95,33 @@ public class Survival extends JavaPlugin {
   private void setupPlugin(final SurvivalData survivalData) {
     survivalData.getAsyncMySQL().getMySQL().createTables(); // Tabellen erzeugen
 
-    registerEvents(); // Events registrieren
-    registerCommands(); // Commands registrieren
-    registerDynmap(survivalData); // Dynmap registrieren
+    registerEvents();
+    registerCommands();
+    registerDynmap(survivalData);
 
-    execScheduler(); // Starte den Counter
+    //Scheduler starten fuer regelmaessige Aufgaben
+    execScheduler();
   }
 
   private void registerEvents() {
     final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(),
         new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
         new LocationChangeEvents(), new PlayerConnectionEvents(), new ChangedExpEvents());
-    listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
+
+    for (final Listener listener : listeners) {
+      Bukkit.getPluginManager().registerEvents(listener, this);
+    }
   }
 
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
         new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
         new Tame(), new Vote(), new Zone());
-    commands.forEach(commandExecutor -> getCommand(commandExecutor.getClass().getName()
-        .substring(26).toLowerCase()).setExecutor(commandExecutor));
+        
+     for (final CommandExecutor commandExecutor : commands) {
+      getCommand(commandExecutor.getClass().getName()
+          .substring(26).toLowerCase()).setExecutor(commandExecutor);
+    }
   }
 
   private void registerDynmap(final SurvivalData survivalData) {

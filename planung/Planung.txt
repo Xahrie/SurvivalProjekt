@@ -35,3 +35,8 @@ Builden:
   Alice An Mario: Ich hab deine Klasse LevelPlayer mal ein wenig aufgeräumt. Ich hab da ein paar Attribute gelöscht und durch Methodenaufrufe ersetzt, sodass es etwas weniger
          kompliziert ist. Auch das mit der UUID hab ich geändert, weil das nicht so viel Sinn macht die in dieser Klasse zu speichern, dann kann man die besser immer übergeben wenn man sie sie braucht.
          P.S.: lieber float statt Float :)
+
+  Mario an Alice: Danke erstmal für die Aufräumung. Nebenbei habe ich ein paar Rechtschreibfehler bemerkt wie z.b "existiert" statt "exestiert" xD
+  				  Bei der UUID habe ich mir was schon gedacht, aber genau weiß ich es nicht mehr.
+  				  Ich sollte außerdem mehr mit Methoden arbeiten, da diese übersichtlicher sind.
+  				  Danke für deine Kritik wie ich es nennen würde.

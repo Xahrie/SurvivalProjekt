@@ -70,7 +70,6 @@ public class Complain implements CommandExecutor {
           executor.outputComplaint(complaint);
         }
       }
-
     } else if (args[1].equals("all")) {
       for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
         if (survivalPlayer.getComplaints().size() > 0) {
@@ -78,7 +77,6 @@ public class Complain implements CommandExecutor {
         }
       }
     } else {
-
       final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(sender);
       if (target != null) {
         outputComplaint(target, sender);
