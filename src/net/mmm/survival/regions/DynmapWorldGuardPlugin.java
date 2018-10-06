@@ -316,7 +316,7 @@ public class DynmapWorldGuardPlugin {
    */
   public void onEnable() {
     final PluginManager pm = Survival.getInstance().getServer().getPluginManager();
-    dynmap = pm.getPlugin("regions"); /* Get regions */
+    dynmap = pm.getPlugin("dynmap"); /* Get dynamp */
     checkDynmap(pm);
   }
 
@@ -324,7 +324,7 @@ public class DynmapWorldGuardPlugin {
     if (this.dynmap != null) {
       checkWorldGuard(pluginManager.getPlugin("WorldGuard"));
     } else {
-      severe("Cannot find regions!");
+      severe("Cannot find dynmap!");
     }
   }
 
@@ -503,7 +503,7 @@ public class DynmapWorldGuardPlugin {
     public void onPluginEnable(final PluginEnableEvent event) {
       final Plugin p = event.getPlugin();
       final String name = p.getDescription().getName();
-      if (name.equals("regions") || name.equals("WorldGuard")) {
+      if (name.equals("dynmap") || name.equals("WorldGuard")) {
         if (dynmap.isEnabled() && wg.isEnabled())
           activate();
       }

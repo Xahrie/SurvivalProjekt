@@ -22,15 +22,6 @@ Builden:
   TODO Spawn (Abgie, Alice, Pas)
 
 "Kommunikation"
-  Mario: An Abgie, weshalb sollte da keine NullPointerException entstehen?
-  		   Meine Erfahrungen sagen mir, obwohl ich das abfrage das es nicht "null" sein darf das er sie gerne ausspuckt.
-  		   Bitte begründe.
-  Abgie: Eine NullPointerException entsteht immer dann, wenn man einen Wert, der mit "null" initialisiert wurde weiterverwendet hat. Um
-         dies zu verhindern wird "assert obj!=null", "Objects.requireNonNull(obj)" oder "(obj!=null)?<then>:<else>" eingefuehrt. Bei uns
-         ist eine solche Abfrage vorhanden. Eine auftretende NullPointerException ist immer ein Zeichen dafuer, dass der Entwickler einen
-         schlechten Code testet. Deswegen sollte man auch NIEMALS Error, Exception, alles von RuntimeException bis auf wenige Ausnahmen und
-         Throwable catchen und auch nie Exceptions ignorieren oder zumindest loggen.
-
   Mario: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen sich nicht nutzen.
   		   Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
   		   Kann man mir sagen woran es liegt oder fehlt ein Plugin?

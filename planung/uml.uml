@@ -3,75 +3,58 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="433.0" y="602.0">net.mmm.survival.commands.Economy</node>
-    <node x="145.0" y="602.0">net.mmm.survival.util.Messages</node>
-    <node x="289.0" y="602.0">net.mmm.survival.commands.SetSpawn</node>
-    <node x="135.0" y="676.0">net.mmm.survival.Survival</node>
-    <node x="0.0" y="750.0">net.mmm.survival.commands.Zone</node>
-    <node x="161.0" y="79.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.AreaStyle</node>
-    <node x="170.0" y="380.0">net.mmm.survival.events.InteractEvents</node>
-    <node x="221.0" y="306.0">net.mmm.survival.events.LocationChangeEvents</node>
-    <node x="0.0" y="676.0">net.mmm.survival.util.Regions</node>
-    <node x="159.0" y="454.0">net.mmm.survival.util.Scoreboards</node>
-    <node x="243.5" y="232.0">net.mmm.survival.events.CommandEvents.Commands</node>
-    <node x="427.0" y="79.0">net.mmm.survival.farming.statistics.WalkLength</node>
-    <node x="413.0" y="153.0">net.mmm.survival.player.HotbarMessager</node>
-    <node x="590.0" y="750.0">net.mmm.survival.commands.Pay</node>
-    <node x="337.0" y="380.0">net.mmm.survival.util.SurvivalWorld</node>
-    <node x="239.0" y="750.0">net.mmm.survival.commands.Navi</node>
-    <node x="633.0" y="454.0">net.mmm.survival.events.EntityEvents</node>
-    <node x="278.0" y="79.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.UpdateJob</node>
-    <node x="307.0" y="528.0">net.mmm.survival.events.VoteEvents</node>
-    <node x="114.0" y="0.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin</node>
-    <node x="155.0" y="528.0">net.mmm.survival.events.ChatEvents</node>
-    <node x="0.0" y="602.0">net.mmm.survival.commands.Complain</node>
-    <node x="558.0" y="79.0">net.mmm.survival.farming.statistics.OnlineTime</node>
-    <node x="608.0" y="306.0">net.mmm.survival.events.FarmingEvents</node>
-    <node x="229.0" y="153.0">net.mmm.survival.events.CommandEvents</node>
-    <node x="0.0" y="306.0">net.mmm.survival.events.PlayerConnectionEvents</node>
-    <node x="0.0" y="528.0">net.mmm.survival.commands.Gamemode</node>
-    <node x="120.0" y="750.0">net.mmm.survival.farming.Type</node>
-    <node x="45.5" y="153.0">net.mmm.survival.commands.Teleport</node>
-    <node x="356.0" y="750.0">net.mmm.survival.commands.Save</node>
-    <node x="719.0" y="602.0">net.mmm.survival.commands.SetHome</node>
-    <node x="420.0" y="232.0">net.mmm.survival.player.SurvivalPlayer</node>
-    <node x="576.0" y="602.0">net.mmm.survival.util.UUIDUtils</node>
-    <node x="317.0" y="454.0">net.mmm.survival.SurvivalData</node>
-    <node x="668.0" y="380.0">net.mmm.survival.util.ItemManager</node>
-    <node x="475.0" y="454.0">net.mmm.survival.events.DeathEvents</node>
-    <node x="269.0" y="676.0">net.mmm.survival.player.Licence</node>
-    <node x="473.0" y="750.0">net.mmm.survival.commands.Vote</node>
-    <node x="608.0" y="528.0">net.mmm.survival.player.Complaint</node>
-    <node x="0.0" y="454.0">net.mmm.survival.util.UUIDFetcher</node>
-    <node x="609.0" y="232.0">net.mmm.survival.mysql.AsyncMySQL.MySQL</node>
-    <node x="0.0" y="232.0">net.mmm.survival.commands.Home</node>
-    <node x="0.0" y="79.0">net.mmm.survival.dynmap.DynmapWorldGuardPlugin.OurServerListener</node>
-    <node x="101.0" y="232.0">net.mmm.survival.commands.Spawn</node>
-    <node x="458.0" y="528.0">net.mmm.survival.farming.PlayerStats</node>
-    <node x="503.0" y="380.0">net.mmm.survival.farming.StatsManager</node>
-    <node x="0.0" y="380.0">net.mmm.survival.worldedit.CuboidIterator</node>
-    <node x="593.0" y="153.0">net.mmm.survival.mysql.AsyncMySQL</node>
-    <node x="435.0" y="306.0">net.mmm.survival.util.CommandUtils</node>
-    <node x="532.0" y="676.0">net.mmm.survival.util.Konst</node>
-    <node x="655.0" y="676.0">net.mmm.survival.commands.Tame</node>
-    <node x="402.0" y="676.0">net.mmm.survival.commands.Money</node>
-    <node x="503.25" y="0.0">net.mmm.survival.farming.statistics.Statistic</node>
+    <node x="165.0" y="301.0">net.mmm.survival.util.ItemManager</node>
+    <node x="144.0" y="523.0">net.mmm.survival.commands.Economy</node>
+    <node x="595.0" y="449.0">net.mmm.survival.util.Messages</node>
+    <node x="488.0" y="301.0">net.mmm.survival.events.DeathEvents</node>
+    <node x="0.0" y="671.0">net.mmm.survival.commands.Vote</node>
+    <node x="0.0" y="523.0">net.mmm.survival.commands.SetSpawn</node>
+    <node x="301.0" y="449.0">net.mmm.survival.player.Complaint</node>
+    <node x="572.0" y="523.0">net.mmm.survival.Survival</node>
+    <node x="507.0" y="597.0">net.mmm.survival.commands.Zone</node>
+    <node x="514.0" y="227.0">net.mmm.survival.events.InteractEvents</node>
+    <node x="329.0" y="301.0">net.mmm.survival.util.UUIDFetcher</node>
+    <node x="221.0" y="153.0">net.mmm.survival.events.LocationChangeEvents</node>
+    <node x="482.0" y="79.0">net.mmm.survival.mysql.AsyncMySQL.MySQL</node>
+    <node x="0.0" y="79.0">net.mmm.survival.farming.statistics.WalkLength</node>
+    <node x="258.0" y="597.0">net.mmm.survival.commands.Home</node>
+    <node x="351.0" y="671.0">net.mmm.survival.commands.Pay</node>
+    <node x="286.0" y="0.0">net.mmm.survival.player.HotbarMessager</node>
+    <node x="117.0" y="671.0">net.mmm.survival.commands.Navi</node>
+    <node x="158.0" y="375.0">net.mmm.survival.events.EntityEvents</node>
+    <node x="0.0" y="449.0">net.mmm.survival.events.VoteEvents</node>
+    <node x="470.0" y="375.0">net.mmm.survival.events.ChatEvents</node>
+    <node x="450.0" y="449.0">net.mmm.survival.commands.Complain</node>
+    <node x="130.0" y="597.0">net.mmm.survival.commands.Spawn</node>
+    <node x="131.0" y="79.0">net.mmm.survival.farming.statistics.OnlineTime</node>
+    <node x="151.0" y="449.0">net.mmm.survival.farming.PlayerStats</node>
+    <node x="173.0" y="227.0">net.mmm.survival.events.FarmingEvents</node>
+    <node x="435.0" y="153.0">net.mmm.survival.events.CommandEvents</node>
+    <node x="315.0" y="375.0">net.mmm.survival.commands.Gamemode</node>
+    <node x="0.0" y="153.0">net.mmm.survival.events.PlayerConnectionEvents</node>
+    <node x="627.0" y="597.0">net.mmm.survival.farming.Type</node>
+    <node x="0.0" y="301.0">net.mmm.survival.farming.StatsManager</node>
+    <node x="344.0" y="227.0">net.mmm.survival.worldedit.CuboidIterator</node>
+    <node x="466.0" y="0.0">net.mmm.survival.mysql.AsyncMySQL</node>
+    <node x="234.0" y="671.0">net.mmm.survival.commands.Save</node>
+    <node x="430.0" y="523.0">net.mmm.survival.commands.SetHome</node>
+    <node x="0.0" y="227.0">net.mmm.survival.util.CommandUtils</node>
+    <node x="293.0" y="79.0">net.mmm.survival.player.SurvivalPlayer</node>
+    <node x="384.0" y="597.0">net.mmm.survival.commands.Tame</node>
+    <node x="0.0" y="597.0">net.mmm.survival.commands.Money</node>
+    <node x="287.0" y="523.0">net.mmm.survival.util.UUIDUtils</node>
+    <node x="0.0" y="375.0">net.mmm.survival.SurvivalData</node>
+    <node x="76.25" y="0.0">net.mmm.survival.farming.statistics.Statistic</node>
   </nodes>
   <notes />
   <edges>
     <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.farming.statistics.Statistic">
       <point x="0.0" y="-14.5" />
-      <point x="482.5" y="54.0" />
-      <point x="525.5" y="54.0" />
+      <point x="55.5" y="54.0" />
+      <point x="98.5" y="54.0" />
       <point x="-22.25" y="14.5" />
     </edge>
-    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.OurServerListener" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
-      <point x="0.0" y="-14.5" />
-      <point x="70.5" y="54.0" />
-      <point x="145.83333333333334" y="54.0" />
-      <point x="-63.66666666666666" y="14.5" />
-    </edge>
-    <edge source="net.mmm.survival.events.CommandEvents.Commands" target="net.mmm.survival.events.CommandEvents">
+    <edge source="net.mmm.survival.mysql.AsyncMySQL.MySQL" target="net.mmm.survival.mysql.AsyncMySQL">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
@@ -81,38 +64,12 @@
     </edge>
     <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.statistics.Statistic">
       <point x="0.0" y="-14.5" />
-      <point x="613.0" y="54.0" />
-      <point x="570.0" y="54.0" />
+      <point x="186.0" y="54.0" />
+      <point x="143.0" y="54.0" />
       <point x="22.25" y="14.5" />
     </edge>
-    <edge source="net.mmm.survival.mysql.AsyncMySQL.MySQL" target="net.mmm.survival.mysql.AsyncMySQL">
-      <point x="0.0" y="-14.5" />
-      <point x="0.0" y="14.5" />
-    </edge>
-    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.AreaStyle" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
-      <point x="0.0" y="-14.5" />
-      <point x="0.0" y="14.5" />
-    </edge>
-    <edge source="net.mmm.survival.commands.Spawn" target="net.mmm.survival.commands.Teleport">
-      <point x="0.0" y="-14.5" />
-      <point x="142.5" y="207.0" />
-      <point x="114.5" y="207.0" />
-      <point x="23.0" y="14.5" />
-    </edge>
-    <edge source="net.mmm.survival.dynmap.DynmapWorldGuardPlugin.UpdateJob" target="net.mmm.survival.dynmap.DynmapWorldGuardPlugin">
-      <point x="0.0" y="-14.5" />
-      <point x="330.0" y="54.0" />
-      <point x="273.16666666666663" y="54.0" />
-      <point x="63.66666666666666" y="14.5" />
-    </edge>
-    <edge source="net.mmm.survival.commands.Home" target="net.mmm.survival.commands.Teleport">
-      <point x="0.0" y="-14.5" />
-      <point x="40.5" y="207.0" />
-      <point x="68.5" y="207.0" />
-      <point x="-23.0" y="14.5" />
-    </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="408.0" y="389.5" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="408.0" y="390.0" />
   <SelectedNodes />
   <Categories>
     <Category>Inner Classes</Category>
