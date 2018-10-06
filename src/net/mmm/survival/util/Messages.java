@@ -72,8 +72,8 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§88┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
-  public static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
-  public static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
 
   /*
   Lizenz System
@@ -84,26 +84,23 @@ public final class Messages {
   public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz für §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
   public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
   public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
-
-  /*
-  Teleport
-   */
-  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
-  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
-
   /*
   Level System
    */
   public static final String LEVEL_ADDED_EXP = "§8┃ §eSurvival §7» Du hast §e? §7Erfahrung(en) erhalten.";
   public static final String LEVEL_LEVEL_UP = "§8┃ §eSurvival §7» Du bist im Level aufgestiegen. Dein aktuelles Level ist: §e?§7, §aGlückwunsch.";
-
   /*
   Skill System
    */
   public static final String SKILL_ADDED_SKILLPOINTS = "§8┃ §eSurvival §7» Du erhälst §e? §7Skillpunkte.";
   public static final String SKILL_NOT_ENOUGH_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast nicht genügend Skillpunkte.";
   public static final String SKILL_CURRENT_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast aktuell §e? §7Skillpunkte.";
-  
+  /*
+  Teleport
+   */
+  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
+  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
+
   /**
    * Instanz
    */

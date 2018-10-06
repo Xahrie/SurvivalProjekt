@@ -24,17 +24,8 @@ public class SurvivalData {
   public SurvivalData() {
     players = async.getPlayers(); // Lade Spieler(SurvivalPlayer) von MySQL
     playerCache = async.getPlayerCache(); // Lade Spielerdatenbank von MySQL
-    levels = new HashMap<Integer, Float>();
+    levels = new HashMap<>();
     levelsBerechnen();
-  }
-
-  private void levelsBerechnen() {
-    float exp = 100F;
-    for (int i = 1; i < 100; i++) {
-      final LevelState state = LevelState.LEVEL_1_BETWEEN_20.getLevelState(i);
-      exp += state.getFactor() * exp;
-      levels.put(i, exp);
-    }
   }
 
   /**
@@ -45,6 +36,15 @@ public class SurvivalData {
       survivalData = new SurvivalData();
     }
     return survivalData;
+  }
+
+  private void levelsBerechnen() {
+    float exp = 100F;
+    for (int i = 1; i < 100; i++) {
+      final LevelState state = LevelState.LEVEL_1_BETWEEN_20.getLevelState(i);
+      exp += (state != null ? state.getFactor() : 0) * exp;
+      levels.put(i, exp);
+    }
   }
 
   //<editor-fold desc="getter and setter">

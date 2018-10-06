@@ -28,6 +28,7 @@ public abstract class TeleportBase {
   private void countdown(final Location location, final SurvivalPlayer teleported) {
     new BukkitRunnable() {
       int i = 3;
+
       @Override
       public void run() {
         if (teleported.isTeleport()) {

@@ -114,10 +114,10 @@ public class AsyncMySQL {
     final int maxzone = resultSet.getInt(5);
     final Location location = determineLocation(resultSet.getString(6));
     final LevelPlayer levelPlayer = new LevelPlayer(resultSet.getFloat(7));
-    
+
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location, levelPlayer);
   }
-  
+
   private List<Complaint> determineComplaints(final UUID uuid) {
     final ArrayList<Complaint> complaints = new ArrayList<>();
 

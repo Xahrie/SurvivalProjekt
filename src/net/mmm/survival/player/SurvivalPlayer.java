@@ -52,7 +52,7 @@ public class SurvivalPlayer extends HotbarMessager {
     this.maxzone = maxzone;
     this.home = home;
     this.levelPlayer = levelPlayer;
-    
+
     this.lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
     this.stats = new PlayerStats(); // Erstelle Statistiken
   }
@@ -158,13 +158,13 @@ public class SurvivalPlayer extends HotbarMessager {
   public UUID getUuid() {
     return uuid;
   }
-  
-  public LevelPlayer getLevelPlayer() {
-    return this.levelPlayer;
-  }
 
   public void setUuid(final UUID uuid) {
     this.uuid = uuid;
+  }
+
+  public LevelPlayer getLevelPlayer() {
+    return this.levelPlayer;
   }
 
   public short getVotes() {

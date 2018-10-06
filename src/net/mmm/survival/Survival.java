@@ -108,17 +108,15 @@ public class Survival extends JavaPlugin {
         new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
         new LocationChangeEvents(), new PlayerConnectionEvents(), new ChangedExpEvents());
 
-    for (final Listener listener : listeners) {
-      Bukkit.getPluginManager().registerEvents(listener, this);
-    }
+    listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
         new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
         new Tame(), new Vote(), new Zone());
-        
-     for (final CommandExecutor commandExecutor : commands) {
+
+    for (final CommandExecutor commandExecutor : commands) {
       getCommand(commandExecutor.getClass().getName()
           .substring(26).toLowerCase()).setExecutor(commandExecutor);
     }

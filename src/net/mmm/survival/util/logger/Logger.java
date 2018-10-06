@@ -24,8 +24,8 @@ import org.bukkit.entity.Player;
  */
 public class Logger implements Exitable {
   private final Filter filter;
-  private LogManager logManager;
   private final String name;
+  private LogManager logManager;
 
   public Logger(final String name) {
     super();
