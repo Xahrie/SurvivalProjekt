@@ -95,7 +95,7 @@ public class AsyncMySQL {
 
     try (final Statement statement = getMySQL().connection.createStatement();
          final ResultSet resultSet = statement
-             .executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME, EXP FROM SurvivalPlayer")) {
+             .executeQuery("SELECT UUID, MONEY, LICENCES, VOTES, MAXZONE, HOME, LEVELPLAYER FROM SurvivalPlayer")) {
       while (resultSet.next()) {
         final UUID uuid = UUID.fromString(resultSet.getString(1));
         survivalPlayers.put(uuid, determinePlayer(resultSet, uuid));
@@ -213,7 +213,7 @@ public class AsyncMySQL {
     final Collection<SurvivalPlayer> players = SurvivalData.getInstance().getPlayers().values();
 
     try (final PreparedStatement statement = sql.connection
-        .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=?, EXP=? WHERE UUID=?")) {
+        .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=?, LEVELPLAYER=? WHERE UUID=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
         final StringBuilder licences = determineLicences(survivalPlayer);
@@ -290,7 +290,7 @@ public class AsyncMySQL {
    */
   public void createPlayer(final SurvivalPlayer survivalPlayer) {
     try (final PreparedStatement statement = sql.connection
-        .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE, EXP) VALUES (?, ?, ?, ?, ?)")) {
+        .prepareStatement("INSERT INTO SurvivalPlayer (UUID, MONEY, VOTES, MAXZONE, LEVELPLAYER) VALUES (?, ?, ?, ?, ?)")) {
       statement.setString(1, survivalPlayer.getUuid().toString());
       statement.setDouble(2, survivalPlayer.getMoney());
       statement.setInt(3, survivalPlayer.getVotes());
