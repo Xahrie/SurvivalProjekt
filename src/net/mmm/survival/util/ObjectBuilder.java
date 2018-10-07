@@ -29,7 +29,7 @@ public final class ObjectBuilder {
     return encoder.encodeToString(outputStream.toByteArray());
   }
 
-  static Object getObjectOf(final String basic) {
+  public static Object getObjectOf(final String basic) {
     final Base64.Decoder decoder = Base64.getDecoder();
     final byte[] data = decoder.decode(basic);
     final ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(data);
