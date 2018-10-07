@@ -2,6 +2,9 @@ package net.mmm.survival.player;
 
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.events.ChangedExpEvent;
+
+import java.io.Serializable;
+
 import org.bukkit.Bukkit;
 
 /*
@@ -10,8 +13,12 @@ import org.bukkit.Bukkit;
  * Time: 01:41:39
  * Location: SurvivalProjekt
  */
-public class LevelPlayer {
+public class LevelPlayer implements Serializable {
 
+  /*
+   * "transient" speichert nicht die Variabel ab2
+   */
+  private static final long serialVersionUID = -324162873104318794L;
   private Float exp;
 
   public LevelPlayer(final Float exp) {
