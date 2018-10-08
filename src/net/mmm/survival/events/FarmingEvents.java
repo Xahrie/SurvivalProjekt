@@ -1,8 +1,11 @@
 package net.mmm.survival.events;
 
+import net.mmm.survival.farming.PlayerStats;
 import net.mmm.survival.farming.Type;
+import net.mmm.survival.farming.statistics.Statistic;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,8 +30,8 @@ public class FarmingEvents implements Listener {
    */
   @EventHandler
   public void onAction(final PlayerMoveEvent event) { //TODO (Abgie) 30.09.2018: AENDERN
-    final SurvivalPlayer handlingPlayer = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
-    handlingPlayer.getStats().getStatistic(Type.ONLINE_TIME).update(handlingPlayer);
+    final SurvivalPlayer handler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
+    saveStatistic(handler, Type.ONLINE_TIME);
   }
 
   /**
@@ -38,10 +41,19 @@ public class FarmingEvents implements Listener {
   @EventHandler
   public void onTeleport(final PlayerTeleportEvent event) {
     final SurvivalPlayer teleported = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
-    final World startWorld = event.getFrom().getWorld();
-    final World destinationWorld = event.getTo().getWorld();
+    final Location startLocation = event.getFrom();
+    final World startWorld = startLocation.getWorld();
+    final Location destinationLocation = event.getTo();
+    final World destinationWorld = destinationLocation.getWorld();
+
     if (startWorld.equals(SurvivalWorld.FARMWELT.get()) && !destinationWorld.equals(SurvivalWorld.FARMWELT.get())) {
-      teleported.getStats().getStatistic(Type.WALK_LENGTH_CM).update(teleported); // Speichere Statistik
+      saveStatistic(teleported, Type.WALK_LENGTH_CM);
     }
+  }
+
+  private void saveStatistic(final SurvivalPlayer teleported, final Type walkLengthCm) {
+    final PlayerStats teleportedStats = teleported.getStats();
+    final Statistic teleportedStaticstic = teleportedStats.getStatistic(walkLengthCm);
+    teleportedStaticstic.update(teleported); // Speichere Statistik
   }
 }

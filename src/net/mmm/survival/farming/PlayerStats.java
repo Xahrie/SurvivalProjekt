@@ -37,8 +37,10 @@ public class PlayerStats {
    * @return Statistik
    */
   public Statistic getStatistic(final Type statisticType) {
-    return statistics.stream().filter(statistic ->
-        statistic.getType().equals(statisticType)).findFirst().orElse(null);
+    return statistics.stream().filter(statistic -> {
+      final Type type = statistic.getType();
+      return type.equals(statisticType);
+    }).findFirst().orElse(null);
   }
 
 }

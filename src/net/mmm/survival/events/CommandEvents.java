@@ -1,7 +1,6 @@
 package net.mmm.survival.events;
 
 import net.mmm.survival.Survival;
-import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
  * Klasse CommandEvents ueberschreibt den Command:
@@ -24,20 +24,15 @@ public class CommandEvents implements Listener {
     final String message = event.getMessage().split(" ")[0];
 
     if (message.equalsIgnoreCase("/info")) {
-      info(executor);
+      evaluateInfoCommand(executor);
     }
   }
 
-  private void info(final CommandSender commandSender) {
-    if (CommandUtils.checkPlayer(commandSender)) {
-      commandSender.sendMessage(Messages.PREFIX + " Name: §8" +
-          Survival.getInstance().getDescription().getName());
-      commandSender.sendMessage(Messages.PREFIX + " Version: §8" +
-          Survival.getInstance().getDescription().getVersion());
-      commandSender.sendMessage(Messages.PREFIX + " Autoren: §8" +
-          Survival.getInstance().getDescription().getAuthors().get(0));
-      commandSender.sendMessage(Messages.PREFIX + " MC-Build: §8" +
-          Survival.getInstance().getDescription().getAPIVersion());
-    }
+  private void evaluateInfoCommand(final CommandSender commandSender) {
+    final PluginDescriptionFile pluginDescription = Survival.getInstance().getDescription();
+    commandSender.sendMessage(Messages.PREFIX + " Name: §8" + pluginDescription.getName());
+    commandSender.sendMessage(Messages.PREFIX + " Version: §8" + pluginDescription.getVersion());
+    commandSender.sendMessage(Messages.PREFIX + " Autoren: §8" + pluginDescription.getAuthors().get(0));
+    commandSender.sendMessage(Messages.PREFIX + " MC-Build: §8" + pluginDescription.getAPIVersion());
   }
 }

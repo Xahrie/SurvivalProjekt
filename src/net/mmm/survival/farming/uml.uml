@@ -3,40 +3,149 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="79.0">net.mmm.survival.farming.statistics.WalkLength</node>
-    <node x="131.0" y="79.0">net.mmm.survival.farming.statistics.OnlineTime</node>
-    <node x="0.0" y="153.0">net.mmm.survival.farming.PlayerStats</node>
-    <node x="150.0" y="153.0">net.mmm.survival.events.FarmingEvents</node>
-    <node x="0.0" y="380.0">net.mmm.survival.farming.Farming</node>
-    <node x="137.0" y="380.0">net.mmm.survival.farming.Type</node>
-    <node x="166.0" y="306.0">net.mmm.survival.farming.StatsManager</node>
-    <node x="0.0" y="306.0">net.mmm.survival.player.SurvivalPlayer</node>
-    <node x="5.5" y="232.0">net.mmm.survival.farming.Statistics</node>
-    <node x="76.25" y="0.0">net.mmm.survival.farming.statistics.Statistic</node>
+    <node x="41.98908730158729" y="218.0">net.mmm.survival.farming.statistics.WalkLength</node>
+    <node x="53.11408730158726" y="99.0">net.mmm.survival.farming.FarmingKonst</node>
+    <node x="214.9470899470899" y="218.0">net.mmm.survival.farming.statistics.OnlineTime</node>
+    <node x="123.11298500881827" y="307.0">net.mmm.survival.farming.PlayerStats</node>
+    <node x="237.0753968253968" y="475.0">net.mmm.survival.events.FarmingEvents</node>
+    <node x="204.8220899470899" y="0.0">net.mmm.survival.farming.Type</node>
+    <node x="29.536706349206327" y="475.0">net.mmm.survival.farming.StatsManager</node>
+    <node x="152.1944444444444" y="396.0">net.mmm.survival.player.SurvivalPlayer</node>
+    <node x="208.98015873015873" y="99.0">net.mmm.survival.farming.statistics.Statistic</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.statistics.Statistic">
-      <point x="0.0" y="-14.5" />
-      <point x="186.0" y="54.0" />
-      <point x="143.0" y="54.0" />
-      <point x="22.25" y="14.5" />
+    <edge source="net.mmm.survival.events.FarmingEvents" target="net.mmm.survival.farming.Type">
+      <point x="31.5" y="-14.5" />
+      <point x="331.5753968253968" y="450.0" />
+      <point x="382.4392636684304" y="450.0" />
+      <point x="382.4392636684304" y="59.0" />
+      <point x="273.5363756613756" y="59.0" />
+      <point x="31.714285714285722" y="14.5" />
     </edge>
     <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.farming.statistics.Statistic">
-      <point x="0.0" y="-14.5" />
-      <point x="55.5" y="54.0" />
-      <point x="98.5" y="54.0" />
-      <point x="-22.25" y="14.5" />
+      <point x="13.874999999999972" y="-14.5" />
+      <point x="111.36408730158726" y="158.0" />
+      <point x="215.33730158730157" y="158.0" />
+      <point x="-38.14285714285714" y="14.5" />
     </edge>
-    <edge source="net.mmm.survival.farming.Statistics" target="net.mmm.survival.farming.PlayerStats">
-      <point x="0.0" y="-14.5" />
+    <edge source="net.mmm.survival.player.SurvivalPlayer" target="net.mmm.survival.farming.PlayerStats">
+      <point x="-10.083333333333286" y="-14.5" />
+      <point x="202.6111111111111" y="356.0" />
+      <point x="175.61298500881827" y="356.0" />
       <point x="0.0" y="14.5" />
     </edge>
+    <edge source="net.mmm.survival.farming.statistics.Statistic" target="net.mmm.survival.farming.Type">
+      <point x="22.25" y="-14.5" />
+      <point x="275.73015873015873" y="79.0" />
+      <point x="252.39351851851845" y="79.0" />
+      <point x="10.571428571428555" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.StatsManager" target="net.mmm.survival.farming.Type">
+      <point x="-30.0" y="-14.5" />
+      <point x="59.53670634920633" y="450.0" />
+      <point x="0.0" y="450.0" />
+      <point x="0.0" y="49.0" />
+      <point x="210.10780423280417" y="49.0" />
+      <point x="-31.714285714285722" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.PlayerStats" target="net.mmm.survival.farming.statistics.OnlineTime">
+      <point x="42.0" y="-14.5" />
+      <point x="217.61298500881827" y="287.0" />
+      <point x="242.4470899470899" y="287.0" />
+      <point x="-27.5" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.farming.FarmingKonst">
+      <point x="-13.875000000000028" y="-14.5" />
+      <point x="-30.5" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.FarmingKonst">
+      <point x="-41.25" y="-14.5" />
+      <point x="228.6970899470899" y="148.0" />
+      <point x="144.61408730158726" y="148.0" />
+      <point x="30.5" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.player.SurvivalPlayer">
+      <point x="-27.75" y="14.5" />
+      <point x="69.73908730158729" y="287.0" />
+      <point x="52.94819223985891" y="287.0" />
+      <point x="52.94819223985891" y="376.0" />
+      <point x="162.27777777777771" y="376.0" />
+      <point x="-50.41666666666666" y="-14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.PlayerStats" target="net.mmm.survival.farming.Type">
+      <point x="-42.0" y="-14.5" />
+      <point x="133.61298500881827" y="277.0" />
+      <point x="31.48908730158726" y="277.0" />
+      <point x="31.48908730158726" y="59.0" />
+      <point x="220.67923280423275" y="59.0" />
+      <point x="-21.14285714285714" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.StatsManager" target="net.mmm.survival.player.SurvivalPlayer">
+      <point x="30.0" y="-14.5" />
+      <point x="119.53670634920633" y="450.0" />
+      <point x="182.4444444444444" y="450.0" />
+      <point x="-30.25" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.PlayerStats" target="net.mmm.survival.farming.statistics.WalkLength">
+      <point x="-21.0" y="-14.5" />
+      <point x="154.61298500881827" y="267.0" />
+      <point x="125.23908730158729" y="267.0" />
+      <point x="27.75" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.events.FarmingEvents" target="net.mmm.survival.player.SurvivalPlayer">
+      <point x="-31.5" y="-14.5" />
+      <point x="268.5753968253968" y="450.0" />
+      <point x="242.9444444444444" y="450.0" />
+      <point x="30.25000000000003" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.Statistic" target="net.mmm.survival.player.SurvivalPlayer">
+      <point x="38.14285714285711" y="14.5" />
+      <point x="291.62301587301585" y="188.0" />
+      <point x="335.4470899470899" y="188.0" />
+      <point x="335.4470899470899" y="376.0" />
+      <point x="263.1111111111111" y="376.0" />
+      <point x="50.416666666666714" y="-14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.statistics.Statistic">
+      <point x="13.75" y="-14.5" />
+      <point x="283.6970899470899" y="198.0" />
+      <point x="278.9087301587302" y="198.0" />
+      <point x="25.428571428571445" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.WalkLength" target="net.mmm.survival.farming.Type">
+      <point x="-41.62500000000003" y="-14.5" />
+      <point x="55.86408730158726" y="198.0" />
+      <point x="42.33730158730157" y="198.0" />
+      <point x="42.33730158730157" y="69.0" />
+      <point x="231.25066137566134" y="69.0" />
+      <point x="-10.571428571428555" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.PlayerStats" target="net.mmm.survival.farming.statistics.Statistic">
+      <point x="21.0" y="-14.5" />
+      <point x="196.61298500881827" y="287.0" />
+      <point x="204.4470899470899" y="287.0" />
+      <point x="204.4470899470899" y="188.0" />
+      <point x="253.48015873015873" y="188.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.farming.Type">
+      <point x="41.25" y="-14.5" />
+      <point x="311.1970899470899" y="198.0" />
+      <point x="318.9165564373897" y="198.0" />
+      <point x="318.9165564373897" y="69.0" />
+      <point x="262.96494708994703" y="69.0" />
+      <point x="21.14285714285714" y="14.5" />
+    </edge>
+    <edge source="net.mmm.survival.farming.statistics.OnlineTime" target="net.mmm.survival.player.SurvivalPlayer">
+      <point x="27.5" y="14.5" />
+      <point x="297.4470899470899" y="366.0" />
+      <point x="242.9444444444444" y="366.0" />
+      <point x="30.25000000000003" y="-14.5" />
+    </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="188.0" y="331.0" />
-  <SelectedNodes>
-    <node>net.mmm.survival.farming.statistics.WalkLength</node>
-  </SelectedNodes>
+  <settings layout="Hierarchic Group" zoom="0.8670756646216768" x="279.0" y="479.0" />
+  <SelectedNodes />
   <Categories />
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>

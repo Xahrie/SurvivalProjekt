@@ -6,10 +6,10 @@ import java.util.List;
 import net.mmm.survival.farming.FarmingKonst;
 import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
+import org.bukkit.entity.Player;
 
 /**
- * WalkLength: Beschreibung der Klasse moeglichst praezise, aber nicht zu lang.
- * Zeilenlaenge: 80
+ * WalkLength trackt die Laenge, die ein Spieler (nicht in der Bauwelt) laeuft.
  *
  * @author Abgie on 28.09.18 12:00
  * project SurvivalProjekt
@@ -24,7 +24,7 @@ public class WalkLength extends Statistic {
       org.bukkit.Statistic.BOAT_ONE_CM, org.bukkit.Statistic.CLIMB_ONE_CM,
       org.bukkit.Statistic.FLY_ONE_CM, org.bukkit.Statistic.MINECART_ONE_CM,
       org.bukkit.Statistic.PIG_ONE_CM, org.bukkit.Statistic.SWIM_ONE_CM);
-  private int oldLength = 0;
+  private int oldLength;
 
   /**
    * Konstruktor
@@ -45,13 +45,14 @@ public class WalkLength extends Statistic {
   /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
    *
-   * @param survivalPlayer Spieler der Statistik
+   * @param target Spieler der Statistik
    */
   @Override
-  public void update(final SurvivalPlayer survivalPlayer) {
+  public void update(final SurvivalPlayer target) {
     int lengthInCm = 0;
     for (final org.bukkit.Statistic statistic : statistics) {
-      lengthInCm += survivalPlayer.getPlayer().getStatistic(statistic);
+      final Player targetPlayer = target.getPlayer();
+      lengthInCm += targetPlayer.getStatistic(statistic);
     }
     final int difference = lengthInCm - oldLength;
     incrementValue(difference);

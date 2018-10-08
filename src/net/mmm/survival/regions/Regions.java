@@ -11,22 +11,22 @@ import org.bukkit.Location;
 /**
  * Verwaltung der Regionen
  */
-public class Regions {
+public final class Regions {
   private static final String GLOBAL_REGION = "__global__";   // Rueckgabe, wenn keine Region in Selektion definiert
 
-  private static void checkRegionId(final String id, final boolean allowGlobal) throws CommandException {
-    checkValid(id); // Ueberpruefe, ob Name erlaubt ist
-    checkGlobal(id, allowGlobal); // Ueberpruefe ob Region global ist
+  private static void evaluateRegionId(final String id, final boolean allowGlobal) throws CommandException {
+    evaluateValid(id); // Ueberpruefe, ob Name erlaubt ist
+    evaluateGlobal(id, allowGlobal); // Ueberpruefe ob Region global ist
   }
 
-  private static void checkValid(final String id) throws CommandException {
+  private static void evaluateValid(final String id) throws CommandException {
     if (!ProtectedRegion.isValidId(id)) {
       throw new CommandException("The region name of '" + id +
           "' contains characters that are not allowed.");
     }
   }
 
-  private static void checkGlobal(final String id, final boolean allowGlobal) throws CommandException {
+  private static void evaluateGlobal(final String id, final boolean allowGlobal) throws CommandException {
     if ((!allowGlobal) && (id.equalsIgnoreCase(GLOBAL_REGION))) {
       throw new CommandException("Sorry, you can't use __global__ here.");
     }
@@ -41,9 +41,9 @@ public class Regions {
    * @return Geschuetzte Region
    * @see com.sk89q.worldguard.protection.managers.RegionManager
    */
-  public static ProtectedRegion checkExistingRegion(final RegionManager regionManager, final String id, final boolean allowGlobal) {
+  public static ProtectedRegion evaluateExistingRegion(final RegionManager regionManager, final String id, final boolean allowGlobal) {
     try {
-      checkRegionId(id, allowGlobal);
+      evaluateRegionId(id, allowGlobal);
     } catch (final CommandException ex) {
       ex.printStackTrace();
     }
@@ -76,9 +76,9 @@ public class Regions {
    * @return Geschuetzte Region
    * @see com.sk89q.worldguard.protection.managers.RegionManager
    */
-  public static ProtectedRegion checkRegionLocationIn(final RegionManager regionManager, final Location loc) {
-    final ApplicableRegionSet set = regionManager
-        .getApplicableRegions(new Vector(loc.getX(), loc.getY(), loc.getZ()));
+  public static ProtectedRegion evaluateRegionOnCurrentLocation(final RegionManager regionManager, final Location loc) {
+    final ApplicableRegionSet set = regionManager.
+        getApplicableRegions(new Vector(loc.getX(), loc.getY(), loc.getZ()));
 
     if (set.size() == 0) { // keine Region ausgewaehlt, dann direkt abbrechen
       return null;
@@ -90,12 +90,14 @@ public class Regions {
 
   private static void warningMoreRegionsSelected(final ApplicableRegionSet set) {
     final StringBuilder builder = new StringBuilder();
-    set.forEach(region -> builder.append(region.getId()).append(", "));
+    set.forEach(region ->
+        builder.append(region.getId())
+            .append(", "));
     builder.deleteCharAt(builder.length() - 1);
 
-    try {
+    try { //TODO (Abgie) 08.10.2018: WAS???
       throw new CommandException("You're standing in several regions (please pick one).\nYou're in: " +
-          builder.toString());
+          builder);
     } catch (final CommandException ex) {
       ex.printStackTrace();
     }

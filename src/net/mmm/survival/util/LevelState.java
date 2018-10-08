@@ -15,7 +15,7 @@ public enum LevelState {
   LEVEL_71_BETWEEN_90(0.05F),
   LEVEL_91_BETWEEN_99(0.01F);
 
-  final float factor;
+  private final float factor;
 
   LevelState(final float factor) {
     this.factor = factor;

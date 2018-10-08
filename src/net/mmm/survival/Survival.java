@@ -29,10 +29,12 @@ import net.mmm.survival.events.InteractEvents;
 import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
+import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +48,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * BlueIronGirl und Abgie
  */
 public class Survival extends JavaPlugin {
-  private static Survival server = null;
+  private static Survival server;
 
   /**
    * @return Instanz des Plugins
@@ -67,15 +69,19 @@ public class Survival extends JavaPlugin {
    * Wird bei der Deaktivierung des Servers durchgefuehrt
    */
   public void onDisable() {
-    Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(Messages.PREFIX +
-        "Der Server wird neugestartet."));
+    for (final Player player : Bukkit.getOnlinePlayers()) {
+      player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet.");
+    }
 
     //Alle Werte in Datenbank speichern
     save();
 
-    SurvivalData.getInstance().getAsyncMySQL().getMySQL().closeConnection(); /* Datenbankverbindung schliessen */
-    if (SurvivalData.getInstance().getDynmap() != null) {
-      SurvivalData.getInstance().getDynmap().onDisable(); /* Disable von Dynmap */
+    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
+    final AsyncMySQL.MySQL mySQL = asyncMySQL.getMySQL();
+    mySQL.closeConnection(); /* Datenbankverbindung schliessen */
+    final DynmapWorldGuardPlugin dynmap = SurvivalData.getInstance().getDynmap();
+    if (dynmap != null) {
+      dynmap.onDisable(); /* Disable von Dynmap */
     }
   }
 
@@ -84,7 +90,8 @@ public class Survival extends JavaPlugin {
     StatsManager.saveStats();
 
     //Spielerdaten speichern
-    SurvivalData.getInstance().getAsyncMySQL().storePlayers();
+    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
+    asyncMySQL.storePlayers();
   }
 
   private SurvivalData createInstanceAndData() {
@@ -93,7 +100,9 @@ public class Survival extends JavaPlugin {
   }
 
   private void setupPlugin(final SurvivalData survivalData) {
-    survivalData.getAsyncMySQL().getMySQL().createTables(); // Tabellen erzeugen
+    final AsyncMySQL asyncMySQL = survivalData.getAsyncMySQL();
+    final AsyncMySQL.MySQL mySQL = asyncMySQL.getMySQL();
+    mySQL.createTables(); // Tabellen erzeugen
 
     registerEvents();
     registerCommands();
@@ -108,7 +117,8 @@ public class Survival extends JavaPlugin {
         new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
         new LocationChangeEvents(), new PlayerConnectionEvents(), new ChangedExpEvents());
 
-    listeners.forEach(listener -> Bukkit.getPluginManager().registerEvents(listener, this));
+    listeners.forEach(listener ->
+        Bukkit.getPluginManager().registerEvents(listener, this));
   }
 
   private void registerCommands() {
@@ -116,10 +126,12 @@ public class Survival extends JavaPlugin {
         new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
         new Tame(), new Vote(), new Zone());
 
-    for (final CommandExecutor commandExecutor : commands) {
-      getCommand(commandExecutor.getClass().getName()
-          .substring(26).toLowerCase()).setExecutor(commandExecutor);
-    }
+    commands.forEach(commandExecutor ->
+    {
+      final Class<? extends CommandExecutor> commandExecutorClass = commandExecutor.getClass();
+      final String commandName = commandExecutorClass.getName();
+      getCommand(commandName.substring(26).toLowerCase()).setExecutor(commandExecutor);
+    });
   }
 
   private void registerDynmap(final SurvivalData survivalData) {
@@ -130,7 +142,7 @@ public class Survival extends JavaPlugin {
 
   private void execScheduler() {
     final AtomicInteger counter = new AtomicInteger();
-    Bukkit.getScheduler().scheduleSyncRepeatingTask(Survival.getInstance(), () -> {
+    Bukkit.getScheduler().scheduleSyncRepeatingTask(getInstance(), () -> {
           if (counter.get() % 60 == 0) {
             StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
           } //TODO (Abgie) 30.09.2018: HotbarMessager ueberarbeiten
@@ -142,7 +154,6 @@ public class Survival extends JavaPlugin {
           }
           counter.getAndIncrement();
         }
-
         , 20L, 20L);
   }
 }

@@ -28,7 +28,6 @@ public class Logger implements Exitable {
   private LogManager logManager;
 
   public Logger(final String name) {
-    super();
     this.name = name;
     this.filter = new Filter();
     createLogManager(new File("plugins//Survival//log//log_" + new SimpleDateFormat("YYYY_MM_dd").format(new Date()) + ".log"));
@@ -41,7 +40,8 @@ public class Logger implements Exitable {
 
   private void toLog(final Level level, final String msg) {
     final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date() + " " + name + "\n" + msg);
-    if (filter.get().stream().anyMatch(item -> msg.toLowerCase().contains(item.toLowerCase())) || filter.get().isEmpty()) {
+    if (filter.get().stream().anyMatch(item ->
+        msg.toLowerCase().contains(item.toLowerCase())) || filter.get().isEmpty()) {
       logManager.log(logMessage);
       if (level.equals(Level.SEVERE)) {
         System.err.println(logMessage);
@@ -107,7 +107,7 @@ public class Logger implements Exitable {
   }
 
   public void trace(final Object message, final Throwable t) {
-    final String msg = message.toString() + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     info(msg);
   }
 
@@ -117,7 +117,7 @@ public class Logger implements Exitable {
   }
 
   public void trace(final Player player, final Throwable t) {
-    final String msg = "Player: " + player.getDisplayName() + "\n" + t.toString();
+    final String msg = "Player: " + player.getDisplayName() + "\n" + t;
     info(msg);
   }
 
@@ -126,7 +126,7 @@ public class Logger implements Exitable {
   }
 
   public void trace(final String message, final Object o) {
-    final String msg = message + "\n" + o.toString();
+    final String msg = message + "\n" + o;
     info(msg);
   }
 
@@ -149,7 +149,7 @@ public class Logger implements Exitable {
   }
 
   public void trace(final String message, final Throwable t) {
-    final String msg = message + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     info(msg);
   }
 
@@ -164,7 +164,7 @@ public class Logger implements Exitable {
   }
 
   public void warn(final Object message, final Throwable t) {
-    final String msg = message.toString() + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     warning(msg);
   }
 
@@ -174,7 +174,7 @@ public class Logger implements Exitable {
   }
 
   public void warn(final Player player, final Throwable t) {
-    final String msg = "Player: " + player.getDisplayName() + "\n" + t.toString();
+    final String msg = "Player: " + player.getDisplayName() + "\n" + t;
     warning(msg);
   }
 
@@ -183,7 +183,7 @@ public class Logger implements Exitable {
   }
 
   public void warn(final String message, final Object o) {
-    final String msg = message + "\n" + o.toString();
+    final String msg = message + "\n" + o;
     warning(msg);
   }
 
@@ -206,7 +206,7 @@ public class Logger implements Exitable {
   }
 
   public void warn(final String message, final Throwable t) {
-    final String msg = message + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     warning(msg);
   }
 
@@ -221,7 +221,7 @@ public class Logger implements Exitable {
   }
 
   public void error(final Object message, final Throwable t) {
-    final String msg = message.toString() + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     severe(msg);
   }
 
@@ -231,7 +231,7 @@ public class Logger implements Exitable {
   }
 
   public void error(final Player player, final Throwable t) {
-    final String msg = "Player: " + player.getDisplayName() + "\n" + t.toString();
+    final String msg = "Player: " + player.getDisplayName() + "\n" + t;
     severe(msg);
   }
 
@@ -240,7 +240,7 @@ public class Logger implements Exitable {
   }
 
   public void error(final String message, final Object o) {
-    final String msg = message + "\n" + o.toString();
+    final String msg = message + "\n" + o;
     severe(msg);
   }
 
@@ -263,7 +263,7 @@ public class Logger implements Exitable {
   }
 
   public void error(final String message, final Throwable t) {
-    final String msg = message + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     severe(msg);
   }
 
@@ -278,7 +278,7 @@ public class Logger implements Exitable {
   }
 
   public void debug(final Object message, final Throwable t) {
-    final String msg = message.toString() + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     config(msg);
   }
 
@@ -288,7 +288,7 @@ public class Logger implements Exitable {
   }
 
   public void debug(final Player player, final Throwable t) {
-    final String msg = "Player: " + player.getDisplayName() + "\n" + t.toString();
+    final String msg = "Player: " + player.getDisplayName() + "\n" + t;
     config(msg);
   }
 
@@ -297,7 +297,7 @@ public class Logger implements Exitable {
   }
 
   public void debug(final String message, final Object o) {
-    final String msg = message + "\n" + o.toString();
+    final String msg = message + "\n" + o;
     config(msg);
   }
 
@@ -320,7 +320,7 @@ public class Logger implements Exitable {
   }
 
   public void debug(final String message, final Throwable t) {
-    final String msg = message + "\n" + t.toString();
+    final String msg = message + "\n" + t;
     config(msg);
   }
 

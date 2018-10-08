@@ -1,10 +1,9 @@
 package net.mmm.survival.player;
 
-import net.mmm.survival.SurvivalData;
-import net.mmm.survival.events.ChangedExpEvent;
-
 import java.io.Serializable;
 
+import net.mmm.survival.SurvivalData;
+import net.mmm.survival.events.ChangedExpEvent;
 import org.bukkit.Bukkit;
 
 /*
@@ -65,7 +64,7 @@ public class LevelPlayer implements Serializable {
    */
   public boolean addExp(final float exp, final SurvivalPlayer survivalPlayer) {
     if (exp == 0F) return false;
-    int level = getLevel();
+    final int level = getLevel();
     if (level == 99) {
       this.exp += exp;
       return true;

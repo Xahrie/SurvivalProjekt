@@ -3,6 +3,9 @@ package net.mmm.survival.events;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -26,18 +29,30 @@ public class LocationChangeEvents implements Listener {
     if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
       event.setCancelled(true);
       event.useTravelAgent(false);
-      checkWorld(event);
+      if (checkWorld(event)) {
+        evaluateNetherTeleport(event);
+      }
     }
   }
 
-  private void checkWorld(final PlayerPortalEvent event) {
-    if (event.getFrom().getWorld().equals(SurvivalWorld.BAUWELT.get())) {
-      event.getPlayer().teleport(SurvivalWorld.NETHER.get().getSpawnLocation(),
-          PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+  private boolean checkWorld(final PlayerPortalEvent event) {
+    final Location startLocation = event.getFrom();
+    final World startWorld = startLocation.getWorld();
+    final World bauweltWorld = SurvivalWorld.BAUWELT.get();
+    if (startWorld.equals(bauweltWorld)) {
+      return true;
     } else {
-      event.getPlayer().teleport(SurvivalWorld.BAUWELT.get().getSpawnLocation(),
-          PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
+      final Player eventPlayer = event.getPlayer();
+      eventPlayer.teleport(bauweltWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
     }
+
+    return false;
+  }
+
+  private void evaluateNetherTeleport(final PlayerPortalEvent event) {
+    final Player eventPlayer = event.getPlayer();
+    final World netherWorld = SurvivalWorld.NETHER.get();
+    eventPlayer.teleport(netherWorld.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.NETHER_PORTAL);
   }
 
   /**
@@ -56,8 +71,10 @@ public class LocationChangeEvents implements Listener {
   @EventHandler
   public void onTeleport(final PlayerTeleportEvent event) {
     final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
-    final String destinationWorldName = event.getTo().getWorld().getName();
-    final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorldName));
+    final Location destinationLocation = event.getTo();
+    final World destinationWorld = destinationLocation.getWorld();
+    final SurvivalLicence needed = SurvivalLicence.
+        getLicence(SurvivalWorld.getWorld(destinationWorld.getName()));
     if (needed != null && !traveler.hasLicence(needed)) {
       event.setCancelled(true);
     }

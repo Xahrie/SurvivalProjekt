@@ -72,9 +72,6 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§88┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
-  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
-  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
-
   /*
   Lizenz System
    */
@@ -95,6 +92,13 @@ public final class Messages {
   public static final String SKILL_ADDED_SKILLPOINTS = "§8┃ §eSurvival §7» Du erhälst §e? §7Skillpunkte.";
   public static final String SKILL_NOT_ENOUGH_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast nicht genügend Skillpunkte.";
   public static final String SKILL_CURRENT_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast aktuell §e? §7Skillpunkte.";
+  /*
+  Tame
+   */
+  public static final String ENTITY_TAMED_NOTMORE = "§8┃ §eSurvival §7» §7Du hast das Tier freigelassen.";
+  public static final String ENTITY_NOT_TAMED = "§8┃ §eSurvival §7» Du hast dieses Tier nicht gezähmt.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
   /*
   Teleport
    */

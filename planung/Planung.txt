@@ -6,15 +6,15 @@ Testphase:
   Lizenzsystem, Lizenzen Portale (SrAkzeptiert)
 
 In Arbeit:
-  Abgie          Autogeld fuer Farming etc
-  Alice          Gefaengnis
-  PAS123         Grundstueck kann man spaeter mit Geld erweitern
+  Abgie          Autogeld für Farming etc
+  Alice          Gefängnis
+  PAS123         Grundstück kann man später mit Geld erweitern
   SrAkzeptiert   Levelsystem, Skillsystem
 
 Zu Programmieren:
-  TODO Am Anfang ein Hotelzimmer oder was aehnliches (Alice & Abgie)
+  TODO Am Anfang ein Hotelzimmer oder was ähnliches (Alice & Abgie)
   TODO Levelsystem, Skillsystem (SrAkzeptiert)
-  TODO Jobsystem fuer verschiedene Aufgaben (?)
+  TODO Jobsystem für verschiedene Aufgaben (?)
   TODO Lizenzen Extraitems etc (?)
 
 Builden:
@@ -22,21 +22,23 @@ Builden:
   TODO Spawn (Abgie, Alice, Pas)
 
 "Kommunikation"
-  Mario: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen sich nicht nutzen.
-  		   Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht.
-  		   Kann man mir sagen woran es liegt oder fehlt ein Plugin?
-  Abgie: Es sollte funktionieren alle jars von libs in den plugins-Ordner ausser spigot-1.13.jar. -> spigot-1.13.jar bitte in den
-         Wurzelordner
+  Mario an Abgie: Ich habe versucht den Server durchaus aufzusetzen, aber einige Plugins wie "BungeeGroupManager" lassen
+                  sich nicht nutzen. Die Daten in der config.yml habe ich eintragen lassen, klappt aber nicht. Kann man
+                  mir sagen woran es liegt oder fehlt ein Plugin?
+  Abgie an Mario: Es sollte funktionieren alle jars von libs in den plugins-Ordner ausser spigot-1.13.jar. -> spigot-
+                  1.13.jar bitte in den Wurzelordner
 
-  Abgie: Noch ein kleiner Tipp am Rande. Ich wuerde eigentlich Daten immer versuchen als Primitiv zu speichern. Da kanns bei fehlender
-         Initialisierung auch ne NullPointerException geben. Aber dann ersparst du der JVM auch das Autoboxing und es ist etwas
-         ressourcensparender und du musst bei der initialisierung kein neues Objekt erzeugen.
+  Alice An Mario: Ich hab deine Klasse LevelPlayer mal ein wenig aufgeräumt. Ich hab da ein paar Attribute gelöscht und 
+                  durch Methodenaufrufe ersetzt, sodass es etwas weniger kompliziert ist. Auch das mit der UUID hab ich 
+                  geändert, weil das nicht so viel Sinn macht die in dieser Klasse zu speichern, dann kann man die
+                  besser immer übergeben wenn man sie sie braucht.
+                  P.S.: lieber float statt Float :)
+  Mario an Alice: Danke erstmal für die Aufräumung. Nebenbei habe ich ein paar Rechtschreibfehler bemerkt wie z.b
+                  "existiert" statt "exestiert" xD Bei der UUID habe ich mir was schon gedacht, aber genau weiß ich es
+                  nicht mehr. Ich sollte außerdem mehr mit Methoden arbeiten, da diese übersichtlicher sind. Danke für
+                  deine Kritik wie ich es nennen würde.
 
-  Alice An Mario: Ich hab deine Klasse LevelPlayer mal ein wenig aufgeräumt. Ich hab da ein paar Attribute gelöscht und durch Methodenaufrufe ersetzt, sodass es etwas weniger
-         kompliziert ist. Auch das mit der UUID hab ich geändert, weil das nicht so viel Sinn macht die in dieser Klasse zu speichern, dann kann man die besser immer übergeben wenn man sie sie braucht.
-         P.S.: lieber float statt Float :)
+  Abgie an Mario: AsyncMySQL.java:248 - Verschachtelte Try-Blöcke sind kein guter Stil
 
-  Mario an Alice: Danke erstmal für die Aufräumung. Nebenbei habe ich ein paar Rechtschreibfehler bemerkt wie z.b "existiert" statt "exestiert" xD
-  				  Bei der UUID habe ich mir was schon gedacht, aber genau weiß ich es nicht mehr.
-  				  Ich sollte außerdem mehr mit Methoden arbeiten, da diese übersichtlicher sind.
-  				  Danke für deine Kritik wie ich es nennen würde.
+  Navi.java:46 - Welche Exception?
+  Zone.java:107 - Welche Exception?

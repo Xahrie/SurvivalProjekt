@@ -8,8 +8,7 @@ import net.mmm.survival.farming.Type;
 import net.mmm.survival.player.SurvivalPlayer;
 
 /**
- * OnlineTime: Beschreibung der Klasse moeglichst praezise, aber nicht zu lang.
- * Zeilenlaenge: 80
+ * OnlineTime trackt die Onlinezeit, die ein Spieler nicht afk ist.
  *
  * @author Abgie on 28.09.18 11:36
  * project SurvivalProjekt
@@ -45,7 +44,7 @@ public class OnlineTime extends Statistic {
     final Long aktuelleSystemzeitMinuten = System.currentTimeMillis() / 60000;
     if (!addedMinutes.contains(aktuelleSystemzeitMinuten)) {
       incrementValue(1);
-      this.addedMinutes.add(aktuelleSystemzeitMinuten);
+      addedMinutes.add(aktuelleSystemzeitMinuten);
     }
   }
 

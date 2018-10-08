@@ -7,26 +7,26 @@ public enum SurvivalLicence {
   NETHERLIZENZ(500D),
   ENDLIZENZ(750D);
 
-  private final Double price;
+  private final double price;
 
-  SurvivalLicence(final Double price) {
+  SurvivalLicence(final double price) {
     this.price = price;
   }
 
   /**
-   * @param sworld SurvivalWorld
+   * @param survivalWorld SurvivalWorld
    * @return Returnt die Lizenz zur zugehoerigen Welt
    */
-  public static SurvivalLicence getLicence(final SurvivalWorld sworld) {
-    if (sworld == SurvivalWorld.NETHER) {
+  public static SurvivalLicence getLicence(final SurvivalWorld survivalWorld) {
+    if (survivalWorld.equals(SurvivalWorld.NETHER)) {
       return NETHERLIZENZ;
-    } else if (sworld == SurvivalWorld.END) {
+    } else if (survivalWorld.equals(SurvivalWorld.END)) {
       return ENDLIZENZ;
     }
     return null;
   }
 
-  public Double getPrice() {
+  public double getPrice() {
     return this.price;
   }
 

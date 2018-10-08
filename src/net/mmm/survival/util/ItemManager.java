@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * Build-Manager fuer Items
  */
-public class ItemManager {
+public final class ItemManager {
 
   /**
    * Build-Methode fuer Item mit folgenden Angaben

@@ -2,6 +2,7 @@ package net.mmm.survival.player;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
@@ -30,6 +31,7 @@ public class SurvivalPlayer extends HotbarMessager {
   private short votes;
   private Location home;
   private UUID uuid;
+  //</editor-fold>
 
   /**
    * Konstruktor
@@ -42,8 +44,8 @@ public class SurvivalPlayer extends HotbarMessager {
    * @param maxzone Maximal zulaessige Groeße der Zone
    * @param home Homepunkt
    */
-  public SurvivalPlayer(final UUID uuid, final double money, final List<Complaint> complaints, final List<SurvivalLicence> licences, final short votes,
-                        final int maxzone, final Location home, final LevelPlayer levelPlayer) {
+  public SurvivalPlayer(final UUID uuid, final double money, final List<Complaint> complaints, final List<SurvivalLicence> licences,
+                        final short votes, final int maxzone, final Location home, final LevelPlayer levelPlayer) {
     this.uuid = uuid;
     this.money = money;
     this.complaints = complaints;
@@ -61,8 +63,8 @@ public class SurvivalPlayer extends HotbarMessager {
    * Ermittle den SurvivalPlayer aus dem SpielerCache
    *
    * @param player Ausfuehrender Spieler -> Name des Spielers wird zur Ermittlung genommen
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann
-   * <code>return null</code>
+   * @return SurvivalPlayer von {@code player}. Wenn nicht vorhanden, dann
+   * {@code return null}
    */
   public static SurvivalPlayer findSurvivalPlayer(final Player player) {
     return findSurvivalPlayer(player, player.getName());
@@ -73,8 +75,8 @@ public class SurvivalPlayer extends HotbarMessager {
    *
    * @param executor Ausfuehrender Spieler
    * @param playerName Spielername
-   * @return SurvivalPlayer von <code>player</code>. Wenn nicht vorhanden, dann
-   * <code>return null</code>
+   * @return SurvivalPlayer von {@code player}. Wenn nicht vorhanden, dann
+   * {@code return null}
    */
   public static SurvivalPlayer findSurvivalPlayer(final Player executor, final String playerName) {
     final SurvivalPlayer survivalPlayer = determinePlayer(playerName);
@@ -83,13 +85,14 @@ public class SurvivalPlayer extends HotbarMessager {
     }
     return survivalPlayer;
   }
-  //</editor-fold>
 
   private static SurvivalPlayer determinePlayer(final String playerName) {
-    if (SurvivalData.getInstance().getPlayerCache().containsValue(playerName)) {
+    final Map<UUID, String> playerCache = SurvivalData.getInstance().getPlayerCache();
+    if (playerCache.containsValue(playerName)) {
       final UUID uuid = UUIDUtils.getUUID(playerName);
-      if (SurvivalData.getInstance().getPlayers().containsKey(uuid)) {
-        return SurvivalData.getInstance().getPlayers().get(uuid);
+      final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
+      if (players.containsKey(uuid)) {
+        return players.get(uuid);
       }
     }
     return null;
@@ -104,10 +107,15 @@ public class SurvivalPlayer extends HotbarMessager {
     outputComplaint(complaint);
   }
 
+  public void addOrTakeMoney(final double amount) {
+    money += amount;
+  }
+
   public void outputComplaint(final Complaint complaint) {
-    getPlayer().sendMessage(Messages.PREFIX + "§c Der Spieler: §e" + SurvivalData.getInstance().getPlayers()
-        .get(complaint.getExecutor()).getPlayer().getDisplayName() + "§c hat sich am §e" +
-        complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
+    final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
+    final Player complaintExecutor = players.get(complaint.getExecutor()).getPlayer();
+    getPlayer().sendMessage(Messages.PREFIX + "§c Der Spieler: §e" + complaintExecutor.getDisplayName() +
+        "§c hat sich am §e" + complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
   }
 
   public void sendHotbarMessage(final String message) { //TODO (Abgie) 03.10.2018: HotbarMessager is not working

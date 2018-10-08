@@ -23,8 +23,9 @@ public class ChatEvents implements Listener {
     event.setCancelled(true);
 
     for (final Player all : Bukkit.getOnlinePlayers()) {
-      all.sendMessage(BungeeGroupManager.getGroupManager()
-          .getPrefix(chatter) + chatter.getName() + " §7» §7" + event.getMessage());
+      final BungeeGroupManager groupManager = BungeeGroupManager.getGroupManager();
+      final String prefix = groupManager.getPrefix(chatter);
+      all.sendMessage(prefix + chatter.getName() + " §7» " + event.getMessage());
     }
   }
 

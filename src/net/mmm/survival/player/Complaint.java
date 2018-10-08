@@ -42,6 +42,7 @@ public class Complaint {
   }
 
   //<editor-fold desc="getter and setter">
+
   public String getReason() {
     return reason;
   }

@@ -24,13 +24,13 @@ public class Economy implements CommandExecutor {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player executor = (Player) commandSender;
       if (CommandUtils.isOperator(executor)) {
-        checkCommandLength(args, executor);
+        evaluateCommandLength(args, executor);
       }
     }
     return false;
   }
 
-  private void checkCommandLength(final String[] strings, final Player executor) {
+  private void evaluateCommandLength(final String[] strings, final Player executor) {
     if (strings.length == 1) {
       evaluateOneArgument(strings[0], executor);
     } else if (strings.length == 3) {
@@ -40,8 +40,8 @@ public class Economy implements CommandExecutor {
     }
   }
 
-  private void evaluateOneArgument(final String string, final Player executor) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, string);
+  private void evaluateOneArgument(final String targetPlayerString, final Player executor) {
+    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, targetPlayerString);
     if (survivalPlayer != null) {
       final double money = survivalPlayer.getMoney();
       executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + survivalPlayer.getPlayer()
@@ -55,19 +55,25 @@ public class Economy implements CommandExecutor {
     final String argument = strings[0];
     final Player target = UUIDUtils.getPlayer(strings[1]);
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, strings[1]);
-    final int amount = CommandUtils.checkNumber(strings[2], executor);
+    final int amount = CommandUtils.stringToNumber(strings[2], executor);
 
-    if (argument.equals("set")) { // Geld setzen
-      updateMoney(executor, target, survivalPlayer, amount);
-    } else if (argument.equals("take")) { // Geld wegnehmen
-      if (amount <= survivalPlayer.getMoney())
-        updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() - amount);
-    } else if (argument.equals("reset")) { // Geld zuruecksetzen
-      updateMoney(executor, target, survivalPlayer, 0);
-    } else if (argument.equals("add")) { // Geld hinzufuegen
-      updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() + amount);
-    } else {
-      executor.sendMessage(Messages.USAGE_ECONOMY_COMMAND);
+    switch (argument) {
+      case "set":  // Geld setzen
+        updateMoney(executor, target, survivalPlayer, amount);
+        break;
+      case "take":  // Geld wegnehmen
+        if (amount <= survivalPlayer.getMoney())
+          updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() - amount);
+        break;
+      case "reset":  // Geld zuruecksetzen
+        updateMoney(executor, target, survivalPlayer, 0);
+        break;
+      case "add":  // Geld hinzufuegen
+        updateMoney(executor, target, survivalPlayer, survivalPlayer.getMoney() + amount);
+        break;
+      default:
+        executor.sendMessage(Messages.USAGE_ECONOMY_COMMAND);
+        break;
     }
   }
 

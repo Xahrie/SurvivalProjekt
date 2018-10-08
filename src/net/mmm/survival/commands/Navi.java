@@ -1,15 +1,16 @@
 package net.mmm.survival.commands;
 
-import java.util.Objects;
 import java.util.UUID;
 
+import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.regions.Regions;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.UUIDFetcher;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,13 +25,12 @@ public class Navi implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final Player player = (Player) commandSender;
-      checkArguments(player, args);
+      evaluateArguments(player, args);
     }
-
     return false;
   }
 
-  private void checkArguments(final Player executor, final String[] args) {
+  private void evaluateArguments(final Player executor, final String[] args) {
     if (args.length == 1) {
       findRegion(args[0], executor);
     } else {
@@ -39,39 +39,38 @@ public class Navi implements CommandExecutor {
   }
 
   private void findRegion(final String args, final Player executor) {
-    try {
-      findPlayer(args, executor);
+    try { // Finde die Region eines bestimmten Spielers
+      UUIDUtils.getUUID(args, uuid ->
+          UUIDUtils.getName(uuid, playerName ->
+              evaluateRegion(executor, uuid, playerName)));
     } catch (final Exception ex) {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
   }
 
-  private void findPlayer(final String args, final Player executor) {
-    UUIDFetcher.getUUID(args, uuid -> UUIDFetcher.getName(uuid, playerName -> checkRegion(executor, uuid, playerName)));
-  }
-
-  private void checkRegion(final Player executor, final UUID uuid, final String playerName) {
+  private void evaluateRegion(final Player executor, final UUID uuid, final String playerName) {
     final ProtectedRegion region = getRegionWhenExists(uuid, executor);
-    editCompassTarget(executor, region);
-    executor.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" +
-        playerName + " gesetzt.");
+    if (region != null) {
+      editCompassTarget(executor, region);
+    }
+    executor.sendMessage(Messages.PREFIX + " §7Dein Kompassziel wurde auf die Zone von §e" + playerName +
+        " gesetzt.");
   }
 
   private ProtectedRegion getRegionWhenExists(final UUID uuid, final Player executor) {
-    if (Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager(),
-        uuid.toString(), false) != null) {
-      return Regions.checkExistingRegion(SurvivalData.getInstance().getDynmap().getRegionManager(),
-          uuid.toString(), false);
-    } else {
+    final DynmapWorldGuardPlugin dynmap = SurvivalData.getInstance().getDynmap();
+    final ProtectedRegion protectedRegion = Regions.
+        evaluateExistingRegion(dynmap.getRegionManager(), uuid.toString(), false);
+    if (protectedRegion == null) {
       executor.sendMessage(Messages.ZONE_UNGUELTIG);
     }
-    return null;
+    return protectedRegion;
   }
 
   private void editCompassTarget(final Player executor, final ProtectedRegion region) {
-    executor.setCompassTarget(new Location(SurvivalWorld.BAUWELT.get(), Objects.requireNonNull(region)
-        .getMinimumPoint().getBlockX(), region.getMinimumPoint().getBlockY(), region.getMinimumPoint()
-        .getBlockZ()));
+    final BlockVector minimumPoint = region.getMinimumPoint();
+    final Location targetLocation = new Location(SurvivalWorld.BAUWELT.get(), minimumPoint.getBlockX(),
+        minimumPoint.getBlockY(), minimumPoint.getBlockZ());
+    executor.setCompassTarget(targetLocation);
   }
-
 }

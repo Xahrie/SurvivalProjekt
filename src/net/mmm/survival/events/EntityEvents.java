@@ -1,6 +1,9 @@
 package net.mmm.survival.events;
 
 import net.mmm.survival.regions.SurvivalWorld;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -25,22 +28,30 @@ public class EntityEvents implements Listener {
    */
   @EventHandler
   public void onCreatureSpawn(final CreatureSpawnEvent event) {
-    if (event.getEntity() instanceof Wither) {
-      witherSpawn(event);
-    } else if (event.getEntity() instanceof Monster) {
-      monsterSpawn(event);
+    if (event.getEntity() instanceof Monster) {
+      evaluateSpawnMob(event);
     }
   }
 
-  private void monsterSpawn(final CreatureSpawnEvent event) {
-    if (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
+  private void evaluateSpawnMob(final CreatureSpawnEvent event) {
+    if (event.getEntity() instanceof Wither) {
+      evaluateSpawnWither(event);
+    } else {
+      evaluateSpawnMonster(event);
+    }
+  }
+
+  private void evaluateSpawnMonster(final CreatureSpawnEvent event) {
+    final CreatureSpawnEvent.SpawnReason spawnReason = event.getSpawnReason();
+    if (!spawnReason.equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
       event.setCancelled(true);
     }
   }
 
-  private void witherSpawn(final CreatureSpawnEvent event) {
-    if (event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.BUILD_WITHER) &&
-        !event.getLocation().getWorld().equals(SurvivalWorld.NETHER.get())) {
+  private void evaluateSpawnWither(final CreatureSpawnEvent event) {
+    final Location spawnLocation = event.getLocation();
+    final World spawnWorld = spawnLocation.getWorld();
+    if (!spawnWorld.equals(SurvivalWorld.NETHER.get())) {
       event.setCancelled(true);
     }
   }
@@ -51,9 +62,10 @@ public class EntityEvents implements Listener {
    */
   @EventHandler
   public void onTarget(final EntityTargetEvent event) {
-    if (event.getEntity().getWorld().equals(SurvivalWorld.BAUWELT.get()) &&
-        event.getTarget() instanceof Player && (event.getEntity() instanceof IronGolem ||
-        event.getEntity() instanceof Wolf) && event.getTarget() instanceof Player) {
+    final Entity targetingEntity = event.getEntity();
+    final World targetWorld = targetingEntity.getWorld();
+    if (targetWorld.equals(SurvivalWorld.BAUWELT.get()) && event.getTarget() instanceof Player &&
+        (targetingEntity instanceof IronGolem || targetingEntity instanceof Wolf)) {
       event.setCancelled(true);
     }
   }

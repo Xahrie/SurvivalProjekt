@@ -14,34 +14,46 @@ public class Pay implements CommandExecutor {
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
     if (CommandUtils.checkPlayer(commandSender)) {
       final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) commandSender);
-      checkArgumentLength(args, executor);
+      evaluateArgumentLength(args, executor);
     }
     return false;
   }
 
-  private void checkArgumentLength(final String[] strings, final SurvivalPlayer executor) {
+  private void evaluateArgumentLength(final String[] strings, final SurvivalPlayer executor) {
     if (strings.length == 2) {
       evaluateTwoArguments(strings, executor);
     } else {
-      executor.getPlayer().sendMessage(Messages.USAGE_PAY_COMMAND);
+      final Player executorPlayer = executor.getPlayer();
+      executorPlayer.sendMessage(Messages.USAGE_PAY_COMMAND);
     }
   }
 
   private void evaluateTwoArguments(final String[] strings, final SurvivalPlayer executor) {
     final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(executor.getPlayer(), strings[0]);
-    final int amount = CommandUtils.checkNumber(strings[1], executor.getPlayer());
-
-    payMoney(executor, target, amount);
+    final int amount = CommandUtils.stringToNumber(strings[1], executor.getPlayer());
+    if (checkPayIsValid(executor, amount)) {
+      evaluatePay(executor, target, amount);
+    }
   }
 
-  private void payMoney(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {
+  private boolean checkPayIsValid(final SurvivalPlayer executor, final int amount) {
     if (amount <= executor.getMoney()) {
-      target.setMoney(target.getMoney() + amount);
-      executor.setMoney(executor.getMoney() - amount);
-      executor.getPlayer().sendMessage(Messages.PREFIX + "Du hast " + target.getPlayer()
-          .getDisplayName() + amount + Konst.CURRENCY + " gezahlt.");
+      return true;
     } else {
       executor.getPlayer().sendMessage(Messages.NOT_ENOUGH_MONEY);
     }
+
+    return false;
+  }
+
+  private void evaluatePay(SurvivalPlayer executor, SurvivalPlayer target, int amount) {
+    target.addOrTakeMoney(amount);
+    executor.addOrTakeMoney(amount * -1);
+    final Player executorPlayer = executor.getPlayer();
+    final Player targetPlayer = target.getPlayer();
+    executorPlayer.sendMessage(Messages.PREFIX + "Du hast " + targetPlayer.getDisplayName() +
+        amount + Konst.CURRENCY + " gezahlt.");
+    targetPlayer.sendMessage(Messages.PREFIX + "Du hast von " + executorPlayer.getDisplayName() +
+        amount + Konst.CURRENCY + " erhalten.");
   }
 }

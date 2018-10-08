@@ -4,6 +4,7 @@ import de.PAS123.Group.Group.Group;
 import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,9 +36,9 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean isOperator(final Player player) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(player);
-    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) &&
-        !group.equals(Group.ADMIN)) {
+    final BungeeGroupManager groupManager = BungeeGroupManager.getGroupManager();
+    final Group group = groupManager.getGroup(player);
+    if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
       player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
       return false;
     }
@@ -48,12 +49,13 @@ public final class CommandUtils {
   /**
    * Check, ob bereits teleportiert wird
    *
-   * @param survivalPlayer Spieler als SurvivalPlayer
+   * @param teleported Spieler als SurvivalPlayer
    * @return booleanischer Wert
    */
-  public static boolean checkTeleport(final SurvivalPlayer survivalPlayer) {
-    if (survivalPlayer.isTeleport()) {
-      survivalPlayer.getPlayer().sendMessage(Messages.ALREADY_TELEPORTED);
+  public static boolean checkTeleport(final SurvivalPlayer teleported) {
+    if (teleported.isTeleport()) {
+      final Player teleportedPlayer = teleported.getPlayer();
+      teleportedPlayer.sendMessage(Messages.ALREADY_TELEPORTED);
       return false;
     }
 
@@ -67,7 +69,8 @@ public final class CommandUtils {
    * @return boolean
    */
   public static boolean checkWorld(final Player player) {
-    if (!player.getWorld().equals(SurvivalWorld.BAUWELT.get())) {
+    final World playerWorld = player.getWorld();
+    if (!playerWorld.equals(SurvivalWorld.BAUWELT.get())) {
       player.sendMessage(Messages.NO_VALID_WORLD);
       return false;
     }
@@ -84,7 +87,7 @@ public final class CommandUtils {
    * Zahl)
    * @see java.lang.NumberFormatException
    */
-  public static int checkNumber(final String input, final Player executor) {
+  public static int stringToNumber(final String input, final Player executor) {
     try {
       return Integer.parseInt(input);
     } catch (final NumberFormatException ignored) {
@@ -93,5 +96,4 @@ public final class CommandUtils {
 
     return 0;
   }
-
 }

@@ -1,6 +1,8 @@
 package net.mmm.survival.events;
 
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -29,11 +31,13 @@ public class DeathEvents implements Listener {
    */
   @EventHandler
   public void onRespawn(final PlayerRespawnEvent event) {
-    Location spawnLocation = event.getPlayer().getWorld().getSpawnLocation();
-    if (event.getPlayer().getBedSpawnLocation() != null) {
-      spawnLocation = event.getPlayer().getBedSpawnLocation();
+    final Player respawnPlayer = event.getPlayer();
+    final World respawnWorld = respawnPlayer.getWorld();
+    Location spawnLocation = respawnWorld.getSpawnLocation();
+
+    if (respawnPlayer.getBedSpawnLocation() != null) {
+      spawnLocation = respawnPlayer.getBedSpawnLocation();
     }
     event.setRespawnLocation(spawnLocation);
   }
-
 }

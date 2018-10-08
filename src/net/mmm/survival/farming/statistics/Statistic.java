@@ -27,7 +27,7 @@ public abstract class Statistic {
   }
 
   /**
-   * Erhoeht den Wert der Statistik um dem Faktor <code>amount</code>
+   * Erhoeht den Wert der Statistik um dem Faktor {@code amount}
    *
    * @param amount Faktor der Erhöhung
    */
@@ -36,7 +36,7 @@ public abstract class Statistic {
   }
 
   /**
-   * Vermindert den Wert der Statistik um den Faktor <code>amount</code>
+   * Vermindert den Wert der Statistik um den Faktor {@code amount}
    *
    * @param amount Faktor der Verminderung
    */
@@ -62,17 +62,18 @@ public abstract class Statistic {
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
    */
   public abstract float getMoney();
+
   //<editor-fold desc="getter and setter">
 
   public Type getType() {
     return this.type;
   }
 
-  public Integer getValue() {
+  Integer getValue() {
     return this.value;
   }
 
-  public void setValue(final int value) {
+  private void setValue(final int value) {
     this.value = value;
   }
 

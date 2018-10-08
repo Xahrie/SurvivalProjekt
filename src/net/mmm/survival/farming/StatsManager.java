@@ -1,8 +1,10 @@
 package net.mmm.survival.farming;
 
-import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
+import net.mmm.survival.farming.statistics.Statistic;
 import net.mmm.survival.player.SurvivalPlayer;
 
 /**
@@ -13,34 +15,23 @@ import net.mmm.survival.player.SurvivalPlayer;
  * @version 1.0
  * @since JDK 8
  */
-public class StatsManager {
+public final class StatsManager {
 
   /**
    * Speichere Statistiken aller Spieler
    */
   public static void saveStats() {
-    SurvivalData.getInstance().getPlayers().keySet().forEach(uuid ->
-        saveStats(SurvivalData.getInstance().getPlayers().get(uuid)));
+    final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
+    players.keySet().forEach(uuid ->
+        replaceStatsToMoneyAndResetStats(players.get(uuid)));
   }
 
-  /**
-   * speichere Statistiken des Spielers <code>playerToSave</code>, setze die
-   * Statistiken lokal zurueck und wandle diese in einen verdienst um
-   *
-   * @param playerToSave zu verarbeitender Spieler
-   */
-  private static void saveStats(final SurvivalPlayer playerToSave) {
-    replaceStatsToMoney(playerToSave);
-    resetStats(playerToSave);
-  }
-
-  private static void replaceStatsToMoney(final SurvivalPlayer playerToSave) {
+  private static void replaceStatsToMoneyAndResetStats(final SurvivalPlayer playerToSave) {
     for (final Type type : Type.values()) {
-      playerToSave.setMoney(playerToSave.getStats().getStatistic(type).getMoney() + playerToSave.getMoney());
+      final PlayerStats playerToSaveStats = playerToSave.getStats();
+      final Statistic playerToSaveStatistic = playerToSaveStats.getStatistic(type);
+      playerToSave.addOrTakeMoney(playerToSaveStatistic.getMoney());
+      playerToSaveStatistic.resetValue();
     }
-  }
-
-  private static void resetStats(final SurvivalPlayer playerToSave) {
-    Arrays.asList(Type.values()).forEach(type -> playerToSave.getStats().getStatistic(type).resetValue());
   }
 }

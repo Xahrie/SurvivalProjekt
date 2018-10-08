@@ -65,14 +65,14 @@ public class Complain implements CommandExecutor {
     if (args.length == 1 || !CommandUtils.isOperator(sender)) {
       final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
       sender.sendMessage(Messages.COMPLAINT_INFO);
-      if (executor.getComplaints().size() > 0) {
+      if (!executor.getComplaints().isEmpty()) {
         for (final Complaint complaint : executor.getComplaints()) {
           executor.outputComplaint(complaint);
         }
       }
     } else if (args[1].equals("all")) {
       for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
-        if (survivalPlayer.getComplaints().size() > 0) {
+        if (!survivalPlayer.getComplaints().isEmpty()) {
           outputComplaint(survivalPlayer, sender);
         }
       }
@@ -85,7 +85,7 @@ public class Complain implements CommandExecutor {
   }
 
   private void outputComplaint(final SurvivalPlayer survivalPlayer, final Player sender) {
-    if (survivalPlayer.getComplaints().size() > 0) {
+    if (!survivalPlayer.getComplaints().isEmpty()) {
       final Player player = survivalPlayer.getPlayer();
       if (player != null) {
         sender.sendMessage(Messages.PREFIX + "§fÜber den Spieler §e" + player.getDisplayName() +

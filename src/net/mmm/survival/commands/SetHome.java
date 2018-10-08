@@ -14,14 +14,16 @@ import org.bukkit.entity.Player;
 public class SetHome implements CommandExecutor {
   @Override
   public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
-    if (CommandUtils.checkPlayer(commandSender)) {
+    if (CommandUtils.checkPlayer(commandSender) && CommandUtils.checkWorld((Player) commandSender)) {
       final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) commandSender);
-      if (CommandUtils.checkWorld(executor.getPlayer())) {
-        executor.setHome(executor.getPlayer().getLocation());
-        executor.getPlayer().sendMessage(Messages.HOME_SET);
-      }
+      evaluateHome(executor);
     }
     return false;
   }
 
+  private void evaluateHome(SurvivalPlayer executor) {
+    final Player executorPlayer = executor.getPlayer();
+    executor.setHome(executorPlayer.getLocation());
+    executorPlayer.sendMessage(Messages.HOME_SET);
+  }
 }
