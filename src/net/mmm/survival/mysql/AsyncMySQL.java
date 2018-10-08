@@ -1,6 +1,5 @@
 package net.mmm.survival.mysql;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -269,11 +268,7 @@ public class AsyncMySQL {
     statement.setInt(4, survivalPlayer.getMaxzone());
     statement.setString(5, home);
     statement.setString(6, survivalPlayer.getUuid().toString());
-    try {
-      statement.setString(7, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
-    } catch (final IOException exc) {
-      exc.printStackTrace();
-    }
+    statement.setString(7, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
     statement.executeUpdate();
   }
 
@@ -301,12 +296,8 @@ public class AsyncMySQL {
       statement.setInt(3, survivalPlayer.getVotes());
       statement.setInt(4, survivalPlayer.getMaxzone());
       statement.setFloat(5, survivalPlayer.getLevelPlayer().getExp());
-      try {
-        statement.setString(6, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
-        //TODO (Abgie) 08.10.2018: Das wird nie gehen
-      } catch (final IOException exc) {
-        exc.printStackTrace();
-      }
+      statement.setString(6, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
+      //TODO (Abgie) 08.10.2018: Das wird nie gehen
       statement.executeUpdate();
     } catch (final SQLException ex) {
       ex.printStackTrace();
