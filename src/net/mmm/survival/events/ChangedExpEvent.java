@@ -12,8 +12,7 @@ import org.bukkit.event.HandlerList;
  */
 
 public class ChangedExpEvent extends Event {
-
-  private final HandlerList handlers = new HandlerList();
+  private static final HandlerList handlers = new HandlerList();
   private final SurvivalPlayer survivalPlayer;
   private final float oldExp;
   private final float newExp;
@@ -56,6 +55,10 @@ public class ChangedExpEvent extends Event {
   }
 
   public HandlerList getHandlers() {
+    return handlers;
+  }
+
+  public static HandlerList getHandlerList() {
     return handlers;
   }
 }
