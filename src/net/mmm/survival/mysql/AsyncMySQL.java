@@ -297,9 +297,7 @@ public class AsyncMySQL {
       statement.setDouble(2, survivalPlayer.getMoney());
       statement.setInt(3, survivalPlayer.getVotes());
       statement.setInt(4, survivalPlayer.getMaxzone());
-      statement.setFloat(5, survivalPlayer.getLevelPlayer().getExp());
-      statement.setString(6, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
-      //TODO (Abgie) 08.10.2018: Das wird nie gehen
+      statement.setString(5, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
       statement.executeUpdate();
     } catch (final SQLException ex) {
       ex.printStackTrace();
