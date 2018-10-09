@@ -30,6 +30,10 @@ public class ChangedExpEvent extends Event {
     this.changedLevel = !oldLevel.equals(newLevel);
   }
 
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
+
   public float getOldExp() {
     return oldExp;
   }
@@ -55,10 +59,6 @@ public class ChangedExpEvent extends Event {
   }
 
   public HandlerList getHandlers() {
-    return handlers;
-  }
-
-  public static HandlerList getHandlerList() {
     return handlers;
   }
 }

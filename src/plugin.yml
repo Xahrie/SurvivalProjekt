@@ -1,5 +1,5 @@
 name: Survival
-version: 2.2.2
+version: 2.2.4
 author: PAS123, BlueIronGirl and Abgie
 api-version: 1.13
 
@@ -25,3 +25,5 @@ commands:
   vote:
   zone:
   licence:
+
+depend: [dynmap, WorldEdit, BungeeGroupManager, Votifier, WorldGuard]
