@@ -6,6 +6,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import net.mmm.survival.util.logger.Logger;
 import org.bukkit.Location;
 
 /**
@@ -13,6 +14,7 @@ import org.bukkit.Location;
  */
 public final class Regions {
   private static final String GLOBAL_REGION = "__global__";   // Rueckgabe, wenn keine Region in Selektion definiert
+  private static final Logger logger = new Logger(Regions.class.getName());
 
   private static void evaluateRegionId(final String id, final boolean allowGlobal) throws CommandException {
     evaluateValid(id); // Ueberpruefe, ob Name erlaubt ist
@@ -90,17 +92,12 @@ public final class Regions {
 
   private static void warningMoreRegionsSelected(final ApplicableRegionSet set) {
     final StringBuilder builder = new StringBuilder();
-    set.forEach(region ->
-        builder.append(region.getId())
-            .append(", "));
-    builder.deleteCharAt(builder.length() - 1);
-
-    try { //TODO (Abgie) 08.10.2018: WAS???
-      throw new CommandException("You're standing in several regions (please pick one).\nYou're in: " +
-          builder);
-    } catch (final CommandException ex) {
-      ex.printStackTrace();
+    for (final ProtectedRegion region : set) {
+      builder.append(region.getId())
+          .append(", ");
     }
+    builder.deleteCharAt(builder.length() - 1);
+    logger.warn(new CommandException("You're standing in several regions (please pick one).\nYou're in: " + builder));
   }
 
 }

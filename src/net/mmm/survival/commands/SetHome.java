@@ -21,7 +21,7 @@ public class SetHome implements CommandExecutor {
     return false;
   }
 
-  private void evaluateHome(SurvivalPlayer executor) {
+  private void evaluateHome(final SurvivalPlayer executor) {
     final Player executorPlayer = executor.getPlayer();
     executor.setHome(executorPlayer.getLocation());
     executorPlayer.sendMessage(Messages.HOME_SET);

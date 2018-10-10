@@ -50,7 +50,7 @@ public class ChangedExpEvent extends Event {
     return newLevel;
   }
 
-  public boolean changedLevel() {
+  public boolean isChanged() {
     return changedLevel;
   }
 

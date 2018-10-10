@@ -64,7 +64,7 @@ public final class UUIDUtils {
    * @param uuid Universally Unique Identifier des Spielers
    * @return letzter bekannter Name des Spielers
    */
-  public static String getName(final UUID uuid) {
+  private static String getName(final UUID uuid) {
     return cache.get(uuid);
   }
 
@@ -111,24 +111,4 @@ public final class UUIDUtils {
     return player;
   }
 
-  /**
-   * Bestimme die UUID aus dem String, der eine UUID Darstellen soll
-   *
-   * @param playerName UUID als String
-   * @return Universally Unique Identifier
-   */
-  public static UUID uuidFromString(final String playerName) {
-    return UUID.fromString(playerName);
-  }
-
-  /**
-   * Ueberfruefe, ob der Spieler mit diesem Namen jemals auif diesem Server war
-   *
-   * @param playerName letzer bekannter Name des Spielers
-   * @return (ja | nein) - Der Spieler war (bereits | noch nie) auf dem Server.
-   */
-  public static boolean wasOnline(final String playerName) {
-    return cache.keySet().stream().map(cache::get)
-        .anyMatch(nameFromUUID -> nameFromUUID.equalsIgnoreCase(playerName));
-  }
 }

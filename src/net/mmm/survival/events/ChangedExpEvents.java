@@ -21,7 +21,7 @@ public class ChangedExpEvents implements Listener {
     final Player p = sp.getPlayer();
     final float addedExp = roundNumber(e.getNewExp() - e.getOldExp());
     p.sendMessage(Messages.LEVEL_ADDED_EXP.replaceAll("?", addedExp + ""));
-    if (e.changedLevel()) {
+    if (e.isChanged()) {
       p.sendMessage(Messages.LEVEL_LEVEL_UP.replaceAll("?", e.getNewLevel() + ""));
     }
   }

@@ -46,7 +46,7 @@ public class Pay implements CommandExecutor {
     return false;
   }
 
-  private void evaluatePay(SurvivalPlayer executor, SurvivalPlayer target, int amount) {
+  private void evaluatePay(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {
     target.addOrTakeMoney(amount);
     executor.addOrTakeMoney(amount * -1);
     final Player executorPlayer = executor.getPlayer();

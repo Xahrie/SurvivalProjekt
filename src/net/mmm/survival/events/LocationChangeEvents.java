@@ -73,8 +73,7 @@ public class LocationChangeEvents implements Listener {
     final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     final Location destinationLocation = event.getTo();
     final World destinationWorld = destinationLocation.getWorld();
-    final SurvivalLicence needed = SurvivalLicence.
-        getLicence(SurvivalWorld.getWorld(destinationWorld.getName()));
+    final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorld.getName()));
     if (needed != null && !traveler.hasLicence(needed)) {
       event.setCancelled(true);
     }

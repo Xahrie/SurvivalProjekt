@@ -1,7 +1,5 @@
 package net.mmm.survival.util.logger;
 
-import java.io.IOException;
-
 /**
  * Import from abgie.tool.util.Exitable
  *
@@ -10,8 +8,8 @@ import java.io.IOException;
  * @version 1.0
  * @since JDK 8
  */
-public interface Exitable {
+interface Exitable {
 
-  void exit() throws IOException;
+  void exit();
 
 }

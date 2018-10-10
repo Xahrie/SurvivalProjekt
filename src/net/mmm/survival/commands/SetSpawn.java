@@ -20,7 +20,7 @@ public class SetSpawn implements CommandExecutor {
     return false;
   }
 
-  private void evaluateSpawn(Player teleported) {
+  private void evaluateSpawn(final Player teleported) {
     final World world = teleported.getWorld();
     world.setSpawnLocation(teleported.getLocation());
     teleported.sendMessage(Messages.SPAWN_SET);

@@ -9,7 +9,7 @@ import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.util.LevelState;
 
-public class SurvivalData {
+public final class SurvivalData {
   private static SurvivalData survivalData;
 
   private final AsyncMySQL async = new AsyncMySQL();
@@ -21,7 +21,7 @@ public class SurvivalData {
   /**
    * Konstruktor
    */
-  public SurvivalData() {
+  private SurvivalData() {
     players = async.getPlayers(); // Lade Spieler(SurvivalPlayer) von MySQL
     playerCache = async.getPlayerCache(); // Lade Spielerdatenbank von MySQL
     levels = new HashMap<>();

@@ -26,21 +26,21 @@ public enum LevelState {
   }
 
   public LevelState getLevelState(final Integer level) {
-    if (betweenNumbers(1, 20, level)) {
+    if (checkbetweenNumbers(1, 20, level)) {
       return LEVEL_1_BETWEEN_20;
-    } else if (betweenNumbers(21, 40, level)) {
+    } else if (checkbetweenNumbers(21, 40, level)) {
       return LEVEL_21_BETWEEN_40;
-    } else if (betweenNumbers(41, 70, level)) {
+    } else if (checkbetweenNumbers(41, 70, level)) {
       return LEVEL_41_BETWEEN_70;
-    } else if (betweenNumbers(71, 90, level)) {
+    } else if (checkbetweenNumbers(71, 90, level)) {
       return LEVEL_71_BETWEEN_90;
-    } else if (betweenNumbers(91, 99, level)) {
+    } else if (checkbetweenNumbers(91, 99, level)) {
       return LEVEL_91_BETWEEN_99;
     }
     return null;
   }
 
-  private boolean betweenNumbers(final Integer tinyNr, final Integer bigNr, final Integer nr) {
+  private boolean checkbetweenNumbers(final Integer tinyNr, final Integer bigNr, final Integer nr) {
     return nr >= tinyNr && bigNr >= nr;
   }
 }

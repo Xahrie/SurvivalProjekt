@@ -48,7 +48,7 @@ public class LevelPlayer implements Serializable {
   private Integer getLevel(final Float exp) {
     float xp = 100F;
     Integer level = 1;
-    for (float xp2 : SurvivalData.getInstance().getLevels().values()) {//Setzt das Level anhand der Exp | NICHT Getestet
+    for (final float xp2 : SurvivalData.getInstance().getLevels().values()) {//Setzt das Level anhand der Exp | NICHT Getestet
       if (xp <= exp && xp2 > exp) {
         return level;
       }
