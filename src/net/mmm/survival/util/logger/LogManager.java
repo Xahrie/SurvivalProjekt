@@ -15,7 +15,7 @@ import java.io.Writer;
  */
 final class LogManager {
   private final File file;
-  private final StringBuilder log;
+  private StringBuilder log;
 
   LogManager(final File file) {
     this.file = file;
@@ -30,6 +30,7 @@ final class LogManager {
   void exit() {
     try (final Writer writer = new FileWriter(file, true)) {
       writer.write(log.toString());
+      log = new StringBuilder();
     } catch (final IOException ex) {
       ex.printStackTrace();
     }

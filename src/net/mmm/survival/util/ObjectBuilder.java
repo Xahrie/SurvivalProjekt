@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Base64;
 
 import net.mmm.survival.util.logger.Logger;
@@ -26,7 +27,7 @@ public final class ObjectBuilder {
    * @param object zu serialisierendes Objekt
    * @return serialisierter String
    */
-  public static String getStringOf(final Object object) {
+  public static String getStringOf(final Serializable object) {
     if (object != null) {
       try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
            final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
@@ -38,7 +39,6 @@ public final class ObjectBuilder {
       } finally {
         logger.exit();
       }
-      return null;
     }
     return null;
   }
@@ -59,6 +59,8 @@ public final class ObjectBuilder {
       logger.error(ex);
     } catch (final ClassNotFoundException ex) {
       logger.error("Klasse konnte nicht gefunden werden.", ex);
+    } catch (final ClassCastException ex) {
+      logger.error("Zielobjekt muss Serialize implementieren.", ex);
     } finally {
       logger.exit();
     }
