@@ -30,7 +30,8 @@ public class Logger implements Exitable {
   public Logger(final String name) {
     this.name = name;
     this.filter = new Filter();
-    createLogManager(new File("plugins//Survival//log//log_" + new SimpleDateFormat("YYYY_MM_dd").format(new Date()) + ".log"));
+    createLogManager(new File("plugins" + File.separator + "Survival" + File.separator + "log" +
+        File.separator + "log_" + new SimpleDateFormat("YYYY_MM_dd").format(new Date()) + ".log"));
   }
 
   @Override
@@ -72,7 +73,7 @@ public class Logger implements Exitable {
   }
 
   private void createLogManager(final File logFile) {
-    final File logDirectory = new File("plugins//Survival//log");
+    final File logDirectory = new File("plugins" + File.separator + "Survival" + File.separator + "log");
 
     if (!new File("log").exists() && logDirectory.mkdir()) {
       System.out.println(Messages.LOG_CREATED);
