@@ -27,15 +27,18 @@ public final class ObjectBuilder {
    * @return serialisierter String
    */
   public static String getStringOf(final Object object) {
-    try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-         final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
-      objectOutputStream.writeObject(object);
-      final Base64.Encoder encoder = Base64.getEncoder();
-      return encoder.encodeToString(outputStream.toByteArray());
-    } catch (final IOException ex) {
-      logger.error(ex);
-    } finally {
-      logger.exit();
+    if (object != null) {
+      try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+           final ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)) {
+        objectOutputStream.writeObject(object);
+        final Base64.Encoder encoder = Base64.getEncoder();
+        return encoder.encodeToString(outputStream.toByteArray());
+      } catch (final IOException ex) {
+        logger.error(ex);
+      } finally {
+        logger.exit();
+      }
+      return null;
     }
     return null;
   }
