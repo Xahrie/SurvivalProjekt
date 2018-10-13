@@ -17,6 +17,7 @@ import net.mmm.survival.commands.SetHome;
 import net.mmm.survival.commands.SetSpawn;
 import net.mmm.survival.commands.Spawn;
 import net.mmm.survival.commands.Tame;
+import net.mmm.survival.commands.TeleportWorld;
 import net.mmm.survival.commands.Vote;
 import net.mmm.survival.commands.Zone;
 import net.mmm.survival.events.ChangedExpEvents;
@@ -124,7 +125,7 @@ public class Survival extends JavaPlugin {
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
         new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
-        new Tame(), new Vote(), new Zone());
+        new Tame(), new Vote(), new TeleportWorld(), new Zone());
 
     commands.forEach(commandExecutor ->
     {
@@ -152,7 +153,15 @@ public class Survival extends JavaPlugin {
                     "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
                         .getMoney() + Constants.CURRENCY));*/
           }
+          //alle 5 Minuten alle Daten in der Datenbank speichern
+          if (counter.get() % 300 == 0) {
+            System.out.println("Saving to Database");
+            save();
+          }
           counter.getAndIncrement();
+          if (counter.get() == Integer.MAX_VALUE) {
+            counter.set(0);
+          }
         }
         , 20L, 20L);
   }

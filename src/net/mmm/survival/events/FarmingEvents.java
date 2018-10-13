@@ -25,11 +25,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class FarmingEvents implements Listener {
 
   /**
-   * @param event PlayerEvent -> Wenn ein Spieler ein PlayerEvent ausfuehrt
-   * @see org.bukkit.event.player.PlayerEvent
+   * @param event PlayerMoveEvent -> Wenn ein Spieler ein PlayerEvent ausfuehrt
+   * @see org.bukkit.event.player.PlayerMoveEvent
    */
   @EventHandler
-  public void onAction(final PlayerMoveEvent event) { //TODO (Abgie) 30.09.2018: AENDERN
+  public void onAction(final PlayerMoveEvent event) {
     final SurvivalPlayer handler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     saveStatistic(handler, Type.ONLINE_TIME);
   }

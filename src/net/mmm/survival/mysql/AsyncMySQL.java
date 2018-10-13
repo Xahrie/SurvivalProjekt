@@ -64,14 +64,7 @@ public class AsyncMySQL {
    * @return Name des Spielers
    */
   public String getName(final UUID uuid) {
-    try (final ResultSet rs = getMySQL().query("SELECT name FROM Playerstatus where UUID=" + uuid)) {
-      if (rs.next()) {
-        return rs.getString(1);
-      }
-    } catch (final SQLException ex) {
-      ex.printStackTrace();
-    }
-    return null;
+    return getMySQL().query("SELECT name FROM Playerstatus where UUID='" + uuid + "'");
   }
 
   /**
@@ -201,15 +194,28 @@ public class AsyncMySQL {
    */
   public void updatePlayer(final Player target) {
     final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
-    final String qry = players.containsKey(target.getUniqueId()) ?
-        "UPDATE Playerstatus SET name=? WHERE UUID=?" : "INSERT INTO Playerstatus (name, UUID) VALUES (?, ?)";
 
-    try (final PreparedStatement statement = sql.connection.prepareStatement(qry)) {
-      statement.setString(1, target.getName());
-      statement.setString(2, target.getUniqueId().toString());
-      statement.executeUpdate();
-    } catch (final SQLException ex) {
-      ex.printStackTrace();
+    if (players.containsKey(target.getUniqueId())) { //schon mal angemeldet
+      final String qry = "UPDATE Playerstatus SET name=?,online=? WHERE UUID=?";
+      try (final PreparedStatement statement = sql.connection.prepareStatement(qry)) {
+        statement.setString(1, target.getName());
+        statement.setInt(2, 1);
+        statement.setString(3, target.getUniqueId().toString());
+
+        statement.executeUpdate();
+      } catch (final SQLException ex) {
+        ex.printStackTrace();
+      }
+    } else { //neu
+      final String qry = "INSERT INTO Playerstatus (name, UUID, online) VALUES (?, ?, ?)";
+      try (final PreparedStatement statement = sql.connection.prepareStatement(qry)) {
+        statement.setString(1, target.getName());
+        statement.setString(2, target.getUniqueId().toString());
+        statement.setInt(3, 1);
+        statement.executeUpdate();
+      } catch (final SQLException ex) {
+        ex.printStackTrace();
+      }
     }
   }
 
@@ -387,34 +393,26 @@ public class AsyncMySQL {
      * Erstellung einer Query eines Strings
      *
      * @param query Query als String
-     * @return Query
-     * @see java.sql.ResultSet
+     * @return Stringvalue
      */
-    ResultSet query(final String query) {
+    String query(final String query) {
       openConnectionIfClosed();
+      ResultSet rs = null;
       try {
-        return query(connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS));
+        rs = connection.prepareStatement(query).executeQuery();
+        if (rs.next()) {
+          return rs.getString(1);
+        }
       } catch (final SQLException ex) {
         ex.printStackTrace();
-      }
-      return null;
-    }
-
-    /**
-     * Erstellung einer Query eines PreparedStatements
-     *
-     * @param statement PreparedStatement
-     * @return Query
-     * @see java.sql.ResultSet
-     * @see java.sql.PreparedStatement
-     */
-    ResultSet query(final PreparedStatement statement) {
-      openConnectionIfClosed();
-      try (final PreparedStatement preparedStatement = statement) {
-        preparedStatement.executeUpdate();
-        return preparedStatement.getGeneratedKeys();
-      } catch (final SQLException ex) {
-        ex.printStackTrace();
+      } finally {
+        if (rs != null) {
+          try {
+            rs.close();
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+        }
       }
       return null;
     }

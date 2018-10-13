@@ -2,9 +2,9 @@ package net.mmm.survival.commands;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import com.sk89q.worldguard.domains.DefaultDomain;
@@ -25,6 +25,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+//TODO (Abgie) 13.10.2018: Messages
+//TODO (Abgie) 13.10.2018: Player (offline)
+//TODO (Abgie) 13.10.2018: "mindestens", Zone kleiner!, ZOne kaufen/erweitern
 /**
  * /zone Command
  */
@@ -107,64 +110,57 @@ public class Zone implements CommandExecutor {
   }
 
   private void tryAddPlayerToZone(final Player executor, final String[] args) {
-    try {
-      evaluateAddPlayerToZone(executor, args[1]);
-    } catch (final Exception ex) {
+    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
+    final RegionManager regionManager = dynmapPlugin.getRegionManager();
+
+    final UUID uuid = executor.getUniqueId();
+    final ProtectedRegion existingRegion = Regions.evaluateExistingRegion(regionManager, uuid.toString(), false);
+    if (existingRegion != null) {
+      performAddPlayerToZone(executor, args[1], existingRegion);
+    } else {
       executor.sendMessage(Messages.ZONE_NOT_SET);
     }
   }
 
-  private void evaluateAddPlayerToZone(final Player executor, final String arg) {
-    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
-    final RegionManager regionManager = dynmapPlugin.getRegionManager();
-
-    UUIDUtils.getUUID(arg, uuid ->
-        UUIDUtils.getName(uuid, name -> {
-          final ProtectedRegion existingRegion = Regions.
-              evaluateExistingRegion(regionManager, uuid.toString(), false);
-          performAddPlayerToZone(executor, arg, uuid, name, existingRegion);
-        }));
-  }
-
-  private void performAddPlayerToZone(final Player executor, final String arg, final UUID uuid, final String name,
-                                      final ProtectedRegion region) {
+  private void performAddPlayerToZone(final Player executor, final String playerToadd, final ProtectedRegion region) {
     if (region != null) {
-      final DefaultDomain membersOfSelectedRegion = region.getMembers();
-      if (!membersOfSelectedRegion.contains(uuid)) {
-        final Player playerToAdd = UUIDUtils.getPlayer(arg);
-        membersOfSelectedRegion.addPlayer(playerToAdd.getUniqueId());
-        executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + name + " §7zu deiner Zone hinzugefügt.");
-      } else {
-        executor.sendMessage(Messages.PREFIX + name + " §7ist bereits Mitglied deiner Zone.");
+      final Player playerToAdd = UUIDUtils.getPlayer(playerToadd);
+      if (playerToAdd != null) {
+        final DefaultDomain membersOfSelectedRegion = region.getMembers();
+        if (!membersOfSelectedRegion.toPlayersString().contains(playerToAdd.getUniqueId().toString())) {
+
+          membersOfSelectedRegion.addPlayer(playerToAdd.getUniqueId());
+          executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + playerToadd + " §7zu deiner Zone hinzugefügt.");
+        } else {
+          executor.sendMessage(Messages.PREFIX + playerToadd + " §7ist bereits Mitglied deiner Zone.");
+        }
       }
     }
   }
 
   private void evaluateRemovePlayerFromZone(final Player executor, final String[] args) {
-    try {
-      performRemovePlayerFromZone(executor, args[1]);
-    } catch (final Exception ex) {
-      executor.sendMessage(Messages.ZONE_NOT_SET);
-    }
-  }
-
-  private void performRemovePlayerFromZone(final Player executor, final String arg) {
     final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
     final RegionManager regionManager = dynmapPlugin.getRegionManager();
+    final String sPlayerToRemove = args[1];
 
-    UUIDUtils.getUUID(arg, uuid ->
-        UUIDUtils.getName(uuid, name -> {
-          final ProtectedRegion region = Regions.evaluateExistingRegion(regionManager, uuid.toString(), false);
-          if (region != null) {
-            final DefaultDomain regionMembers = region.getMembers();
-            if (regionMembers.contains(uuid)) {
-              regionMembers.removePlayer(uuid);
-              executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + name + " §7von deiner Zone entfernt.");
-            } else {
-              executor.sendMessage(Messages.PREFIX + name + " §7ist bereits Mitglied deiner Zone.");
-            }
-          }
-        }));
+    final UUID uuidExecutor = executor.getUniqueId();
+    final UUID uuid = UUIDUtils.getUUID(sPlayerToRemove);
+
+    if (uuid != null) {
+      final ProtectedRegion existingRegion = Regions.evaluateExistingRegion(regionManager, uuidExecutor.toString(), false);
+      if (existingRegion != null) {
+
+        final DefaultDomain regionMembers = existingRegion.getMembers();
+        if (regionMembers.contains(uuid)) {
+          regionMembers.removePlayer(uuid);
+          executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + sPlayerToRemove + " §7von deiner Zone entfernt.");
+        } else {
+          executor.sendMessage(Messages.PREFIX + sPlayerToRemove + " §7ist bereits Mitglied deiner Zone.");
+        }
+      } else {
+        executor.sendMessage(Messages.ZONE_NOT_SET);
+      }
+    }
   }
 
   private void evaluateInfoZone(final Player executor, final String[] args) {
@@ -279,22 +275,22 @@ public class Zone implements CommandExecutor {
   }
 
   private String sendZoneInfo(final ProtectedRegion region) {
-    final String[] message = new String[1];
-    UUIDUtils.getName(UUID.fromString(region.getId()), name ->
-        message[0] = Messages.PREFIX + " §7Besitzer§8: " + name + "\n" + Messages.PREFIX +
-            " §7Mitglieder§8: " + getZoneInfo(region) + "\n");
+    final String owername = UUIDUtils.getName(UUID.fromString(region.getId()));
+    String message = Messages.PREFIX + " §7Besitzer§8: " + owername + "\n";
+    if (!getZoneInfo(region).isEmpty()) {
+      message += Messages.PREFIX + " §7Mitglieder§8: " + getZoneInfo(region) + "\n";
+    }
 
-    return message[0];
+    return message;
   }
 
-  private StringBuilder getZoneInfo(final ProtectedRegion region) {
+  private String getZoneInfo(final ProtectedRegion region) {
     final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
-    final DefaultDomain regionOwners = region.getOwners();
-    final Set<UUID> uuidSet = regionOwners.getUniqueIds();
-    final Iterator<UUID> uuidIterator = uuidSet.iterator();
+    final DefaultDomain regionmembers = region.getMembers();
+    final Set<UUID> uuidSet = regionmembers.getUniqueIds();
 
-    final StringBuilder member = new StringBuilder(mySQL.getName(uuidIterator.next()));
-    uuidSet.forEach(uuid -> member.append(", ").append(mySQL.getName(uuid)));
-    return member;
+    final StringJoiner member = new StringJoiner(",");
+    uuidSet.forEach(uuid -> member.add(mySQL.getName(uuid)));
+    return member.toString();
   }
 }

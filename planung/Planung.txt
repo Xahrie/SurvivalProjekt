@@ -6,7 +6,7 @@ Testphase:
   Lizenzsystem, Lizenzen Portale (SrAkzeptiert)
 
 In Arbeit:
-  Abgie          Autogeld für Farming etc
+  Abgie          Autogeld für Farming etc (kann noch erweitert werden)
   Alice          Gefängnis
   PAS123         Grundstück kann man später mit Geld erweitern
   SrAkzeptiert   Levelsystem, Skillsystem

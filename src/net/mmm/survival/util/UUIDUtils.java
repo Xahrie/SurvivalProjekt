@@ -64,7 +64,7 @@ public final class UUIDUtils {
    * @param uuid Universally Unique Identifier des Spielers
    * @return letzter bekannter Name des Spielers
    */
-  private static String getName(final UUID uuid) {
+  public static String getName(final UUID uuid) {
     return cache.get(uuid);
   }
 

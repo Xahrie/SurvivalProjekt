@@ -13,6 +13,7 @@ commands:
     aliases: [gm]
   home:
   info:
+  licence:
   money:
   navi:
     aliases: [navigation]
@@ -22,8 +23,9 @@ commands:
   setspawn:
   spawn:
   tame:
+  teleportworld:
+    aliases: [tpworld]
   vote:
   zone:
-  licence:
 
 depend: [dynmap, WorldEdit, BungeeGroupManager, Votifier, WorldGuard]
