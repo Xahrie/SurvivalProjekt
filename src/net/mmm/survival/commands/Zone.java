@@ -25,9 +25,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-//TODO (Abgie) 13.10.2018: Messages
-//TODO (Abgie) 13.10.2018: Player (offline)
-//TODO (Abgie) 13.10.2018: "mindestens", Zone kleiner!, ZOne kaufen/erweitern
+//TODO (Abgie) 13.10.2018: "mindestens", Zone kleiner!, Zone kaufen/erweitern
 /**
  * /zone Command
  */
@@ -124,12 +122,11 @@ public class Zone implements CommandExecutor {
 
   private void performAddPlayerToZone(final Player executor, final String playerToadd, final ProtectedRegion region) {
     if (region != null) {
-      final Player playerToAdd = UUIDUtils.getPlayer(playerToadd);
-      if (playerToAdd != null) {
+      final UUID uuidOfPlayerToAdd = UUIDUtils.getUUID(playerToadd);
+      if (uuidOfPlayerToAdd != null) {
         final DefaultDomain membersOfSelectedRegion = region.getMembers();
-        if (!membersOfSelectedRegion.toPlayersString().contains(playerToAdd.getUniqueId().toString())) {
-
-          membersOfSelectedRegion.addPlayer(playerToAdd.getUniqueId());
+        if (!membersOfSelectedRegion.toPlayersString().contains(uuidOfPlayerToAdd.toString())) {
+          membersOfSelectedRegion.addPlayer(uuidOfPlayerToAdd);
           executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + playerToadd + " §7zu deiner Zone hinzugefügt.");
         } else {
           executor.sendMessage(Messages.PREFIX + playerToadd + " §7ist bereits Mitglied deiner Zone.");
@@ -174,15 +171,13 @@ public class Zone implements CommandExecutor {
   }
 
   private void determinePlayerInfo(final Player executor, final String arg) {
-    UUIDUtils.getUUID(arg, uuid -> {
-      final OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-      final Long time = offlinePlayer.getLastPlayed();
-      final Long first = offlinePlayer.getFirstPlayed();
-      final String lastonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(time));
-      final String firstonline = new SimpleDateFormat("dd.MM.yyyy").format(new Date(first));
+    final UUID uuid = UUIDUtils.getUUID(arg);
+    final OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(uuid);
+    final long lastPlayed = targetPlayer.getLastPlayed();
+    final long firstPlayed = targetPlayer.getFirstPlayed();
+    final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-      sendPlayerInfo(executor, lastonline, firstonline);
-    });
+    sendPlayerInfo(executor, dateFormat.format(new Date(lastPlayed)), dateFormat.format(new Date(firstPlayed)));
   }
 
   private void sendPlayerInfo(final Player executor, final String lastonline, final String firstonline) {
@@ -199,22 +194,21 @@ public class Zone implements CommandExecutor {
   }
 
   private void tryUpdateLength(final Player executor, final String arg, final Integer max) {
-    UUIDUtils.getUUID(arg, uuid -> {
+    final UUID uuid = UUIDUtils.getUUID(arg);
+    if (uuid != null) {
       final Map<UUID, SurvivalPlayer> playerCache = SurvivalData.getInstance().getPlayers();
       final SurvivalPlayer ownerOfTargetZone = playerCache.get(uuid);
 
       if (checkPlayerFound(executor, ownerOfTargetZone)) {
         performUpdateLength(executor, max, uuid, ownerOfTargetZone);
       }
-
-    });
+    }
   }
 
   private void performUpdateLength(final Player executor, final Integer max, final UUID uuid, final SurvivalPlayer ownerOfTargetZone) {
     ownerOfTargetZone.setMaxzone(max);
-    UUIDUtils.getName(uuid, name ->
-        executor.sendMessage(Messages.PREFIX + " §e" + name + " §7kann nun eine Zone mit der Länge §c" +
-            max + " §7erstellen."));
+    executor.sendMessage(Messages.PREFIX + " §e" + UUIDUtils.getName(uuid) +
+        " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen.");
   }
 
   private boolean checkPlayerFound(final Player executor, final SurvivalPlayer targetZoneOwner) {

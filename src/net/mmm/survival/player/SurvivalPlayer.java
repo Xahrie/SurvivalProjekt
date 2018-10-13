@@ -62,12 +62,20 @@ public class SurvivalPlayer extends HotbarMessager {
   /**
    * Ermittle den SurvivalPlayer aus dem SpielerCache
    *
-   * @param player Ausfuehrender Spieler -> Name des Spielers wird zur Ermittlung genommen
+   * @param player Ausfuehrender Spieler => Name des Spielers wird zur Ermittlung genommen
    * @return SurvivalPlayer von {@code player}. Wenn nicht vorhanden, dann
    * {@code return null}
    */
   public static SurvivalPlayer findSurvivalPlayer(final Player player) {
     return findSurvivalPlayer(player, player.getName());
+  }
+
+  public static SurvivalPlayer findSurvivalPlayer(final UUID uuid) {
+    final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
+    if (players.containsKey(uuid)) {
+      return players.get(uuid);
+    }
+    return null;
   }
 
   /**

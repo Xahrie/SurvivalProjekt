@@ -53,8 +53,8 @@ public class Complain implements CommandExecutor {
       final SurvivalPlayer targetSurvivalPlayer = SurvivalPlayer.findSurvivalPlayer(sender, args[1]);
       if (targetSurvivalPlayer != null) {
         targetSurvivalPlayer.getComplaints().clear();
-        sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden des Spielers §e" +
-            targetSurvivalPlayer.getPlayer().getDisplayName() + " §f wurden gelöscht.");
+        sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden des Spielers §e" + args[1] +
+            " §f wurden gelöscht.");
       }
     } else {
       info(sender);
@@ -106,8 +106,8 @@ public class Complain implements CommandExecutor {
         if (checkComplaint(executor, target, reason)) {
           target.addComplaint(new Complaint(target.getUuid(), target.getComplaints().size() + 1,
               reason, executor.getUuid(), new Date()));
-          sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden über den Spielers §e" + target
-              .getPlayer().getDisplayName() + " §fwurden gespeichert.");
+          sender.sendMessage(Messages.PREFIX + "§fDie Beschwerden über den Spielers §e" + args[1] +
+              " §fwurden gespeichert.");
         }
       }
     } else {

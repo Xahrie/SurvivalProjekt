@@ -23,7 +23,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 public class EntityEvents implements Listener {
 
   /**
-   * @param event CreatureSpawnEvent -> Wenn ein Entity gespawnt wird
+   * @param event CreatureSpawnEvent => Wenn ein Entity gespawnt wird
    * @see org.bukkit.event.entity.CreatureSpawnEvent
    */
   @EventHandler
@@ -57,7 +57,7 @@ public class EntityEvents implements Listener {
   }
 
   /**
-   * @param event EntityTargetEvent -> Wenn ein Entity ein anderes Entity als Target setzt
+   * @param event EntityTargetEvent => Wenn ein Entity ein anderes Entity als Target setzt
    * @see org.bukkit.event.entity.EntityTargetEvent
    */
   @EventHandler

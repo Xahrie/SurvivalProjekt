@@ -1,6 +1,8 @@
 package net.mmm.survival;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,10 +15,11 @@ public final class SurvivalData {
   private static SurvivalData survivalData;
 
   private final AsyncMySQL async = new AsyncMySQL();
+  private DynmapWorldGuardPlugin dynmap;
+  private final List<String> namesOfPlayersToVote;
+  private final Map<Integer, Float> levels;
   private final Map<UUID, String> playerCache;
   private final Map<UUID, SurvivalPlayer> players;
-  private final Map<Integer, Float> levels;
-  private DynmapWorldGuardPlugin dynmap;
 
   /**
    * Konstruktor
@@ -25,6 +28,7 @@ public final class SurvivalData {
     players = async.getPlayers(); // Lade Spieler(SurvivalPlayer) von MySQL
     playerCache = async.getPlayerCache(); // Lade Spielerdatenbank von MySQL
     levels = new HashMap<>();
+    namesOfPlayersToVote = new ArrayList<>();
     levelsBerechnen();
   }
 
@@ -62,6 +66,10 @@ public final class SurvivalData {
 
   public Map<Integer, Float> getLevels() {
     return levels;
+  }
+
+  public List<String> getNamesOfPlayersToVote() {
+    return namesOfPlayersToVote;
   }
 
   public Map<UUID, String> getPlayerCache() {

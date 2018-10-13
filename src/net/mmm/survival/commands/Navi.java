@@ -38,12 +38,11 @@ public class Navi implements CommandExecutor {
     }
   }
 
-  private void findRegion(final String args, final Player executor) {
-    try { // Finde die Region eines bestimmten Spielers
-      UUIDUtils.getUUID(args, uuid ->
-          UUIDUtils.getName(uuid, playerName ->
-              evaluateRegion(executor, uuid, playerName)));
-    } catch (final Exception ex) {
+  private void findRegion(final String arg, final Player executor) {
+    final UUID targetUUID = UUIDUtils.getUUID(arg);
+    if (targetUUID != null) {
+      evaluateRegion(executor, targetUUID, arg);
+    } else {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }
   }

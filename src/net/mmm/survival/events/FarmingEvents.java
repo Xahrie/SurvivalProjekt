@@ -25,7 +25,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class FarmingEvents implements Listener {
 
   /**
-   * @param event PlayerMoveEvent -> Wenn ein Spieler ein PlayerEvent ausfuehrt
+   * @param event PlayerMoveEvent => Wenn ein Spieler ein PlayerEvent ausfuehrt
    * @see org.bukkit.event.player.PlayerMoveEvent
    */
   @EventHandler
@@ -35,7 +35,7 @@ public class FarmingEvents implements Listener {
   }
 
   /**
-   * @param event PlayerTeleportEvent -> Wemm ein Spieler teleportiert wird
+   * @param event PlayerTeleportEvent => Wemm ein Spieler teleportiert wird
    * @see org.bukkit.event.player.PlayerTeleportEvent
    */
   @EventHandler

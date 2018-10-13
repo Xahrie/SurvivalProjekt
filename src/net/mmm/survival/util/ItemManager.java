@@ -2,6 +2,7 @@ package net.mmm.survival.util;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -87,7 +88,7 @@ public final class ItemManager {
     final SkullMeta skullMeta = (SkullMeta) playerSkull.getItemMeta();
 
     ((Damageable) skullMeta).setDamage(3);
-    skullMeta.setOwningPlayer(UUIDUtils.getPlayer(playerName));
+    skullMeta.setOwningPlayer(Bukkit.getPlayer(playerName));
     playerSkull.setItemMeta(skullMeta);
 
     return playerSkull;

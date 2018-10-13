@@ -14,7 +14,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  */
 public class ChatEvents implements Listener {
   /**
-   * @param event AsyncPlayerChatEvent -> Wenn ein Spieler chattet
+   * @param event AsyncPlayerChatEvent => Wenn ein Spieler chattet
    * @see org.bukkit.event.player.AsyncPlayerChatEvent
    */
   @EventHandler

@@ -91,6 +91,7 @@ public class Survival extends JavaPlugin {
     StatsManager.saveStats();
 
     //Spielerdaten speichern
+    System.out.println("Saving to Database");
     final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
     asyncMySQL.storePlayers();
   }
@@ -155,7 +156,6 @@ public class Survival extends JavaPlugin {
           }
           //alle 5 Minuten alle Daten in der Datenbank speichern
           if (counter.get() % 300 == 0) {
-            System.out.println("Saving to Database");
             save();
           }
           counter.getAndIncrement();

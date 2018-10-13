@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public class DeathEvents implements Listener {
 
   /**
-   * @param event PlayerDeathEvent -> Wenn ein Spieler stirbt
+   * @param event PlayerDeathEvent => Wenn ein Spieler stirbt
    * @see org.bukkit.event.entity.PlayerDeathEvent
    */
   @EventHandler
@@ -26,7 +26,7 @@ public class DeathEvents implements Listener {
   }
 
   /**
-   * @param event PlayerRespawnEvent -> Wenn ein Spieler respawnt
+   * @param event PlayerRespawnEvent => Wenn ein Spieler respawnt
    * @see org.bukkit.event.player.PlayerRespawnEvent
    */
   @EventHandler

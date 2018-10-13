@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
  */
 public class LocationChangeEvents implements Listener {
   /**
-   * @param event PlayerPortalEvent -> Wenn ein Spieler durch ein Portal geht
+   * @param event PlayerPortalEvent => Wenn ein Spieler durch ein Portal geht
    * @see org.bukkit.event.player.PlayerPortalEvent
    */
   @EventHandler
@@ -57,7 +57,7 @@ public class LocationChangeEvents implements Listener {
   }
 
   /**
-   * @param event PlayerMoveEvent -> Wenn ein Spieler sich bewegt
+   * @param event PlayerMoveEvent => Wenn ein Spieler sich bewegt
    * @see org.bukkit.event.player.PlayerMoveEvent
    */
   @EventHandler
@@ -67,7 +67,7 @@ public class LocationChangeEvents implements Listener {
   }
 
   /**
-   * @param event PlayerTeleportEvent -> Wenn ein Spieler teleportiert wird
+   * @param event PlayerTeleportEvent => Wenn ein Spieler teleportiert wird
    */
   @EventHandler
   public void onTeleport(final PlayerTeleportEvent event) {

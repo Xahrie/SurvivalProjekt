@@ -35,7 +35,7 @@ import org.bukkit.inventory.PlayerInventory;
 public class PlayerConnectionEvents implements Listener {
 
   /**
-   * @param event PlayerJoinEvent -> Wenn ein Spieler den Server betritt
+   * @param event PlayerJoinEvent => Wenn ein Spieler den Server betritt
    * @see org.bukkit.event.player.PlayerJoinEvent
    */
   @EventHandler

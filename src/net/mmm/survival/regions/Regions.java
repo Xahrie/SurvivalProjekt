@@ -62,7 +62,7 @@ public final class Regions {
 
   private static ProtectedRegion noRegionFound(final RegionManager regionManager, final String id) {
     final ProtectedRegion region;
-    if (id.equalsIgnoreCase(GLOBAL_REGION)) { // Keine Region gefunden -> Global
+    if (id.equalsIgnoreCase(GLOBAL_REGION)) { // Keine Region gefunden => Global
       region = new GlobalProtectedRegion(id);
       regionManager.addRegion(region);
       return region;

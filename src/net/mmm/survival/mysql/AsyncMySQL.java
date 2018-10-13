@@ -223,6 +223,7 @@ public class AsyncMySQL {
    * Speicherung von Spielern
    */
   public void storePlayers() {
+    getMySQL().openConnectionIfClosed();
     final Map<UUID, SurvivalPlayer> survivalPlayers = SurvivalData.getInstance().getPlayers();
     final Collection<SurvivalPlayer> players = survivalPlayers.values();
     try (final PreparedStatement statement = sql.connection
@@ -409,8 +410,8 @@ public class AsyncMySQL {
         if (rs != null) {
           try {
             rs.close();
-          } catch (SQLException e) {
-            e.printStackTrace();
+          } catch (final SQLException ex) {
+            ex.printStackTrace();
           }
         }
       }

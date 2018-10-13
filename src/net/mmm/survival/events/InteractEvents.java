@@ -151,7 +151,7 @@ public class InteractEvents implements Listener {
   }
 
   /**
-   * @param event PlayerInteractEvent -> Wenn ein Spieler interagiert
+   * @param event PlayerInteractEvent => Wenn ein Spieler interagiert
    * @see org.bukkit.event.player.PlayerInteractEvent
    */
   @EventHandler
@@ -273,8 +273,7 @@ public class InteractEvents implements Listener {
   private void zoneFound(final Player finder, final ProtectedRegion selectedRegion) {
     final String name = selectedRegion.getId();
     final UUID uuid = UUID.fromString(name);
-    UUIDUtils.getName(uuid, playerName ->
-        finder.sendMessage(Messages.PREFIX + "§7Es wurde die Zone von §e" + playerName + " §7gefunden."));
+    finder.sendMessage(Messages.PREFIX + "§7Es wurde die Zone von §e" + UUIDUtils.getName(uuid) + " §7gefunden.");
 
     if (name.toLowerCase().contains("spawnzone")) {
       finder.sendMessage(Messages.SPAWNZONE_FOUND);
@@ -297,7 +296,7 @@ public class InteractEvents implements Listener {
   }
 
   /**
-   * @param event PlayerInteractEvent -> Wenn ein Spieler mit einem Button interagiert
+   * @param event PlayerInteractEvent => Wenn ein Spieler mit einem Button interagiert
    * @see org.bukkit.event.player.PlayerInteractEvent
    */
   @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -353,7 +352,7 @@ public class InteractEvents implements Listener {
   }
 
   /**
-   * @param event PlayerInteractEntityEvent -> Wenn ein Spieler mit einem anderen Entity interagiert
+   * @param event PlayerInteractEntityEvent => Wenn ein Spieler mit einem anderen Entity interagiert
    * @see org.bukkit.event.player.PlayerInteractEntityEvent
    */
   @EventHandler

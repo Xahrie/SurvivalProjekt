@@ -2,7 +2,7 @@ package net.mmm.survival.commands;
 
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Messages;
-import net.mmm.survival.util.UUIDUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -65,7 +65,7 @@ public class Gamemode implements CommandExecutor {
 
   private void evaluateTwoArguments(final String[] args, final Player executor) {
     this.executor = executor;
-    final Player target = UUIDUtils.getPlayer(args[1]);
+    final Player target = Bukkit.getPlayer(args[1]);
     if (isOnline(target)) {
       final String mode = args[0];
       evaluateInput(mode);
