@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
  * Time: 17:14:05
  * Location: SurvivalProjekt
  */
-//TODO (BlueIronGirl) 05.10.2018: hier koennte man n bisschen was in Methoden auslagern das waere deutlich schoener :)
 public class Licence implements CommandExecutor {
 
   public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
@@ -27,42 +26,10 @@ public class Licence implements CommandExecutor {
     if (args.length == 2) {
       if (args[0].equalsIgnoreCase("buy")) {
         final SurvivalPlayer sp = SurvivalData.getInstance().getPlayers().get(p.getUniqueId());
-        if (args[1].equalsIgnoreCase("nether")) {
-          if (sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
-            sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
-            return true;
-          }
-          final Double cost = SurvivalLicence.NETHERLIZENZ.getPrice();
-          Double currentMoney = sp.getMoney();
-          if (currentMoney >= cost) {
-            currentMoney -= cost;
-          } else {
-            sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
-            return true;
-          }
-          final List<SurvivalLicence> licences = sp.getLicences();
-          licences.add(SurvivalLicence.NETHERLIZENZ);
-          sp.setLicence(licences);
-          sp.setMoney(currentMoney);
-          sender.sendMessage(Messages.LICENCE_BUYING_NETHER);
+        if(args[1].equalsIgnoreCase("nether")) {
+          buyNether(sender, sp);
         } else if (args[1].equalsIgnoreCase("end")) {
-          if (sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
-            sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
-            return true;
-          }
-          final Double cost = SurvivalLicence.ENDLIZENZ.getPrice();
-          Double currentMoney = sp.getMoney();
-          if (currentMoney >= cost) {
-            currentMoney -= cost;
-          } else {
-            sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
-            return true;
-          }
-          final List<SurvivalLicence> licences = sp.getLicences();
-          licences.add(SurvivalLicence.ENDLIZENZ);
-          sp.setLicence(licences);
-          sp.setMoney(currentMoney);
-          sender.sendMessage(Messages.LICENCE_BUYING_END);
+          buyEnd(sender, sp);
         } else {
           sendSyntax(sender, true);
         }
@@ -85,6 +52,46 @@ public class Licence implements CommandExecutor {
    */
   private void sendSyntax(final CommandSender sender, final boolean error) {
     sender.sendMessage(error ? Messages.LICENCE_SYNTAX_ERROR : Messages.LICENCE_SYNTAX);
+  }
+  
+  private void buyNether(final CommandSender sender, final SurvivalPlayer sp) {
+    if (sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
+      sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
+      return;
+    }
+    final Double cost = SurvivalLicence.NETHERLIZENZ.getPrice();
+    Double currentMoney = sp.getMoney();
+    if (currentMoney >= cost) {
+      currentMoney -= cost;
+    } else {
+      sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
+      return;
+    }
+    final List<SurvivalLicence> licences = sp.getLicences();
+    licences.add(SurvivalLicence.NETHERLIZENZ);
+    sp.setLicence(licences);
+    sp.setMoney(currentMoney);
+    sender.sendMessage(Messages.LICENCE_BUYING_NETHER);
+  }
+  
+  private void buyEnd(final CommandSender sender, final SurvivalPlayer sp) {
+    if (sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
+      sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
+      return;
+    }
+    final Double cost = SurvivalLicence.ENDLIZENZ.getPrice();
+    Double currentMoney = sp.getMoney();
+    if (currentMoney >= cost) {
+      currentMoney -= cost;
+    } else {
+      sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
+      return;
+    }
+    final List<SurvivalLicence> licences = sp.getLicences();
+    licences.add(SurvivalLicence.ENDLIZENZ);
+    sp.setLicence(licences);
+    sp.setMoney(currentMoney);
+    sender.sendMessage(Messages.LICENCE_BUYING_END);
   }
 
 }
