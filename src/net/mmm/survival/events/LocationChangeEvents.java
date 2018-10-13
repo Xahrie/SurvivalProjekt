@@ -26,7 +26,8 @@ public class LocationChangeEvents implements Listener {
    */
   @EventHandler
   public void onTravel(final PlayerPortalEvent event) {
-    if (event.getCause().equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
+    final PlayerTeleportEvent.TeleportCause teleportCause = event.getCause();
+    if (teleportCause.equals(PlayerTeleportEvent.TeleportCause.NETHER_PORTAL)) {
       event.setCancelled(true);
       event.useTravelAgent(false);
       if (checkWorld(event)) {

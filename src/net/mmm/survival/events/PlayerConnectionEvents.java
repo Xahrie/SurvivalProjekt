@@ -13,10 +13,12 @@ import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
+import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -101,10 +103,13 @@ public class PlayerConnectionEvents implements Listener {
   private void evaluateFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
     if (joined == null) { // First-Join
       final Player eventPlayer = event.getPlayer();
+      final World world = SurvivalWorld.BAUWELT.get();
       joined = new SurvivalPlayer(eventPlayer.getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
-          (short) 0, Konst.ZONE_SIZE_DEFAULT, null, new LevelPlayer(100F));
+          (short) 0, Konst.ZONE_SIZE_DEFAULT, world.getSpawnLocation(), new LevelPlayer(100F));
+
       final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
       mySQL.createPlayer(joined);
+
       final Map<UUID, SurvivalPlayer> survivalPlayers = SurvivalData.getInstance().getPlayers();
       survivalPlayers.put(joined.getUuid(), joined);
     }

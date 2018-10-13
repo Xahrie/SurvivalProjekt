@@ -41,10 +41,10 @@ public class OnlineTime extends Statistic {
    */
   @Override
   public void update(final SurvivalPlayer survivalPlayer) {
-    final Long aktuelleSystemzeitMinuten = System.currentTimeMillis() / 60000;
-    if (!addedMinutes.contains(aktuelleSystemzeitMinuten)) {
+    final long currentTimeInMillis = System.currentTimeMillis() / 60_000;
+    if (!addedMinutes.contains(currentTimeInMillis)) {
       incrementValue(1);
-      addedMinutes.add(aktuelleSystemzeitMinuten);
+      addedMinutes.add(currentTimeInMillis);
     }
   }
 

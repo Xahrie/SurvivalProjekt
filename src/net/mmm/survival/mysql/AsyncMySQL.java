@@ -26,6 +26,7 @@ import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.ObjectBuilder;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 /**
@@ -157,11 +158,14 @@ public class AsyncMySQL {
 
   private Location determineLocation(final String homeString) {
     Location location = null;
-    if (!homeString.equals("")) {
+    final World bauWorld = SurvivalWorld.BAUWELT.get();
+    if (homeString == null) {
+      location = bauWorld.getSpawnLocation();
+    } else if (!homeString.equals("")) {
       final double x = Double.parseDouble(homeString.split("/")[0]);
       final double y = Double.parseDouble(homeString.split("/")[1]);
       final double z = Double.parseDouble(homeString.split("/")[2]);
-      location = new Location(SurvivalWorld.BAUWELT.get(), x, y, z);
+      location = new Location(bauWorld, x, y, z);
     }
     return location;
   }

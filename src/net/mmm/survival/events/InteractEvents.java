@@ -159,17 +159,20 @@ public class InteractEvents implements Listener {
     final Player player = event.getPlayer();
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(player);
     final Action playerAction = event.getAction();
-    final ItemStack usedItem = event.getItem();
-    final Material materialType = usedItem.getType();
+    if (playerAction.equals(Action.RIGHT_CLICK_BLOCK) && event.getItem() != null) {
+      final ItemStack usedItem = event.getItem();
+      final Material materialType = usedItem.getType();
 
-    if (playerAction.equals(Action.RIGHT_CLICK_BLOCK) && materialType.equals(Material.STICK)) {
-      //Keine Zone vorhanden
-      if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
-        evaluateEditZone(player, event);
-      } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
-        evaluateFindZone(player, event);
+      if (materialType.equals(Material.STICK)) {
+        //Keine Zone vorhanden
+        if (survivalPlayer != null && survivalPlayer.isZonenedit()) {
+          evaluateEditZone(player, event);
+        } else if (survivalPlayer != null && survivalPlayer.isZonensearch()) {
+          evaluateFindZone(player, event);
+        }
       }
     }
+
   }
 
   private void evaluateEditZone(final Player editor, final PlayerInteractEvent event) {
