@@ -120,8 +120,9 @@ public class Survival extends JavaPlugin {
         new CommandEvents(), new DeathEvents(), new EntityEvents(), new FarmingEvents(),
         new InteractEvents(), new LocationChangeEvents(), new PlayerConnectionEvents());
 
-    listeners.forEach(listener ->
-        Bukkit.getPluginManager().registerEvents(listener, this));
+    for (final Listener listener : listeners) {
+      Bukkit.getPluginManager().registerEvents(listener, this);
+    }
   }
 
   private void registerCommands() {
@@ -130,12 +131,11 @@ public class Survival extends JavaPlugin {
         new SetHome(), new SetSpawn(), new Spawn(), new Tame(), new TeleportWorld(), new Vote(),
         new Zone());
 
-    commands.forEach(commandExecutor ->
-    {
+    for (final CommandExecutor commandExecutor : commands) {
       final Class<? extends CommandExecutor> commandExecutorClass = commandExecutor.getClass();
       final String commandName = commandExecutorClass.getName();
       getCommand(commandName.substring(26).toLowerCase()).setExecutor(commandExecutor);
-    });
+    }
   }
 
   private void registerDynmap(final SurvivalData survivalData) {
