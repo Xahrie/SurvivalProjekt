@@ -1,5 +1,6 @@
 package net.mmm.survival.events;
 
+import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.SurvivalPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -13,45 +14,28 @@ import org.bukkit.event.HandlerList;
 
 public class ChangedExpEvent extends Event {
   private static final HandlerList handlers = new HandlerList();
-  private final SurvivalPlayer survivalPlayer;
-  private final float oldExp;
   private final float newExp;
-  private final int oldLevel;
-  private final int newLevel;
-  private final boolean changedLevel;
+  private final SurvivalPlayer survivalPlayer;
 
-  public ChangedExpEvent(final SurvivalPlayer survivalPlayer, final Float oldExp, final Float newExp, final Integer oldLevel,
-                         final Integer newLevel) {
+  public ChangedExpEvent(final SurvivalPlayer survivalPlayer, final float newExp) {
     this.survivalPlayer = survivalPlayer;
-    this.oldExp = oldExp;
     this.newExp = newExp;
-    this.oldLevel = oldLevel;
-    this.newLevel = newLevel;
-    this.changedLevel = !oldLevel.equals(newLevel);
   }
 
+  /*
+   * Required
+   */
   public static HandlerList getHandlerList() {
     return handlers;
   }
 
-  public float getOldExp() {
-    return oldExp;
-  }
-
-  public float getNewExp() {
+  float getNewExp() {
     return newExp;
   }
 
-  public int getOldLevel() {
-    return oldLevel;
-  }
-
-  public int getNewLevel() {
-    return newLevel;
-  }
-
-  public boolean isChanged() {
-    return changedLevel;
+  boolean isChanged() {
+    final LevelPlayer levelPlayer = survivalPlayer.getLevelPlayer();
+    return levelPlayer.getLevel() != levelPlayer.getLevel(newExp);
   }
 
   public SurvivalPlayer getSurvivalPlayer() {

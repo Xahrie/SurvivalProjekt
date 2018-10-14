@@ -446,11 +446,11 @@ public class DynmapWorldGuardPlugin {
   private String determineOwner(final ProtectedRegion region) {
     final StringJoiner owner = new StringJoiner(",");
     final DefaultDomain regionOwners = region.getOwners();
-
     for (final UUID uuid : regionOwners.getUniqueIds()) {
       final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
       owner.add(asyncMySQL.getName(uuid));
     }
+
     return owner.toString();
   }
 

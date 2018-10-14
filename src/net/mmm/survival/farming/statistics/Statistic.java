@@ -69,7 +69,7 @@ public abstract class Statistic {
     return this.type;
   }
 
-  Integer getValue() {
+  int getValue() {
     return this.value;
   }
 

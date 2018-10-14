@@ -6,6 +6,8 @@ package net.mmm.survival.util;
 public final class Konst {
   public static final char CURRENCY = '€';
 
+  public static final float DEFAULT_EXPERIENCE = 100;
+
   public static final int VOTE_REWARD = 1;
   public static final int ZONE_SIZE_DEFAULT = 20;
 

@@ -1,5 +1,7 @@
 package net.mmm.survival.regions;
 
+import java.util.StringJoiner;
+
 import com.sk89q.minecraft.util.commands.CommandException;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -91,12 +93,11 @@ public final class Regions {
   }
 
   private static void warningMoreRegionsSelected(final ApplicableRegionSet set) {
-    final StringBuilder builder = new StringBuilder();
+    final StringJoiner builder = new StringJoiner(",");
     for (final ProtectedRegion region : set) {
-      builder.append(region.getId())
-          .append(", ");
+      builder.add(region.getId());
     }
-    builder.deleteCharAt(builder.length() - 1);
+
     logger.warn(new CommandException("You're standing in several regions (please pick one).\nYou're in: " + builder));
   }
 

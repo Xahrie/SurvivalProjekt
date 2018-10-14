@@ -156,17 +156,11 @@ public class AsyncMySQL {
   }
 
   private Location determineLocation(final String homeString) {
-    Location location = null;
     final World bauWorld = SurvivalWorld.BAUWELT.get();
-    if (homeString == null) {
-      location = bauWorld.getSpawnLocation();
-    } else if (!homeString.equals("")) {
-      final double x = Double.parseDouble(homeString.split("/")[0]);
-      final double y = Double.parseDouble(homeString.split("/")[1]);
-      final double z = Double.parseDouble(homeString.split("/")[2]);
-      location = new Location(bauWorld, x, y, z);
-    }
-    return location;
+    final double x = Double.parseDouble(homeString.split("/")[0]);
+    final double y = Double.parseDouble(homeString.split("/")[1]);
+    final double z = Double.parseDouble(homeString.split("/")[2]);
+    return new Location(bauWorld, x, y, z);
   }
 
   /**
@@ -237,8 +231,10 @@ public class AsyncMySQL {
 
       for (final SurvivalPlayer survivalPlayer : players) {
         final StringJoiner licences = determineLicences(survivalPlayer);
+
         final Location playerHome = survivalPlayer.getHome();
         final String home = playerHome.getX() + "/" + playerHome.getY() + "/" + playerHome.getZ();
+
         updateAndExecuteStatement(statement, survivalPlayer, licences.toString(), home);
       }
     } catch (final SQLException ex) {
@@ -285,18 +281,18 @@ public class AsyncMySQL {
     statement.setInt(3, survivalPlayer.getVotes());
     statement.setInt(4, survivalPlayer.getMaxzone());
     statement.setString(5, home);
-    statement.setString(6, survivalPlayer.getUuid().toString());
-    statement.setString(7, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
+    statement.setString(6, ObjectBuilder.getStringOf(survivalPlayer.getLevelPlayer()));
+    statement.setString(7, survivalPlayer.getUuid().toString());
     statement.executeUpdate();
   }
 
   private StringJoiner determineLicences(final SurvivalPlayer survivalPlayer) {
-    final List<SurvivalLicence> survivalLicences = survivalPlayer.getLicences();
     final StringJoiner licences = new StringJoiner(",");
-
+    final List<SurvivalLicence> survivalLicences = survivalPlayer.getLicences();
     for (final SurvivalLicence licence : survivalLicences) {
       licences.add(licence.name());
     }
+
     return licences;
   }
 
@@ -402,18 +398,18 @@ public class AsyncMySQL {
      */
     String query(final String query) {
       openConnectionIfClosed();
-      ResultSet rs = null;
+      ResultSet resultSet = null;
       try {
-        rs = connection.prepareStatement(query).executeQuery();
-        if (rs.next()) {
-          return rs.getString(1);
+        resultSet = connection.prepareStatement(query).executeQuery();
+        if (resultSet.next()) {
+          return resultSet.getString(1);
         }
       } catch (final SQLException ex) {
         ex.printStackTrace();
       } finally {
-        if (rs != null) {
+        if (resultSet != null) {
           try {
-            rs.close();
+            resultSet.close();
           } catch (final SQLException ex) {
             ex.printStackTrace();
           }

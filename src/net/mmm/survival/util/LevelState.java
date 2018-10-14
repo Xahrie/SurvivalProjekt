@@ -9,23 +9,23 @@ package net.mmm.survival.util;
 
 public enum LevelState {
 
-  LEVEL_1_BETWEEN_20(0.07F),
-  LEVEL_21_BETWEEN_40(0.09F),
-  LEVEL_41_BETWEEN_70(0.07F),
-  LEVEL_71_BETWEEN_90(0.05F),
-  LEVEL_91_BETWEEN_99(0.01F);
+  LEVEL_1_BETWEEN_20(0.07D),
+  LEVEL_21_BETWEEN_40(0.09D),
+  LEVEL_41_BETWEEN_70(0.07D),
+  LEVEL_71_BETWEEN_90(0.05D),
+  LEVEL_91_BETWEEN_99(0.01D);
 
-  private final float factor;
+  private final double factor;
 
-  LevelState(final float factor) {
+  LevelState(final double factor) {
     this.factor = factor;
   }
 
-  public float getFactor() {
+  public double getFactor() {
     return this.factor;
   }
 
-  public LevelState getLevelState(final Integer level) {
+  public LevelState getLevelState(final int level) {
     if (checkbetweenNumbers(1, 20, level)) {
       return LEVEL_1_BETWEEN_20;
     } else if (checkbetweenNumbers(21, 40, level)) {
@@ -40,7 +40,7 @@ public enum LevelState {
     return null;
   }
 
-  private boolean checkbetweenNumbers(final Integer tinyNr, final Integer bigNr, final Integer nr) {
+  private boolean checkbetweenNumbers(final int tinyNr, final int bigNr, final int nr) {
     return nr >= tinyNr && bigNr >= nr;
   }
 }

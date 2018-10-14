@@ -1,5 +1,7 @@
 package net.mmm.survival.commands;
 
+import java.util.List;
+
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
@@ -56,8 +58,10 @@ public class Licence implements CommandExecutor {
       final double cost = licence.getPrice();
       if (CommandUtils.checkMoney(cost, executor)) {
         executor.addOrTakeMoney(-cost);
-        executor.getLicences().add(licence);
-        executor.getPlayer().sendMessage(message);
+        final List<SurvivalLicence> executorLicences = executor.getLicences();
+        executorLicences.add(licence);
+        final Player executorPlayer = executor.getPlayer();
+        executorPlayer.sendMessage(message);
       }
     }
   }

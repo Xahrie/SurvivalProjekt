@@ -53,6 +53,7 @@ public class SurvivalPlayer extends HotbarMessager {
     this.votes = votes;
     this.maxzone = maxzone;
     this.home = home;
+
     this.levelPlayer = levelPlayer;
 
     this.lastComplaint = new Date(); // Setze Datum der letzten Beschwerde

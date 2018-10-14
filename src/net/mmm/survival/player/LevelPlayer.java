@@ -3,8 +3,7 @@ package net.mmm.survival.player;
 import java.io.Serializable;
 
 import net.mmm.survival.SurvivalData;
-import net.mmm.survival.events.ChangedExpEvent;
-import org.bukkit.Bukkit;
+import net.mmm.survival.util.Konst;
 
 /*
  * @author Suders
@@ -12,43 +11,37 @@ import org.bukkit.Bukkit;
  * Time: 01:41:39
  * Location: SurvivalProjekt
  */
-public class LevelPlayer implements Serializable {
 
+//TODO (Abgie) 14.10.2018: Muss noch fertiggestellt werden
+public class LevelPlayer implements Serializable {
+  private static final long serialVersionUID = -324162873104318794L;
   /*
    * "transient" speichert nicht die Variabel ab2
    */
-  private static final long serialVersionUID = -324162873104318794L;
-  private Float exp;
+  private final transient Float exp;
 
-  public LevelPlayer(final Float exp) {
-    this.exp = exp != null ? exp : 100F;//Setzt die Exp
+  public LevelPlayer(final float exp) {
+    this.exp = exp != 0 ? exp : 100F;//Setzt die Exp
   }
 
-  /*
-   * @return Returnt den EXP Wert, nicht sein richtiges Level.
-   * Bedeutet nicht eine Zahl zwischen 1-99 sondern eine über 100F
-   */
-  public Float getExp() {
+  public float getExp() {
     return this.exp;
   }
 
-  /*
-   * @return Returnt das aktuelle Level
-   */
-  public Integer getLevel() {
+  public int getLevel() {
     return getLevel(exp);
   }
 
-  /*
+  /**
    * @param exp Aktuelle Exp
    * @return In der Schleife wird der aktuelle EXP Wert mit dem vorherigen Wert und den nächsten Wert verglichen,
    * sodass der letzte Wert kleiner sein muss und der nächste Wert größer sein muss.
    * Letzendlich erhält man dadurch das aktuelle Level.
    */
-  private Integer getLevel(final Float exp) {
-    float xp = 100F;
-    Integer level = 1;
-    for (final float xp2 : SurvivalData.getInstance().getLevels().values()) {//Setzt das Level anhand der Exp | NICHT Getestet
+  public int getLevel(final float exp) {
+    float xp = Konst.DEFAULT_EXPERIENCE;
+    int level = 1;
+    for (final float xp2 : SurvivalData.getInstance().getLevels().values()) { //Setzt das Level anhand der Exp | NICHT Getestet
       if (xp <= exp && xp2 > exp) {
         return level;
       }
@@ -57,21 +50,22 @@ public class LevelPlayer implements Serializable {
     }
     return level;
   }
+//
+//  /**
+//   * @return Returnt ob Level dem Spieler erfolgreich hinzugefügt wurden konnte
+//   * @param level Wie viel Level dem Spieler hinzugefügt werden soll
+//   */
+//  public boolean addExp(final float exp, final SurvivalPlayer survivalPlayer) {
+//    if (exp == 0F) return false;
+//    final int level = getLevel();
+//    if (level == 99) {
+//      this.exp += exp;
+//      return true;
+//    }
+//    final Float oldExp = this.exp;
+//    this.exp += exp;
+//    Bukkit.getPluginManager().callEvent(new ChangedExpEvent(survivalPlayer, oldExp, this.exp, level, getLevel()));
+//    return true;
+//  }
 
-  /*
-   * @return Returnt ob Level dem Spieler erfolgreich hinzugefügt wurden konnte
-   * @param level Wie viel Level dem Spieler hinzugefügt werden soll
-   */
-  public boolean addExp(final float exp, final SurvivalPlayer survivalPlayer) {
-    if (exp == 0F) return false;
-    final int level = getLevel();
-    if (level == 99) {
-      this.exp += exp;
-      return true;
-    }
-    final Float oldExp = this.exp;
-    this.exp += exp;
-    Bukkit.getPluginManager().callEvent(new ChangedExpEvent(survivalPlayer, oldExp, this.exp, level, getLevel()));
-    return true;
-  }
 }

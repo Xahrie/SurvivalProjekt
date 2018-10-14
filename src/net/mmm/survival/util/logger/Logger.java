@@ -40,7 +40,7 @@ public class Logger implements Exitable {
   }
 
   private void toLog(final Level level, final String msg) {
-    final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date() + " " + name + "\n" + msg);
+    final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date()) + " " + name + "\n" + msg;
     boolean b = false;
     for (final String item : filter.get()) {
       if (msg.toLowerCase().contains(item.toLowerCase())) {

@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 //TODO (Abgie) 13.10.2018: "mindestens", Zone kleiner!, Zone kaufen/erweitern
+
 /**
  * /zone Command
  */
@@ -193,7 +194,7 @@ public class Zone implements CommandExecutor {
     }
   }
 
-  private void tryUpdateLength(final Player executor, final String arg, final Integer max) {
+  private void tryUpdateLength(final Player executor, final String arg, final int max) {
     final UUID uuid = UUIDUtils.getUUID(arg);
     if (uuid != null) {
       final Map<UUID, SurvivalPlayer> playerCache = SurvivalData.getInstance().getPlayers();
@@ -205,7 +206,7 @@ public class Zone implements CommandExecutor {
     }
   }
 
-  private void performUpdateLength(final Player executor, final Integer max, final UUID uuid, final SurvivalPlayer ownerOfTargetZone) {
+  private void performUpdateLength(final Player executor, final int max, final UUID uuid, final SurvivalPlayer ownerOfTargetZone) {
     ownerOfTargetZone.setMaxzone(max);
     executor.sendMessage(Messages.PREFIX + " §e" + UUIDUtils.getName(uuid) +
         " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen.");
@@ -279,11 +280,10 @@ public class Zone implements CommandExecutor {
   }
 
   private String getZoneInfo(final ProtectedRegion region) {
+    final StringJoiner member = new StringJoiner(",");
     final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
     final DefaultDomain regionmembers = region.getMembers();
     final Set<UUID> uuidSet = regionmembers.getUniqueIds();
-
-    final StringJoiner member = new StringJoiner(",");
     for (final UUID uuid : uuidSet) {
       member.add(mySQL.getName(uuid));
     }

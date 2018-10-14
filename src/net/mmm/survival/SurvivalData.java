@@ -15,11 +15,11 @@ public final class SurvivalData {
   private static SurvivalData survivalData;
 
   private final AsyncMySQL async = new AsyncMySQL();
-  private DynmapWorldGuardPlugin dynmap;
   private final List<String> namesOfPlayersToVote;
   private final Map<Integer, Float> levels;
   private final Map<UUID, String> playerCache;
   private final Map<UUID, SurvivalPlayer> players;
+  private DynmapWorldGuardPlugin dynmap;
 
   /**
    * Konstruktor

@@ -3,85 +3,85 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="1452.0">net.mmm.survival.commands.Economy</node>
-    <node x="1546.0" y="1740.0">net.mmm.survival.util.Messages</node>
-    <node x="477.0" y="1452.0">net.mmm.survival.commands.SetSpawn</node>
-    <node x="0.0" y="1054.0">net.mmm.survival.Survival</node>
-    <node x="0.0" y="1334.0">net.mmm.survival.util.LevelState</node>
-    <node x="610.0" y="879.0">net.mmm.survival.commands.base.TeleportBase</node>
-    <node x="954.0" y="1452.0">net.mmm.survival.commands.Zone</node>
-    <node x="227.0" y="1054.0">net.mmm.survival.events.InteractEvents</node>
-    <node x="901.0" y="1054.0">net.mmm.survival.regions.DynmapWorldGuardPlugin</node>
-    <node x="590.0" y="1054.0">net.mmm.survival.events.LocationChangeEvents</node>
-    <node x="1431.0" y="1452.0">net.mmm.survival.commands.Pay</node>
-    <node x="563.0" y="1334.0">net.mmm.survival.util.ObjectBuilder</node>
-    <node x="90.5" y="0.0">net.mmm.survival.player.HotbarMessager</node>
-    <node x="0.0" y="1548.0">net.mmm.survival.commands.Navi</node>
-    <node x="532.0" y="1216.0">net.mmm.survival.events.EntityEvents</node>
-    <node x="1293.0" y="1740.0">net.mmm.survival.events.VoteEvents</node>
-    <node x="434.0" y="1740.0">net.mmm.survival.events.ChatEvents</node>
-    <node x="477.0" y="1548.0">net.mmm.survival.commands.Complain</node>
-    <node x="1536.0" y="1216.0">net.mmm.survival.events.FarmingEvents</node>
-    <node x="0.0" y="1740.0">net.mmm.survival.events.CommandEvents</node>
-    <node x="954.0" y="1548.0">net.mmm.survival.commands.Gamemode</node>
-    <node x="838.0" y="1334.0">net.mmm.survival.events.PlayerConnectionEvents</node>
-    <node x="1431.0" y="1548.0">net.mmm.survival.commands.Save</node>
-    <node x="0.0" y="1644.0">net.mmm.survival.commands.SetHome</node>
-    <node x="0.0" y="79.0">net.mmm.survival.player.SurvivalPlayer</node>
-    <node x="1520.0" y="1054.0">net.mmm.survival.util.UUIDUtils</node>
-    <node x="974.0" y="0.0">net.mmm.survival.SurvivalData</node>
-    <node x="1381.0" y="879.0">net.mmm.survival.util.ItemManager</node>
-    <node x="1219.0" y="1216.0">net.mmm.survival.events.DeathEvents</node>
-    <node x="477.0" y="1644.0">net.mmm.survival.commands.Vote</node>
-    <node x="285.0" y="1334.0">net.mmm.survival.regions.SurvivalWorld</node>
-    <node x="1306.0" y="0.0">net.mmm.survival.player.Complaint</node>
-    <node x="1211.0" y="1054.0">net.mmm.survival.player.LevelPlayer</node>
-    <node x="0.0" y="958.0">net.mmm.survival.commands.Home</node>
-    <node x="739.0" y="1740.0">net.mmm.survival.events.ChangedExpEvents</node>
-    <node x="1317.0" y="1334.0">net.mmm.survival.commands.Licence</node>
-    <node x="1038.0" y="1740.0">net.mmm.survival.player.Scoreboards</node>
-    <node x="452.0" y="958.0">net.mmm.survival.commands.Spawn</node>
-    <node x="904.0" y="958.0">net.mmm.survival.commands.TeleportWorld</node>
-    <node x="361.0" y="0.0">net.mmm.survival.mysql.AsyncMySQL</node>
-    <node x="1107.0" y="1334.0">net.mmm.survival.worldedit.CuboidIterator</node>
-    <node x="1521.0" y="0.0">net.mmm.survival.util.CommandUtils</node>
-    <node x="1690.0" y="1740.0">net.mmm.survival.util.Konst</node>
-    <node x="686.0" y="0.0">net.mmm.survival.events.ChangedExpEvent</node>
-    <node x="954.0" y="1644.0">net.mmm.survival.commands.Tame</node>
-    <node x="1431.0" y="1644.0">net.mmm.survival.commands.Money</node>
-    <node x="0.0" y="1216.0">net.mmm.survival.regions.Regions</node>
-    <node x="883.0" y="1216.0">net.mmm.survival.player.SurvivalLicence</node>
+    <node x="748.0" y="1630.0">net.mmm.survival.commands.Economy</node>
+    <node x="1045.0" y="2256.0">net.mmm.survival.util.Messages</node>
+    <node x="0.0" y="2138.0">net.mmm.survival.commands.SetSpawn</node>
+    <node x="1032.0" y="976.0">net.mmm.survival.Survival</node>
+    <node x="477.0" y="1998.0">net.mmm.survival.util.LevelState</node>
+    <node x="739.5" y="1380.0">net.mmm.survival.commands.base.TeleportBase</node>
+    <node x="1659.0" y="0.0">net.mmm.survival.commands.Zone</node>
+    <node x="962.0" y="0.0">net.mmm.survival.events.InteractEvents</node>
+    <node x="0.0" y="0.0">net.mmm.survival.regions.DynmapWorldGuardPlugin</node>
+    <node x="1605.0" y="1630.0">net.mmm.survival.events.LocationChangeEvents</node>
+    <node x="969.0" y="1836.0">net.mmm.survival.commands.Pay</node>
+    <node x="2141.0" y="2138.0">net.mmm.survival.util.ObjectBuilder</node>
+    <node x="691.5" y="0.0">net.mmm.survival.player.HotbarMessager</node>
+    <node x="2074.0" y="1380.0">net.mmm.survival.commands.Navi</node>
+    <node x="1225.0" y="1630.0">net.mmm.survival.events.EntityEvents</node>
+    <node x="1969.0" y="1630.0">net.mmm.survival.events.VoteEvents</node>
+    <node x="740.0" y="2256.0">net.mmm.survival.events.ChatEvents</node>
+    <node x="1597.0" y="1380.0">net.mmm.survival.commands.Complain</node>
+    <node x="893.0" y="1998.0">net.mmm.survival.events.FarmingEvents</node>
+    <node x="477.0" y="2138.0">net.mmm.survival.events.CommandEvents</node>
+    <node x="555.0" y="976.0">net.mmm.survival.commands.Gamemode</node>
+    <node x="0.0" y="1630.0">net.mmm.survival.events.PlayerConnectionEvents</node>
+    <node x="263.0" y="2256.0">net.mmm.survival.commands.Save</node>
+    <node x="1920.0" y="1998.0">net.mmm.survival.commands.SetHome</node>
+    <node x="601.0" y="79.0">net.mmm.survival.player.SurvivalPlayer</node>
+    <node x="1210.0" y="1998.0">net.mmm.survival.util.UUIDUtils</node>
+    <node x="1344.0" y="976.0">net.mmm.survival.SurvivalData</node>
+    <node x="1446.0" y="1836.0">net.mmm.survival.util.ItemManager</node>
+    <node x="1247.0" y="2138.0">net.mmm.survival.events.DeathEvents</node>
+    <node x="0.0" y="1998.0">net.mmm.survival.commands.Vote</node>
+    <node x="1863.0" y="2138.0">net.mmm.survival.regions.SurvivalWorld</node>
+    <node x="0.0" y="1380.0">net.mmm.survival.player.Complaint</node>
+    <node x="1898.0" y="1836.0">net.mmm.survival.player.LevelPlayer</node>
+    <node x="216.0" y="1503.0">net.mmm.survival.commands.Home</node>
+    <node x="1564.0" y="2138.0">net.mmm.survival.events.ChangedExpEvents</node>
+    <node x="0.0" y="1836.0">net.mmm.survival.commands.Licence</node>
+    <node x="0.0" y="2256.0">net.mmm.survival.player.Scoreboards</node>
+    <node x="668.0" y="1514.0">net.mmm.survival.commands.Spawn</node>
+    <node x="1120.0" y="1503.0">net.mmm.survival.commands.TeleportWorld</node>
+    <node x="0.0" y="976.0">net.mmm.survival.mysql.AsyncMySQL</node>
+    <node x="2284.0" y="1630.0">net.mmm.survival.worldedit.CuboidIterator</node>
+    <node x="396.0" y="1630.0">net.mmm.survival.util.CommandUtils</node>
+    <node x="1189.0" y="2256.0">net.mmm.survival.util.Konst</node>
+    <node x="2227.0" y="976.0">net.mmm.survival.events.ChangedExpEvent</node>
+    <node x="1443.0" y="1998.0">net.mmm.survival.commands.Tame</node>
+    <node x="492.0" y="1836.0">net.mmm.survival.commands.Money</node>
+    <node x="1695.0" y="976.0">net.mmm.survival.regions.Regions</node>
+    <node x="911.0" y="2138.0">net.mmm.survival.player.SurvivalLicence</node>
   </nodes>
   <notes />
   <edges>
     <edge source="net.mmm.survival.commands.TeleportWorld" target="net.mmm.survival.commands.base.TeleportBase">
-      <point x="0.0" y="-25.5" />
-      <point x="1120.0" y="933.0" />
-      <point x="706.6666666666666" y="933.0" />
-      <point x="38.66666666666663" y="14.5" />
+      <point x="0.0" y="-36.5" />
+      <point x="1336.0" y="1478.0" />
+      <point x="980.3333333333333" y="1478.0" />
+      <point x="96.33333333333326" y="36.5" />
     </edge>
     <edge source="net.mmm.survival.player.SurvivalPlayer" target="net.mmm.survival.player.HotbarMessager">
-      <point x="0.0" y="-377.5" />
+      <point x="0.0" y="-388.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="net.mmm.survival.commands.Spawn" target="net.mmm.survival.commands.base.TeleportBase">
       <point x="0.0" y="-25.5" />
-      <point x="0.0" y="14.5" />
+      <point x="0.0" y="36.5" />
     </edge>
     <edge source="net.mmm.survival.commands.Home" target="net.mmm.survival.commands.base.TeleportBase">
-      <point x="0.0" y="-25.5" />
-      <point x="216.0" y="933.0" />
-      <point x="629.3333333333334" y="933.0" />
-      <point x="-38.66666666666663" y="14.5" />
+      <point x="0.0" y="-36.5" />
+      <point x="432.0" y="1478.0" />
+      <point x="787.6666666666666" y="1478.0" />
+      <point x="-96.33333333333337" y="36.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.3610046828437633" x="1253.0" y="1164.5" />
+  <settings layout="Hierarchic Group" zoom="0.14535375364089073" x="5311.5" y="1904.0" />
   <SelectedNodes />
   <Categories>
     <Category>Inner Classes</Category>
     <Category>Methods</Category>
   </Categories>
   <SCOPE>All</SCOPE>
-  <VISIBILITY>public</VISIBILITY>
+  <VISIBILITY>private</VISIBILITY>
 </Diagram>
 
