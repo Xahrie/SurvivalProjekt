@@ -61,12 +61,12 @@ public final class Scoreboards {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(scoreboardOwner);
     final int platzierung = getPlatzierung(survivalPlayer);
 
-    final Score scoreA = objective.getScore("Welt: " + worldname);
-    final Score scoreB = objective.getScore("Geld: " + Math.round(survivalPlayer.getMoney() * 100) / 100.0 + Konst.CURRENCY);
-    final Score scoreC = objective.getScore("Platzierung: #" + platzierung);
-    scoreA.setScore(3);
-    scoreB.setScore(2);
-    scoreC.setScore(1);
+    final Score scoreWelt = objective.getScore("Welt: " + worldname);
+    final Score scoreGeld = objective.getScore("Geld: " + Math.round(survivalPlayer.getMoney() * 100) / 100.0 + Konst.CURRENCY);
+    final Score scorePlatzierung = objective.getScore("Platzierung: #" + platzierung);
+    scoreWelt.setScore(3);
+    scoreGeld.setScore(2);
+    scorePlatzierung.setScore(1);
   }
 
   private static int getPlatzierung(final SurvivalPlayer survivalPlayer) {

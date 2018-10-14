@@ -42,3 +42,6 @@ Builden:
 
   Navi.java:46 - Welche Exception?
   Zone.java:107 - Welche Exception?
+
+  Alice an Mario: Ja gerne :) Könnten wir vielleicht den Wert von LevelPlayer in der Datenbank der Tabelle SurvivalPlayer als "richtigen" Wert speichern ?
+  Also wirklich als Zahl und nicht als so ein unleserliches serialisiertes Objekt ? Dann könnte man auch direkt in der Tabelle sehen, was tatsächlich der Wert ist.
