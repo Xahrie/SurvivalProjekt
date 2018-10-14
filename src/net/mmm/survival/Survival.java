@@ -126,7 +126,7 @@ public class Survival extends JavaPlugin {
   private void registerCommands() {
     final List<CommandExecutor> commands = Arrays.asList(new Complain(), new Economy(), new Gamemode(), new Home(),
         new Licence(), new Money(), new Navi(), new Pay(), new Save(), new SetHome(), new SetSpawn(), new Spawn(),
-        new Tame(), new Vote(), new TeleportWorld(), new Zone());
+        new Tame(), new TeleportWorld(), new Vote(), new Zone());
 
     commands.forEach(commandExecutor ->
     {

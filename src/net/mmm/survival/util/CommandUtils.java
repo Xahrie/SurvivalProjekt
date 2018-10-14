@@ -96,4 +96,13 @@ public final class CommandUtils {
 
     return 0;
   }
+
+  public static boolean checkMoney(final double cost, final SurvivalPlayer target) {
+    if (target.getMoney() < cost) {
+      target.getPlayer().sendMessage(Messages.NOT_ENOUGH_MONEY);
+      return false;
+    }
+
+    return true;
+  }
 }

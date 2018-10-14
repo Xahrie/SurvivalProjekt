@@ -24,10 +24,11 @@ public final class Scoreboards {
   public static void setScoreboard(final Player owner) {
     final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
     final Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
-    tablist.keySet().forEach(group -> {
+
+    for (final Group group : tablist.keySet()) {
       final String prefix = manager.getKurzel(group);
       scoreboard.registerNewTeam(tablist.get(group)).setPrefix(prefix);
-    });
+    }
 
     owner.setScoreboard(scoreboard);
     determinePrefix(owner);
@@ -39,6 +40,7 @@ public final class Scoreboards {
       final Scoreboard onlinePlayerScoreboard = onlinePlayer.getScoreboard();
       final String onlinePlayerTeam = tablist.get(manager.getGroup(owner.getUniqueId()));
       onlinePlayerScoreboard.getTeam(onlinePlayerTeam).addPlayer(owner);
+
       final Scoreboard ownerScoreboard = owner.getScoreboard();
       final String ownerTeam = tablist.get(manager.getGroup(onlinePlayer.getUniqueId()));
       ownerScoreboard.getTeam(ownerTeam).addPlayer(onlinePlayer);

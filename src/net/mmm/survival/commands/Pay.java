@@ -31,19 +31,9 @@ public class Pay implements CommandExecutor {
   private void evaluateTwoArguments(final String[] strings, final SurvivalPlayer executor) {
     final SurvivalPlayer target = SurvivalPlayer.findSurvivalPlayer(executor.getPlayer(), strings[0]);
     final int amount = CommandUtils.stringToNumber(strings[1], executor.getPlayer());
-    if (checkPayIsValid(executor, amount)) {
+    if (CommandUtils.checkMoney(amount, executor)) {
       evaluatePay(executor, target, amount);
     }
-  }
-
-  private boolean checkPayIsValid(final SurvivalPlayer executor, final int amount) {
-    if (amount <= executor.getMoney()) {
-      return true;
-    } else {
-      executor.getPlayer().sendMessage(Messages.NOT_ENOUGH_MONEY);
-    }
-
-    return false;
   }
 
   private void evaluatePay(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {

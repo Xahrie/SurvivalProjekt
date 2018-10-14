@@ -1,8 +1,5 @@
 package net.mmm.survival.commands;
 
-import java.util.List;
-
-import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
@@ -20,26 +17,26 @@ import org.bukkit.entity.Player;
  */
 public class Licence implements CommandExecutor {
 
-  public boolean onCommand(final CommandSender sender, final Command cmd, final String label, final String[] args) {
-    if (CommandUtils.checkPlayer(sender)) return true;
-    final Player p = (Player) sender;
-    if (args.length == 2) {
-      if (args[0].equalsIgnoreCase("buy")) {
-        final SurvivalPlayer sp = SurvivalData.getInstance().getPlayers().get(p.getUniqueId());
-        if(args[1].equalsIgnoreCase("nether")) {
-          buyNether(sender, sp);
-        } else if (args[1].equalsIgnoreCase("end")) {
-          buyEnd(sender, sp);
+  public boolean onCommand(final CommandSender commandSender, final Command command, final String s, final String[] args) {
+    if (CommandUtils.checkPlayer(commandSender)) {
+      if (args.length == 2) {
+        if (args[0].equalsIgnoreCase("buy")) {
+          final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer((Player) commandSender);
+          if (args[1].equalsIgnoreCase("nether")) {
+            buyLicence(executor, SurvivalLicence.NETHERLIZENZ, Messages.LICENCE_BUYING_NETHER);
+          } else if (args[1].equalsIgnoreCase("end")) {
+            buyLicence(executor, SurvivalLicence.ENDLIZENZ, Messages.LICENCE_BUYING_END);
+          } else {
+            sendSyntax(commandSender, true);
+          }
+        } else if (args[0].equalsIgnoreCase("help")) {
+          sendSyntax(commandSender, false);
         } else {
-          sendSyntax(sender, true);
+          sendSyntax(commandSender, true);
         }
-      } else if (args[0].equalsIgnoreCase("help")) {
-        sendSyntax(sender, false);
       } else {
-        sendSyntax(sender, true);
+        sendSyntax(commandSender, true);
       }
-    } else {
-      sendSyntax(sender, true);
     }
     return false;
   }
@@ -53,45 +50,24 @@ public class Licence implements CommandExecutor {
   private void sendSyntax(final CommandSender sender, final boolean error) {
     sender.sendMessage(error ? Messages.LICENCE_SYNTAX_ERROR : Messages.LICENCE_SYNTAX);
   }
-  
-  private void buyNether(final CommandSender sender, final SurvivalPlayer sp) {
-    if (sp.hasLicence(SurvivalLicence.NETHERLIZENZ)) {
-      sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
-      return;
+
+  private void buyLicence(final SurvivalPlayer executor, final SurvivalLicence licence, final String message) {
+    if (checkLicenceNotBoughtBefore(executor, licence)) {
+      final double cost = licence.getPrice();
+      if (CommandUtils.checkMoney(cost, executor)) {
+        executor.addOrTakeMoney(-cost);
+        executor.getLicences().add(licence);
+        executor.getPlayer().sendMessage(message);
+      }
     }
-    final Double cost = SurvivalLicence.NETHERLIZENZ.getPrice();
-    Double currentMoney = sp.getMoney();
-    if (currentMoney >= cost) {
-      currentMoney -= cost;
-    } else {
-      sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
-      return;
-    }
-    final List<SurvivalLicence> licences = sp.getLicences();
-    licences.add(SurvivalLicence.NETHERLIZENZ);
-    sp.setLicence(licences);
-    sp.setMoney(currentMoney);
-    sender.sendMessage(Messages.LICENCE_BUYING_NETHER);
-  }
-  
-  private void buyEnd(final CommandSender sender, final SurvivalPlayer sp) {
-    if (sp.hasLicence(SurvivalLicence.ENDLIZENZ)) {
-      sender.sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
-      return;
-    }
-    final Double cost = SurvivalLicence.ENDLIZENZ.getPrice();
-    Double currentMoney = sp.getMoney();
-    if (currentMoney >= cost) {
-      currentMoney -= cost;
-    } else {
-      sender.sendMessage(Messages.NOT_ENOUGH_MONEY);
-      return;
-    }
-    final List<SurvivalLicence> licences = sp.getLicences();
-    licences.add(SurvivalLicence.ENDLIZENZ);
-    sp.setLicence(licences);
-    sp.setMoney(currentMoney);
-    sender.sendMessage(Messages.LICENCE_BUYING_END);
   }
 
+  private boolean checkLicenceNotBoughtBefore(final SurvivalPlayer target, final SurvivalLicence netherlizenz) {
+    if (target.hasLicence(netherlizenz)) {
+      target.getPlayer().sendMessage(Messages.ALREADY_BOUGHT_LICENCE);
+      return false;
+    }
+
+    return true;
+  }
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 import com.sk89q.worldedit.BlockVector;
@@ -424,7 +425,7 @@ public class DynmapWorldGuardPlugin {
   }
 
   private String formatInfoWindow(final ProtectedRegion region, final AreaMarker marker) {
-    final StringBuilder owner = determineOwner(region);
+    final String owner = determineOwner(region);
     String format = "<div class=\"regioninfo\">" + infowindow + "</div>";
 
     format = (marker.getLabel().startsWith("P-") ? format
@@ -442,26 +443,27 @@ public class DynmapWorldGuardPlugin {
     return format;
   }
 
-  private StringBuilder determineOwner(final ProtectedRegion region) {
-    final StringBuilder owner = new StringBuilder();
+  private String determineOwner(final ProtectedRegion region) {
+    final StringJoiner owner = new StringJoiner(",");
     final DefaultDomain regionOwners = region.getOwners();
-    regionOwners.getUniqueIds().forEach(uuid -> {
+
+    for (final UUID uuid : regionOwners.getUniqueIds()) {
       final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
-      owner.append(", ")
-          .append(asyncMySQL.getName(uuid));
-    });
-    owner.replace(0, 2, "");
-    return owner;
+      owner.add(asyncMySQL.getName(uuid));
+    }
+    return owner.toString();
   }
 
-  private String modifyFormat(final ProtectedRegion region, final AreaMarker marker, String format, final StringBuilder owner) {
-    format = owner.length() == 0 ? format.replace("%c", "") : format;
+  private String modifyFormat(final ProtectedRegion region, final AreaMarker marker, String format, final String owner) {
+    format = owner.isEmpty() ? format.replace("%c", "") : format;
+
     final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
     format = format.replace("%a", asyncMySQL.getName(UUID.fromString(marker.getLabel().toLowerCase())))
         .replace("%b", "Owner: ")
         .replace("%groupowners%", region.getOwners().toGroupsString())
         .replace("%groupmembers%", region.getMembers().toGroupsString())
         .replace("*", "");
+
     return format;
   }
 

@@ -284,7 +284,10 @@ public class Zone implements CommandExecutor {
     final Set<UUID> uuidSet = regionmembers.getUniqueIds();
 
     final StringJoiner member = new StringJoiner(",");
-    uuidSet.forEach(uuid -> member.add(mySQL.getName(uuid)));
+    for (final UUID uuid : uuidSet) {
+      member.add(mySQL.getName(uuid));
+    }
+
     return member.toString();
   }
 }

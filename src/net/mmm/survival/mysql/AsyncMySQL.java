@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +25,6 @@ import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.ObjectBuilder;
-import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -102,15 +102,22 @@ public class AsyncMySQL {
 
   private SurvivalPlayer determinePlayer(final ResultSet resultSet, final UUID uuid) throws SQLException {
     final double money = resultSet.getDouble(2);
+
     final List<Complaint> complaints = determineComplaints(uuid);
+
     final List<SurvivalLicence> licences = determineLicences(resultSet.getString(3));
+
     final short votes = (short) resultSet.getInt(4);
+
     final int maxzone = resultSet.getInt(5);
+
     final Location location = determineLocation(resultSet.getString(6));
+
     LevelPlayer levelPlayer = new LevelPlayer(0F);
     if (resultSet.getString(7) != null) {
       levelPlayer = (LevelPlayer) ObjectBuilder.getObjectOf(resultSet.getString(7));
     }
+
     return new SurvivalPlayer(uuid, money, complaints, licences, votes, maxzone, location, levelPlayer);
   }
 
@@ -141,11 +148,10 @@ public class AsyncMySQL {
     final List<SurvivalLicence> licences = new ArrayList<>();
     if (licencesString != null && !licencesString.isEmpty()) {
       for (final String licence : licencesString.split(",")) {
-        if (EnumUtils.isValidEnum(SurvivalLicence.class, licence)) {
-          licences.add(SurvivalLicence.valueOf(licence));
-        }
+        licences.add(SurvivalLicence.valueOf(licence));
       }
     }
+
     return licences;
   }
 
@@ -230,11 +236,10 @@ public class AsyncMySQL {
         .prepareStatement("UPDATE SurvivalPlayer SET MONEY=?, LICENCES=?, VOTES=?, MAXZONE=?, HOME=?, LEVELPLAYER=? WHERE UUID=?")) {
 
       for (final SurvivalPlayer survivalPlayer : players) {
-        final StringBuilder licences = determineLicences(survivalPlayer);
+        final StringJoiner licences = determineLicences(survivalPlayer);
         final Location playerHome = survivalPlayer.getHome();
-        final String home = playerHome != null ? playerHome.getX() + "/" + playerHome.getY() + "/" +
-            playerHome.getZ() : "";
-        updateAndExecuteStatement(statement, survivalPlayer, licences, home);
+        final String home = playerHome.getX() + "/" + playerHome.getY() + "/" + playerHome.getZ();
+        updateAndExecuteStatement(statement, survivalPlayer, licences.toString(), home);
       }
     } catch (final SQLException ex) {
       ex.printStackTrace();
@@ -273,10 +278,10 @@ public class AsyncMySQL {
     }
   }
 
-  private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer,
-                                         final StringBuilder licences, final String home) throws SQLException {
+  private void updateAndExecuteStatement(final PreparedStatement statement, final SurvivalPlayer survivalPlayer, final String licences,
+                                         final String home) throws SQLException {
     statement.setDouble(1, survivalPlayer.getMoney());
-    statement.setString(2, licences.toString());
+    statement.setString(2, licences);
     statement.setInt(3, survivalPlayer.getVotes());
     statement.setInt(4, survivalPlayer.getMaxzone());
     statement.setString(5, home);
@@ -285,13 +290,12 @@ public class AsyncMySQL {
     statement.executeUpdate();
   }
 
-  private StringBuilder determineLicences(final SurvivalPlayer survivalPlayer) {
-    final StringBuilder licences = new StringBuilder();
+  private StringJoiner determineLicences(final SurvivalPlayer survivalPlayer) {
     final List<SurvivalLicence> survivalLicences = survivalPlayer.getLicences();
-    if (!survivalLicences.isEmpty()) {
-      survivalLicences.forEach(licence ->
-          licences.append(licence).append(","));
-      licences.deleteCharAt(licences.length() - 1);
+    final StringJoiner licences = new StringJoiner(",");
+
+    for (final SurvivalLicence licence : survivalLicences) {
+      licences.add(licence.name());
     }
     return licences;
   }

@@ -22,8 +22,9 @@ public final class StatsManager {
    */
   public static void saveStats() {
     final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
-    players.keySet().forEach(uuid ->
-        replaceStatsToMoneyAndResetStats(players.get(uuid)));
+    for (final UUID uuid : players.keySet()) {
+      replaceStatsToMoneyAndResetStats(players.get(uuid));
+    }
   }
 
   private static void replaceStatsToMoneyAndResetStats(final SurvivalPlayer playerToSave) {
