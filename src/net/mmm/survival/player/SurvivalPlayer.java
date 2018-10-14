@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.farming.PlayerStats;
+import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
 import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Location;
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player;
  *
  * @author BlueIronGirl, Abgie
  */
-public class SurvivalPlayer extends HotbarMessager {
+public class SurvivalPlayer {
   private final Date lastComplaint;
   private final List<Complaint> complaints;
   private final PlayerStats stats;
@@ -56,7 +57,8 @@ public class SurvivalPlayer extends HotbarMessager {
 
     this.levelPlayer = levelPlayer;
 
-    this.lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
+    Date lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
+    this.lastComplaint = new Date(lastComplaint.getTime() - Konst.COMPLAIN_HALBE_STUNDE);
     this.stats = new PlayerStats(); // Erstelle Statistiken
   }
 
@@ -113,22 +115,25 @@ public class SurvivalPlayer extends HotbarMessager {
 
   public void addComplaint(final Complaint complaint) {
     complaints.add(complaint);
-    outputComplaint(complaint);
+    outputComplaint(complaint, getPlayer());
   }
 
   public void addOrTakeMoney(final double amount) {
     money += amount;
   }
 
-  public void outputComplaint(final Complaint complaint) {
+  public void outputComplaint(final Complaint complaint, final Player player) {
     final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
     final Player complaintExecutor = players.get(complaint.getExecutor()).getPlayer();
-    getPlayer().sendMessage(Messages.PREFIX + "§c Der Spieler: §e" + complaintExecutor.getDisplayName() +
-        "§c hat sich am §e" + complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
-  }
-
-  public void sendHotbarMessage(final String message) { //TODO (Abgie) 03.10.2018: HotbarMessager is not working
-    //sendHotbarMessage(getPlayer(), message);
+    if (player != null) { //online ?
+      if (getUuid().equals(player.getUniqueId())) {
+        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
+            "§c hat sich am §e" + complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
+      } else {
+        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
+            "§c hat sich am §e" + complaint.outputDate() + "§c über " + UUIDUtils.getName(getUuid()) + " beschwert: §e" + complaint.getReason());
+      }
+    }
   }
   //<editor-fold desc="getter and setter">
 

@@ -31,6 +31,7 @@ import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.mysql.AsyncMySQL;
+import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
@@ -146,24 +147,22 @@ public class Survival extends JavaPlugin {
   private void execScheduler() {
     final AtomicInteger counter = new AtomicInteger();
     Bukkit.getScheduler().scheduleSyncRepeatingTask(getInstance(), () -> {
-          if (counter.get() % 60 == 0) {
-            StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
-          } //TODO (Abgie) 30.09.2018: HotbarMessager ueberarbeiten
-          if (counter.get() % 5 == 0) { //dauerhaft Geldwert anzeigen
-            /*Bukkit.getOnlinePlayers().forEach(player ->
-                SurvivalPlayer.findSurvivalPlayer(player, player.getName()).sendHotbarMessage(
-                    "Money: " + SurvivalPlayer.findSurvivalPlayer(player, player.getName())
-                        .getMoney() + Constants.CURRENCY));*/
-          }
-          //alle 5 Minuten alle Daten in der Datenbank speichern
-          if (counter.get() % 300 == 0) {
-            save();
-          }
-          counter.getAndIncrement();
-          if (counter.get() == Integer.MAX_VALUE) {
-            counter.set(0);
-          }
+      if (counter.get() % 2 == 0) {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
+          Scoreboards.setScoreboard(player);
         }
-        , 20L, 20L);
+      }
+      if (counter.get() % 60 == 0) {
+        StatsManager.saveStats(); // Statistiken werden 1 Mal pro Minute in Geld umgewandelt
+      }
+      //alle 5 Minuten alle Daten in der Datenbank speichern
+      if (counter.get() % 300 == 0) {
+        save();
+      }
+      if (counter.get() == Integer.MAX_VALUE) {
+        counter.set(0);
+      }
+      counter.getAndIncrement();
+    }, 20L, 20L);
   }
 }

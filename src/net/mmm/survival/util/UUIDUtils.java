@@ -2,8 +2,6 @@ package net.mmm.survival.util;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import net.mmm.survival.SurvivalData;
 import org.bukkit.Bukkit;
@@ -22,7 +20,6 @@ import org.bukkit.entity.Player;
  * @since JDK 8
  */
 public final class UUIDUtils {
-  private static final ExecutorService pool = Executors.newCachedThreadPool();
   private static final Map<UUID, String> cache = SurvivalData.getInstance().getPlayerCache();
 
   /**

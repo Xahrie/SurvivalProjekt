@@ -125,7 +125,6 @@ public class InteractEvents implements Listener {
       } catch (final StorageException ex) {
         ex.printStackTrace();
       }
-      owner.sendHotbarMessage(Messages.ZONE_CREATED);
     }
   }
 
