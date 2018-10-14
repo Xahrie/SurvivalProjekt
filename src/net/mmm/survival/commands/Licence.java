@@ -29,28 +29,18 @@ public class Licence implements CommandExecutor {
           } else if (args[1].equalsIgnoreCase("end")) {
             buyLicence(executor, SurvivalLicence.ENDLIZENZ, Messages.LICENCE_BUYING_END);
           } else {
-            sendSyntax(commandSender, true);
+            commandSender.sendMessage(Messages.LICENCE_SYNTAX_ERROR);
           }
         } else if (args[0].equalsIgnoreCase("help")) {
-          sendSyntax(commandSender, false);
+          commandSender.sendMessage(Messages.LICENCE_SYNTAX);
         } else {
-          sendSyntax(commandSender, true);
+          commandSender.sendMessage(Messages.LICENCE_SYNTAX_ERROR);
         }
       } else {
-        sendSyntax(commandSender, true);
+        commandSender.sendMessage(Messages.LICENCE_SYNTAX_ERROR);
       }
     }
     return false;
-  }
-
-  /**
-   * Sendet @param sender den Syntax
-   *
-   * @param sender Sender des Befehls
-   * @param error Ob der Syntax als Fehler ausgegeben werden soll
-   */
-  private void sendSyntax(final CommandSender sender, final boolean error) {
-    sender.sendMessage(error ? Messages.LICENCE_SYNTAX_ERROR : Messages.LICENCE_SYNTAX);
   }
 
   private void buyLicence(final SurvivalPlayer executor, final SurvivalLicence licence, final String message) {
