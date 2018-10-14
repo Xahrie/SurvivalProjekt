@@ -14,9 +14,11 @@ import net.mmm.survival.player.LevelPlayer;
 import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
+import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.ItemManager;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -71,13 +73,30 @@ public class PlayerConnectionEvents implements Listener {
   }
 
   private void evaluateComplaints(final SurvivalPlayer joined) {
+    final Player joinedPlayer = joined.getPlayer();
+
+    //Offene Beschwerden ueber den eingeloggten Player
     if (!joined.getComplaints().isEmpty()) {
-      final Player joinedPlayer = joined.getPlayer();
       joinedPlayer.sendMessage(Messages.COMPLAINT_INFO);
       for (final Complaint complaint : joined.getComplaints()) {
-        joined.outputComplaint(complaint);
+        joined.outputComplaint(complaint, joinedPlayer);
       }
-      //TODO (BlueIronGirl) 30.09.2018: bei Admins immer alle offenen Beschwerden anzeigen, aber kumuliert.
+    }
+
+    //Generell offene Beschwerden
+    if (CommandUtils.isOperator(joinedPlayer)) {
+      joinedPlayer.sendMessage(Messages.PREFIX + "Offene Beschwerden (Details koennen uber /complain list <Spieler> aufgelistet werden):");
+      boolean bFound = false;
+      for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
+        if (!survivalPlayer.getComplaints().isEmpty()) {
+          final int amoutComplaints = survivalPlayer.getComplaints().size();
+          joinedPlayer.sendMessage(Messages.PREFIX + "Spieler " + UUIDUtils.getName(survivalPlayer.getUuid()) + ": " + amoutComplaints);
+          bFound = true;
+        }
+      }
+      if (!bFound) {
+        joinedPlayer.sendMessage(Messages.PREFIX + "Keine offenen Beschwerden");
+      }
     }
   }
 

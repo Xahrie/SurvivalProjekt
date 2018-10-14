@@ -18,6 +18,13 @@ public final class Konst {
   public static final String WEBSITE = "http://www.minemagicmania.de/";
   public static final String YOUTUBE = "https://www.youtube.com/channel/UCXHD5UuvnTRpFMJV0odpHmg";
 
+  /*
+  Complain
+   */
+  public static final long COMPLAIN_HALBE_STUNDE = 1_800_000; //1_800_000 2000
+  public static final long COMPLAIN_EIN_TAG = 86_400_000; //86_400_000 4000
+  public static final int COMPLAIN_MINDESTANZ_ZEICHEN = 10;
+
   /**
    * Instanz
    */
