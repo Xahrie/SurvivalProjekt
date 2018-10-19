@@ -113,7 +113,7 @@ public class AsyncMySQL {
 
     final Location location = determineLocation(resultSet.getString(6));
 
-    LevelPlayer levelPlayer = new LevelPlayer(0F);
+    LevelPlayer levelPlayer = new LevelPlayer();
     if (resultSet.getString(7) != null) {
       levelPlayer = (LevelPlayer) ObjectBuilder.getObjectOf(resultSet.getString(7));
     }

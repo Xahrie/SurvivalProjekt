@@ -19,11 +19,9 @@ public abstract class Statistic {
    * Konstruktor
    *
    * @param type Typ der Statistik
-   * @param value Wert der Statistik
    */
-  Statistic(final Type type, final int value) {
+  Statistic(final Type type) {
     this.type = type;
-    this.value = value;
   }
 
   /**
@@ -36,19 +34,10 @@ public abstract class Statistic {
   }
 
   /**
-   * Vermindert den Wert der Statistik um den Faktor {@code amount}
-   *
-   * @param amount Faktor der Verminderung
-   */
-  void decrementValue(final int amount) {
-    this.value -= amount;
-  }
-
-  /**
    * Setzt den Wert der Statistik zurueck
    */
   public void resetValue() {
-    setValue(0);
+    setValue();
   }
 
   /**
@@ -73,8 +62,8 @@ public abstract class Statistic {
     return this.value;
   }
 
-  private void setValue(final int value) {
-    this.value = value;
+  private void setValue() {
+    this.value = 0;
   }
 
   //</editor-fold>

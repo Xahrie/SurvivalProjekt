@@ -1,5 +1,7 @@
 package net.mmm.survival.commands;
 
+import java.util.Objects;
+
 import net.mmm.survival.commands.base.TeleportBase;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
@@ -26,7 +28,7 @@ public class TeleportWorld extends TeleportBase implements CommandExecutor {
       if (args.length > 0) {
         final String sWorld = args[0];
         if (checkWorldExists(sWorld) && CommandUtils.checkTeleport(survivalPlayer)) {
-          final World world = SurvivalWorld.getWorld(sWorld).get();
+          final World world = Objects.requireNonNull(SurvivalWorld.getWorld(sWorld)).get();
           teleport((Player) commandSender, world.getSpawnLocation());
         }
       }

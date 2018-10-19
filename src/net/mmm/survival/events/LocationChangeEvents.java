@@ -1,5 +1,7 @@
 package net.mmm.survival.events;
 
+import java.util.Objects;
+
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
@@ -74,7 +76,7 @@ public class LocationChangeEvents implements Listener {
     final SurvivalPlayer traveler = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     final Location destinationLocation = event.getTo();
     final World destinationWorld = destinationLocation.getWorld();
-    final SurvivalLicence needed = SurvivalLicence.getLicence(SurvivalWorld.getWorld(destinationWorld.getName()));
+    final SurvivalLicence needed = SurvivalLicence.getLicence(Objects.requireNonNull(SurvivalWorld.getWorld(destinationWorld.getName())));
     if (needed != null && !traveler.hasLicence(needed)) {
       event.setCancelled(true);
     }

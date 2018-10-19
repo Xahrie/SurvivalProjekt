@@ -24,8 +24,8 @@ public class SurvivalPlayer {
   private final List<Complaint> complaints;
   private final PlayerStats stats;
   private final LevelPlayer levelPlayer;
-  private List<SurvivalLicence> licences;
-  private boolean tamed, teleport, zonenedit, zonensearch;
+  private final List<SurvivalLicence> licences;
+  private boolean tamed, teleport, zonenedit, zonensearch, scoreboard;
   //<editor-fold desc="mysql parameter">
   private double money;
   private int maxzone;
@@ -57,7 +57,7 @@ public class SurvivalPlayer {
 
     this.levelPlayer = levelPlayer;
 
-    Date lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
+    final Date lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
     this.lastComplaint = new Date(lastComplaint.getTime() - Konst.COMPLAIN_HALBE_STUNDE);
     this.stats = new PlayerStats(); // Erstelle Statistiken
   }
@@ -197,6 +197,14 @@ public class SurvivalPlayer {
     this.votes = votes;
   }
 
+  boolean isScoreboard() {
+    return scoreboard;
+  }
+
+  void setScoreboardTrue() {
+    this.scoreboard = true;
+  }
+
   public boolean isTamed() {
     return tamed;
   }
@@ -231,10 +239,6 @@ public class SurvivalPlayer {
 
   public boolean hasLicence(final SurvivalLicence licence) {
     return licences.contains(licence);
-  }
-
-  public void setLicence(final List<SurvivalLicence> licences) {
-    this.licences = licences;
   }
 
   //</editor-fold>

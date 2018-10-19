@@ -124,7 +124,7 @@ public class PlayerConnectionEvents implements Listener {
       final Player eventPlayer = event.getPlayer();
       final World world = SurvivalWorld.BAUWELT.get();
       joined = new SurvivalPlayer(eventPlayer.getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
-          (short) 0, Konst.ZONE_SIZE_DEFAULT, world.getSpawnLocation(), new LevelPlayer(100F));
+          (short) 0, Konst.ZONE_SIZE_DEFAULT, world.getSpawnLocation(), new LevelPlayer());
 
       final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
       mySQL.createPlayer(joined);

@@ -29,7 +29,7 @@ public final class Messages {
   /*
   Economy-System
    */
-  public static final String NOT_ENOUGH_MONEY = "§8┃ §eSurvival §7» §cDu hast nicht genuegend Geld auf deinem Konto.";
+  static final String NOT_ENOUGH_MONEY = "§8┃ §eSurvival §7» §cDu hast nicht genuegend Geld auf deinem Konto.";
   public static final String USAGE_ECONOMY_COMMAND = "§8┃ §eSurvival §7» §c/eco [<set|reset|add|take>] <Spieler>";
   public static final String USAGE_MONEY_COMMAND = "§8┃ §eSurvival §7» §c/money";
   public static final String USAGE_MONEY_COMMAND_ADMIN = "§8┃ §eSurvival §7» §c/money <Spieler>";
@@ -62,7 +62,6 @@ public final class Messages {
   public static final String SPAWNZONE_FOUND = "§8┃ §eSurvival §7» Es wurde die Zone §eSpawnzone §7gefunden.";
   public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/navi <Spieler>";
   public static final String ZONE_ALREADY_EXIST = "§8┃ §eSurvival §7» Du hast bereits eine Zone.";
-  public static final String ZONE_CREATED = "§8┃ §eSurvival §7» §7Du hast erfolgreich deine Zone erstellt.";
   public static final String ZONE_EXPLAINATION = "§8┃ §eSurvival §7» Klicke mit einem Stock auf die erste Ecke deiner Zone, danach klicke auf die gegenüber liegende Ecke.";
   public static final String ZONE_HELP = "§8┃ §eSurvival §7» Zonenhilfe§8:\n§e/zone create §8┃ §7Erstellt eine Zone\n§e/zone search §8┃ §7Sucht nach Zonen\n§e/zone add <Spieler> §8┃ §7Fügt einen Spieler auf deine Zone hinzu\n§e/zone remove <Spieler> §8┃ §7Entfernt einen Spieler von deiner Zone\n§e/zone delete §8┃ §7Löscht deine Zone";
   public static final String ZONE_HELP_ADMIN = "§c/zone setlength <Spieler> <Anzahl> §8┃ §7Setzt die Max-Länge der Zone des Spielers §c/zone info <Spieler> §8┃ §7Zeigt Informationen über den Spieler an§c/zone info §8┃ §7Zeigt Informationen über die Zone in der du stehst an";
@@ -75,23 +74,11 @@ public final class Messages {
   /*
   Lizenz System
    */
-  public static final String NO_VALID_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz existiert nicht. Es existieren nur die §cNETHER §7und die §5END §7Lizenz.";
   public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
   public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz für §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
   public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz für §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
   public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
   public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
-  /*
-  Level System
-   */
-  public static final String LEVEL_ADDED_EXP = "§8┃ §eSurvival §7» Du hast §e? §7Erfahrung(en) erhalten.";
-  public static final String LEVEL_LEVEL_UP = "§8┃ §eSurvival §7» Du bist im Level aufgestiegen. Dein aktuelles Level ist: §e?§7, §aGlückwunsch.";
-  /*
-  Skill System
-   */
-  public static final String SKILL_ADDED_SKILLPOINTS = "§8┃ §eSurvival §7» Du erhälst §e? §7Skillpunkte.";
-  public static final String SKILL_NOT_ENOUGH_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast nicht genügend Skillpunkte.";
-  public static final String SKILL_CURRENT_SKILLPOINTS = "§8┃ §eSurvival §7» Du hast aktuell §e? §7Skillpunkte.";
   /*
   Tame
    */

@@ -22,16 +22,7 @@ public class OnlineTime extends Statistic {
    * Konstruktor
    */
   public OnlineTime() {
-    this(0);
-  }
-
-  /**
-   * Konstruktor
-   *
-   * @param value Wert der Statistik
-   */
-  private OnlineTime(final int value) {
-    super(Type.ONLINE_TIME, value);
+    super(Type.ONLINE_TIME);
   }
 
   /**

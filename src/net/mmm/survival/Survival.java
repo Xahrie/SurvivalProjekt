@@ -20,7 +20,6 @@ import net.mmm.survival.commands.Tame;
 import net.mmm.survival.commands.TeleportWorld;
 import net.mmm.survival.commands.Vote;
 import net.mmm.survival.commands.Zone;
-import net.mmm.survival.events.ChangedExpEvents;
 import net.mmm.survival.events.ChatEvents;
 import net.mmm.survival.events.CommandEvents;
 import net.mmm.survival.events.DeathEvents;
@@ -116,9 +115,9 @@ public class Survival extends JavaPlugin {
   }
 
   private void registerEvents() {
-    final List<Listener> listeners = Arrays.asList(new ChangedExpEvents(), new ChatEvents(),
-        new CommandEvents(), new DeathEvents(), new EntityEvents(), new FarmingEvents(),
-        new InteractEvents(), new LocationChangeEvents(), new PlayerConnectionEvents());
+    final List<Listener> listeners = Arrays.asList(new ChatEvents(), new CommandEvents(),
+        new DeathEvents(), new EntityEvents(), new FarmingEvents(), new InteractEvents(),
+        new LocationChangeEvents(), new PlayerConnectionEvents());
 
     for (final Listener listener : listeners) {
       Bukkit.getPluginManager().registerEvents(listener, this);
