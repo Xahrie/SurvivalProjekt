@@ -11,7 +11,6 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.LevelPlayer;
-import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.CommandUtils;
@@ -50,7 +49,7 @@ public class PlayerConnectionEvents implements Listener {
     evaluateFirstJoin(joinedPlayer, event);
 
     //Scoreboard initialisieren
-    Scoreboards.setScoreboard(event.getPlayer());
+//    Scoreboards.setScoreboard(event.getPlayer());
 
     //Vote-Plugin
     evaluateVotes(joinedPlayer);
@@ -144,6 +143,7 @@ public class PlayerConnectionEvents implements Listener {
   public void onQuit(final PlayerQuitEvent event) {
     final SurvivalPlayer quited = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     quited.setZonensearch(false);
+    quited.setScoreboard(false);
     event.setQuitMessage(null);
   }
 

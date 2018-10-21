@@ -18,6 +18,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.PAS123.Group.Group.Group;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.LevelPlayer;
@@ -184,6 +185,23 @@ public class AsyncMySQL {
     }
 
     return cache;
+  }
+
+  public Map<UUID, Group> getGroups() {
+    Map<UUID, Group> groups = new HashMap<>();
+    Connection connection = getMySQL().connection;
+
+    try (Statement statement = connection.createStatement();
+         ResultSet resultSet = statement.executeQuery("SELECT UUID, `Group` FROM BungeeGroupManager")) {
+      while (resultSet.next()) {
+        UUID uuid = UUID.fromString(resultSet.getString(1));
+        Group group = Group.valueOf(resultSet.getString(2));
+        groups.put(uuid, group);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return groups;
   }
 
   /**

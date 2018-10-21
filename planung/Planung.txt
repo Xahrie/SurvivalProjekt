@@ -11,6 +11,9 @@ In Arbeit:
   PAS123         Grundstück kann man später mit Geld erweitern
   SrAkzeptiert   Levelsystem, Skillsystem
 
+  //TODO (Abgie) 21.10.2018: Zone Member add keine Rueckmeldung
+  //TODO (Abgie) 21.10.2018: Geld wird zurueckgesetzt ??
+
 Zu Programmieren:
   TODO Am Anfang ein Hotelzimmer oder was ähnliches (Alice & Abgie)
   TODO Levelsystem, Skillsystem (SrAkzeptiert)

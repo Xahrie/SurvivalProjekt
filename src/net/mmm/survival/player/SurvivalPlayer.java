@@ -201,8 +201,8 @@ public class SurvivalPlayer {
     return scoreboard;
   }
 
-  void setScoreboardTrue() {
-    this.scoreboard = true;
+  public void setScoreboard(final boolean scoreboard) {
+    this.scoreboard = scoreboard;
   }
 
   public boolean isTamed() {

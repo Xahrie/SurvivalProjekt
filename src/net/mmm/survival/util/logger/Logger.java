@@ -54,7 +54,7 @@ public class Logger implements Exitable {
   private void createLogManager(final File logFile) {
     final File logDirectory = new File("plugins" + File.separator + "Survival" + File.separator + "log");
 
-    if (!new File("log").exists() && logDirectory.mkdir()) {
+    if (!logDirectory.exists() && logDirectory.mkdir()) {
       System.out.println(Messages.LOG_CREATED);
     }
     doesLogFileExist(logFile);

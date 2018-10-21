@@ -23,6 +23,57 @@ import org.bukkit.scoreboard.ScoreboardManager;
 public final class Scoreboards {
   private static final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
 
+
+  public static void setScoreboards(Player p) {
+    if (SurvivalPlayer.findSurvivalPlayer(p).isScoreboard()) {
+
+      Objective obj = p.getScoreboard().getObjective("aaa") != null ? p.getScoreboard().getObjective("aaa") : p.getScoreboard().registerNewObjective("aaa", "bbb");
+      for (String score : obj.getScoreboard().getEntries()) {
+        obj.getScoreboard().resetScores(score);
+      }
+      obj.getScore("Geld: " + SurvivalPlayer.findSurvivalPlayer(p).getMoney()).setScore(1);
+
+
+    } else {
+      Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+
+      Objective obj = sb.getObjective("aaa") != null ? sb.getObjective("aaa") : sb.registerNewObjective("aaa", "bbb");
+
+      obj.setDisplayName("test");
+      obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+      BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
+
+      for (Group group : manager.tablist.keySet()) {
+        sb.registerNewTeam("" + manager.tablist.get(group)).setPrefix(BungeeGroupManager.getGroupManager().getKurzel(group));
+      }
+
+      obj.getScore("Geld: " + SurvivalPlayer.findSurvivalPlayer(p).getMoney()).setScore(1);
+
+      p.setScoreboard(sb);
+      setPrefix(p, BungeeGroupManager.getGroupManager().getGroup(p));
+      SurvivalPlayer.findSurvivalPlayer(p).setScoreboard(true);
+    }
+  }
+
+  private static void setPrefix(Player p, Group group) {
+    BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
+    final Boolean nicked = false;
+    for (Player all : Bukkit.getOnlinePlayers()) {
+      try {
+        all.getScoreboard().getTeam("" + manager.tablist.get((nicked ? Group.PREMIUM : group))).addPlayer(p);
+      } catch (Exception ex) {
+      }
+      try {
+        p.getScoreboard().getTeam("" + manager.tablist.get((nicked ? Group.PREMIUM : manager.getGroup(all.getUniqueId())))).addPlayer(all);
+      } catch (Exception ex) {
+      }
+    }
+    p.setDisplayName((nicked ? manager.getPrefix(Group.PREMIUM) : manager.getPrefix(group)) + p.getName());
+    p.setPlayerListName((nicked ? manager.getPrefix(Group.PREMIUM) : manager.getPrefix(group)) + p.getName());
+  }
+
+
   /**
    * Setzt fuer einen spezifischen Spieler {@code p} das Scoreboard um den Rang anzeigen zu lassen
    *
@@ -47,16 +98,16 @@ public final class Scoreboards {
       scoreboard.registerNewTeam(manager.tablist.get(group)).setPrefix(prefix);
     }
 
+    scoreboardOwner.setScoreboard(scoreboard);
     evaluateObjectives(scoreboardOwner);
 
-    scoreboardOwner.setScoreboard(scoreboard);
     determinePrefix(scoreboardOwner);
 
-    survivalPlayer.setScoreboardTrue();
+    survivalPlayer.setScoreboard(true);
   }
 
   private static void updateScoreboard(final Player scoreboardOwner) {
-    final Objective obj = scoreboardOwner.getScoreboard().getObjective("aaa") != null ? scoreboardOwner.getScoreboard().getObjective("aaa") : scoreboardOwner.getScoreboard().registerNewObjective("aaa", "bbb");
+    final Objective obj = getObjective(scoreboardOwner);
 
     for (final String score : obj.getScoreboard().getEntries()) {
       obj.getScoreboard().resetScores(score);
@@ -67,7 +118,7 @@ public final class Scoreboards {
   }
 
   private static void evaluateObjectives(final Player scoreboardOwner) {
-    final Objective objective = scoreboardOwner.getScoreboard().getObjective("aaa") != null ? scoreboardOwner.getScoreboard().getObjective("aaa") : scoreboardOwner.getScoreboard().registerNewObjective("aaa", "bbb");
+    final Objective objective = getObjective(scoreboardOwner);
     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     objective.setDisplayName("   Survival   ");
 
@@ -83,10 +134,17 @@ public final class Scoreboards {
       scoreWelt = objective.getScore("Welt: " + world.name());
       scoreWelt.setScore(3);
     }
+
     final Score scoreGeld = objective.getScore("Geld: " + Math.round(survivalPlayer.getMoney() * 100) / 100.0 + Konst.CURRENCY);
     scoreGeld.setScore(2);
+
     final Score scorePlatzierung = objective.getScore("Platzierung: #" + platzierung);
     scorePlatzierung.setScore(1);
+  }
+
+  private static Objective getObjective(final Player scoreboardOwner) {
+    final String sKey = scoreboardOwner.getEntityId() + "_aaa";
+    return scoreboardOwner.getScoreboard().getObjective(sKey) != null ? scoreboardOwner.getScoreboard().getObjective(sKey) : scoreboardOwner.getScoreboard().registerNewObjective(sKey, "bbb");
   }
 
   private static int getPlatzierung(final SurvivalPlayer survivalPlayer) {
