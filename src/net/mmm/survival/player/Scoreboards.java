@@ -56,21 +56,17 @@ public final class Scoreboards {
     }
   }
 
-  private static void setPrefix(Player p, Group group) {
-    BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-    final Boolean nicked = false;
-    for (Player all : Bukkit.getOnlinePlayers()) {
-      try {
-        all.getScoreboard().getTeam("" + manager.tablist.get((nicked ? Group.PREMIUM : group))).addPlayer(p);
-      } catch (Exception ex) {
-      }
-      try {
-        p.getScoreboard().getTeam("" + manager.tablist.get((nicked ? Group.PREMIUM : manager.getGroup(all.getUniqueId())))).addPlayer(all);
-      } catch (Exception ex) {
+  private static void setPrefix(final Player p, final Group group) {
+    final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
+    p.setDisplayName(manager.getPrefix(group) + p.getName());
+    p.setPlayerListName(manager.getPrefix(group) + p.getName());
+
+    for (final Player all : Bukkit.getOnlinePlayers()) {
+      if (all != null) {
+        all.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(p);
+        p.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(all);
       }
     }
-    p.setDisplayName((nicked ? manager.getPrefix(Group.PREMIUM) : manager.getPrefix(group)) + p.getName());
-    p.setPlayerListName((nicked ? manager.getPrefix(Group.PREMIUM) : manager.getPrefix(group)) + p.getName());
   }
 
 

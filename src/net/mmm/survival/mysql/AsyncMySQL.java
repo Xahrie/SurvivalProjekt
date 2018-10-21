@@ -188,17 +188,17 @@ public class AsyncMySQL {
   }
 
   public Map<UUID, Group> getGroups() {
-    Map<UUID, Group> groups = new HashMap<>();
-    Connection connection = getMySQL().connection;
+    final Map<UUID, Group> groups = new HashMap<>();
+    final Connection connection = getMySQL().connection;
 
-    try (Statement statement = connection.createStatement();
-         ResultSet resultSet = statement.executeQuery("SELECT UUID, `Group` FROM BungeeGroupManager")) {
+    try (final Statement statement = connection.createStatement();
+         final ResultSet resultSet = statement.executeQuery("SELECT UUID, `Group` FROM BungeeGroupManager")) {
       while (resultSet.next()) {
-        UUID uuid = UUID.fromString(resultSet.getString(1));
-        Group group = Group.valueOf(resultSet.getString(2));
+        final UUID uuid = UUID.fromString(resultSet.getString(1));
+        final Group group = Group.valueOf(resultSet.getString(2));
         groups.put(uuid, group);
       }
-    } catch (SQLException e) {
+    } catch (final SQLException e) {
       e.printStackTrace();
     }
     return groups;
