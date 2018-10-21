@@ -55,7 +55,10 @@ public final class Scoreboards {
   }
 
   private static Objective getObjective(final Scoreboard scoreboard) {
-    return scoreboard.getObjective("aaa") != null ? scoreboard.getObjective("aaa") : scoreboard.registerNewObjective("aaa", "bbb");
+    if (scoreboard.getObjective("aaa") != null) {
+      return scoreboard.getObjective("aaa");
+    }
+    return scoreboard.registerNewObjective("aaa", "bbb");
   }
 
   private static void evaluateObjectives(final Player scoreboardOwner, final Objective objective) {
