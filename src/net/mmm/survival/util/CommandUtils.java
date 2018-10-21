@@ -30,16 +30,29 @@ public final class CommandUtils {
   }
 
   /**
-   * besitzt der Spieler die noetigen Gruppen oder ist Op
+   * besitzt der Spieler die noetigen Gruppen oder ist Op (mit Message)
    *
    * @param player Player
    * @return boolean
    */
   public static boolean isOperator(final Player player) {
+    return isOperator(player, true);
+  }
+
+  /**
+   * besitzt der Spieler die noetigen Gruppen oder ist Op
+   *
+   * @param player Player
+   * @param showMessage Nachricht anzeigen
+   * @return boolean
+   */
+  public static boolean isOperator(final Player player, final boolean showMessage) {
     final BungeeGroupManager groupManager = BungeeGroupManager.getGroupManager();
     final Group group = groupManager.getGroup(player);
     if (!player.isOp() && !group.equals(Group.OWNER) && !group.equals(Group.MANAGER) && !group.equals(Group.ADMIN)) {
-      player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
+      if (showMessage) {
+        player.sendMessage(Messages.NOT_ENOUGH_PERMISSIONS);
+      }
       return false;
     }
 

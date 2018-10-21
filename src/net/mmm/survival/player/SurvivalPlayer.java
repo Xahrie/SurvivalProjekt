@@ -25,7 +25,7 @@ public class SurvivalPlayer {
   private final PlayerStats stats;
   private final LevelPlayer levelPlayer;
   private final List<SurvivalLicence> licences;
-  private boolean tamed, teleport, zonenedit, zonensearch, scoreboard;
+  private boolean tamed, teleport, zonenedit, zonensearch, existsScoreboard;
   //<editor-fold desc="mysql parameter">
   private double money;
   private int maxzone;
@@ -197,12 +197,12 @@ public class SurvivalPlayer {
     this.votes = votes;
   }
 
-  boolean isScoreboard() {
-    return scoreboard;
+  boolean isExistsScoreboard() {
+    return existsScoreboard;
   }
 
-  public void setScoreboard(final boolean scoreboard) {
-    this.scoreboard = scoreboard;
+  public void setExistsScoreboard(final boolean existsScoreboard) {
+    this.existsScoreboard = existsScoreboard;
   }
 
   public boolean isTamed() {

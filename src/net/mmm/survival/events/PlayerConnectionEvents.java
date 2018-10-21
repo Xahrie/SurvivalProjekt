@@ -11,6 +11,7 @@ import net.mmm.survival.SurvivalData;
 import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.Complaint;
 import net.mmm.survival.player.LevelPlayer;
+import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.CommandUtils;
@@ -49,7 +50,7 @@ public class PlayerConnectionEvents implements Listener {
     evaluateFirstJoin(joinedPlayer, event);
 
     //Scoreboard initialisieren
-//    Scoreboards.setScoreboard(event.getPlayer());
+    Scoreboards.setScoreboards(event.getPlayer());
 
     //Vote-Plugin
     evaluateVotes(joinedPlayer);
@@ -83,7 +84,7 @@ public class PlayerConnectionEvents implements Listener {
     }
 
     //Generell offene Beschwerden
-    if (CommandUtils.isOperator(joinedPlayer)) {
+    if (CommandUtils.isOperator(joinedPlayer, false)) {
       joinedPlayer.sendMessage(Messages.PREFIX + "Offene Beschwerden (Details koennen uber /complain list <Spieler> aufgelistet werden):");
       boolean bFound = false;
       for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
@@ -143,7 +144,7 @@ public class PlayerConnectionEvents implements Listener {
   public void onQuit(final PlayerQuitEvent event) {
     final SurvivalPlayer quited = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     quited.setZonensearch(false);
-    quited.setScoreboard(false);
+    quited.setExistsScoreboard(false);
     event.setQuitMessage(null);
   }
 

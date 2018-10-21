@@ -31,7 +31,6 @@ import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.mysql.AsyncMySQL;
 import net.mmm.survival.player.Scoreboards;
-import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.util.Messages;
 import org.bukkit.Bukkit;
@@ -150,12 +149,6 @@ public class Survival extends JavaPlugin {
       if (counter.get() % 2 == 0) {
         for (final Player player : Bukkit.getOnlinePlayers()) {
           Scoreboards.setScoreboards(player);
-/*          for (UUID uuid : SurvivalData.getInstance().getAsyncMySQL().getGroups().keySet()) {
-            System.out.println(SurvivalData.getInstance().getAsyncMySQL().getGroups().get(uuid) + " / " + uuid);
-          }*/
-          System.out.println("Gruppe: " + player.getName() + " / " + SurvivalData.getInstance().getAsyncMySQL().getGroups().get(player.getUniqueId()));
-          System.out.println("name: " + player.getName() + " money: " + SurvivalPlayer.findSurvivalPlayer(player).getMoney());
-
         }
       }
       if (counter.get() % 60 == 0) {

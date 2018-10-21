@@ -12,7 +12,6 @@ In Arbeit:
   SrAkzeptiert   Levelsystem, Skillsystem
 
   //TODO (Abgie) 21.10.2018: Zone Member add keine Rueckmeldung
-  //TODO (Abgie) 21.10.2018: Geld wird zurueckgesetzt ??
 
 Zu Programmieren:
   TODO Am Anfang ein Hotelzimmer oder was ähnliches (Alice & Abgie)

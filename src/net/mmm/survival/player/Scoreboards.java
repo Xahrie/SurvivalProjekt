@@ -15,109 +15,50 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 
 /**
  * Scoreboards setzt die Scoreboards der Spieler
  */
 public final class Scoreboards {
-  private static final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-
-
-  public static void setScoreboards(Player p) {
-    if (SurvivalPlayer.findSurvivalPlayer(p).isScoreboard()) {
-
-      Objective obj = p.getScoreboard().getObjective("aaa") != null ? p.getScoreboard().getObjective("aaa") : p.getScoreboard().registerNewObjective("aaa", "bbb");
-      for (String score : obj.getScoreboard().getEntries()) {
-        obj.getScoreboard().resetScores(score);
-      }
-      obj.getScore("Geld: " + SurvivalPlayer.findSurvivalPlayer(p).getMoney()).setScore(1);
-
-
+  public static void setScoreboards(final Player player) {
+    if (SurvivalPlayer.findSurvivalPlayer(player).isExistsScoreboard()) {
+      updateScoreboard(player);
     } else {
-      Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-
-      Objective obj = sb.getObjective("aaa") != null ? sb.getObjective("aaa") : sb.registerNewObjective("aaa", "bbb");
-
-      obj.setDisplayName("test");
-      obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-      BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-
-      for (Group group : manager.tablist.keySet()) {
-        sb.registerNewTeam("" + manager.tablist.get(group)).setPrefix(BungeeGroupManager.getGroupManager().getKurzel(group));
-      }
-
-      obj.getScore("Geld: " + SurvivalPlayer.findSurvivalPlayer(p).getMoney()).setScore(1);
-
-      p.setScoreboard(sb);
-      setPrefix(p, BungeeGroupManager.getGroupManager().getGroup(p));
-      SurvivalPlayer.findSurvivalPlayer(p).setScoreboard(true);
+      createScoreboard(player);
     }
+    setPrefix(player);
   }
 
-  private static void setPrefix(final Player p, final Group group) {
-    final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-    p.setDisplayName(manager.getPrefix(group) + p.getName());
-    p.setPlayerListName(manager.getPrefix(group) + p.getName());
-
-    for (final Player all : Bukkit.getOnlinePlayers()) {
-      if (all != null) {
-        all.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(p);
-        p.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(all);
-      }
-    }
-  }
-
-
-  /**
-   * Setzt fuer einen spezifischen Spieler {@code p} das Scoreboard um den Rang anzeigen zu lassen
-   *
-   * @param scoreboardOwner Owner des Scoreboards
-   */
-  public static void setScoreboard(final Player scoreboardOwner) {
-    final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(scoreboardOwner);
-
-    if (survivalPlayer.isScoreboard()) {
-      createScoreboard(scoreboardOwner, survivalPlayer);
-    } else {
-      updateScoreboard(scoreboardOwner);
-    }
-  }
-
-  private static void createScoreboard(final Player scoreboardOwner, final SurvivalPlayer survivalPlayer) {
-    final ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
-    final Scoreboard scoreboard = scoreboardManager.getNewScoreboard();
-
-    for (final Group group : manager.tablist.keySet()) {
-      final String prefix = manager.getKurzel(group);
-      scoreboard.registerNewTeam(manager.tablist.get(group)).setPrefix(prefix);
-    }
-
-    scoreboardOwner.setScoreboard(scoreboard);
-    evaluateObjectives(scoreboardOwner);
-
-    determinePrefix(scoreboardOwner);
-
-    survivalPlayer.setScoreboard(true);
-  }
-
-  private static void updateScoreboard(final Player scoreboardOwner) {
-    final Objective obj = getObjective(scoreboardOwner);
-
-    for (final String score : obj.getScoreboard().getEntries()) {
-      obj.getScoreboard().resetScores(score);
-    }
-
-    evaluateObjectives(scoreboardOwner);
-
-  }
-
-  private static void evaluateObjectives(final Player scoreboardOwner) {
-    final Objective objective = getObjective(scoreboardOwner);
-    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+  private static void createScoreboard(final Player player) {
+    final Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+    final Objective objective = getObjective(scoreboard);
     objective.setDisplayName("   Survival   ");
+    objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
+    final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
+    for (final Group group : manager.tablist.keySet()) {
+      scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(BungeeGroupManager.getGroupManager().getKurzel(group));
+    }
+
+    player.setScoreboard(scoreboard);
+    evaluateObjectives(player, objective);
+    SurvivalPlayer.findSurvivalPlayer(player).setExistsScoreboard(true);
+  }
+
+  private static void updateScoreboard(final Player player) {
+    final Scoreboard scoreboard = player.getScoreboard();
+    final Objective objective = getObjective(scoreboard);
+    for (final String score : objective.getScoreboard().getEntries()) {
+      objective.getScoreboard().resetScores(score);
+    }
+    evaluateObjectives(player, objective);
+  }
+
+  private static Objective getObjective(final Scoreboard scoreboard) {
+    return scoreboard.getObjective("aaa") != null ? scoreboard.getObjective("aaa") : scoreboard.registerNewObjective("aaa", "bbb");
+  }
+
+  private static void evaluateObjectives(final Player scoreboardOwner, final Objective objective) {
     final World ownerWorld = scoreboardOwner.getWorld();
     final SurvivalWorld world = SurvivalWorld.getWorld(ownerWorld.getName());
 
@@ -138,11 +79,6 @@ public final class Scoreboards {
     scorePlatzierung.setScore(1);
   }
 
-  private static Objective getObjective(final Player scoreboardOwner) {
-    final String sKey = scoreboardOwner.getEntityId() + "_aaa";
-    return scoreboardOwner.getScoreboard().getObjective(sKey) != null ? scoreboardOwner.getScoreboard().getObjective(sKey) : scoreboardOwner.getScoreboard().registerNewObjective(sKey, "bbb");
-  }
-
   private static int getPlatzierung(final SurvivalPlayer survivalPlayer) {
     //Players absteigend sortiert nach Anzahl Geld
     final List<SurvivalPlayer> playersSorted = new ArrayList<>(SurvivalData.getInstance().getPlayers().values());
@@ -158,18 +94,17 @@ public final class Scoreboards {
     return platzierung;
   }
 
-  @SuppressWarnings("deprecation")
-  private static void determinePrefix(final Player owner) {
-    for (final Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-      final Scoreboard onlinePlayerScoreboard = onlinePlayer.getScoreboard();
-      final String onlinePlayerTeam = manager.tablist.get(manager.getGroup(owner.getUniqueId()));
-      onlinePlayerScoreboard.getTeam(onlinePlayerTeam).addPlayer(owner);
+  private static void setPrefix(final Player p) {
+    final Group group = BungeeGroupManager.getGroupManager().getGroup(p);
+    final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
+    p.setDisplayName(manager.getPrefix(group) + p.getName());
+    p.setPlayerListName(manager.getPrefix(group) + p.getName());
 
-      final Scoreboard ownerScoreboard = owner.getScoreboard();
-      final String ownerTeam = manager.tablist.get(manager.getGroup(onlinePlayer.getUniqueId()));
-      ownerScoreboard.getTeam(ownerTeam).addPlayer(onlinePlayer);
+    for (final Player all : Bukkit.getOnlinePlayers()) {
+      if (all != null) {
+        all.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(p);
+        p.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(all);
+      }
     }
-    owner.setDisplayName(manager.getPrefix(owner) + owner.getName());
-    owner.setPlayerListName(manager.getPrefix(owner) + owner.getName());
   }
 }
