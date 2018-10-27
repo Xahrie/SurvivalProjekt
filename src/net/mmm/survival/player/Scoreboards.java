@@ -3,8 +3,8 @@ package net.mmm.survival.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+import de.pas123.bungeegroupmanager.groups.Group;
+import de.pas123.bungeegroupmanager.spigot.BungeeGroupManager;
 import net.mmm.survival.SurvivalData;
 import net.mmm.survival.regions.SurvivalWorld;
 import net.mmm.survival.util.Konst;
@@ -34,10 +34,8 @@ public final class Scoreboards {
     final Objective objective = getObjective(scoreboard);
     objective.setDisplayName("   Survival   ");
     objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-    final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-    for (final Group group : manager.tablist.keySet()) {
-      scoreboard.registerNewTeam("" + manager.tablist.get(group)).setPrefix(BungeeGroupManager.getGroupManager().getKurzel(group));
+    for (final Group group : Group.values()) {
+      scoreboard.registerNewTeam(group.getTabId()).setPrefix(group.getColor());
     }
 
     player.setScoreboard(scoreboard);
@@ -58,7 +56,7 @@ public final class Scoreboards {
     if (scoreboard.getObjective("aaa") != null) {
       return scoreboard.getObjective("aaa");
     }
-    return scoreboard.registerNewObjective("aaa", "bbb");
+    return scoreboard.registerNewObjective("aaa", "bbb", "Stats");
   }
 
   private static void evaluateObjectives(final Player scoreboardOwner, final Objective objective) {
@@ -98,15 +96,16 @@ public final class Scoreboards {
   }
 
   private static void setPrefix(final Player p) {
-    final Group group = BungeeGroupManager.getGroupManager().getGroup(p);
     final BungeeGroupManager manager = BungeeGroupManager.getGroupManager();
-    p.setDisplayName(manager.getPrefix(group) + p.getName());
-    p.setPlayerListName(manager.getPrefix(group) + p.getName());
+    final Group group = manager.getGroup(p);
+
+    p.setDisplayName(group.getPrefix() + p.getName());
+    p.setPlayerListName(group.getPrefix() + p.getName());
 
     for (final Player all : Bukkit.getOnlinePlayers()) {
       if (all != null) {
-        all.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(p);
-        p.getScoreboard().getTeam(manager.tablist.get(group)).addPlayer(all);
+        all.getScoreboard().getTeam(group.getTabId()).addEntry(p.getName());
+        p.getScoreboard().getTeam(group.getTabId()).addEntry(p.getName());
       }
     }
   }

@@ -126,7 +126,7 @@ public class AsyncMySQL {
 
     try (final Statement statement = getMySQL().connection.createStatement();
          final ResultSet resultSet = statement
-             .executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM SurvivalPlayerComplaints")) {
+             .executeQuery("SELECT UUID, ID, REASON, OPERATOR, DATE FROM `SurvivalPlayerComplaints`")) {
       while (resultSet.next()) {
         final UUID uuidComplaint = UUID.fromString(resultSet.getString(1));
         final int id = resultSet.getInt(2);
@@ -458,7 +458,7 @@ public class AsyncMySQL {
     private void update(final String statement) {
       executor.execute(() -> sql.queryUpdate(statement));
     }
-
   }
+
 
 }

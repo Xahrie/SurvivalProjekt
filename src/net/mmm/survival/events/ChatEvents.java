@@ -1,6 +1,7 @@
 package net.mmm.survival.events;
 
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+import de.pas123.bungeegroupmanager.groups.Group;
+import de.pas123.bungeegroupmanager.spigot.BungeeGroupManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,7 +25,8 @@ public class ChatEvents implements Listener {
 
     for (final Player all : Bukkit.getOnlinePlayers()) {
       final BungeeGroupManager groupManager = BungeeGroupManager.getGroupManager();
-      final String prefix = groupManager.getPrefix(chatter);
+      final Group group = groupManager.getGroup(all);
+      final String prefix = group.getPrefix();
       all.sendMessage(prefix + chatter.getName() + " §7» " + event.getMessage());
     }
   }

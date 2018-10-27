@@ -1,7 +1,7 @@
 package net.mmm.survival.util;
 
-import de.PAS123.Group.Group.Group;
-import de.PAS123.Group.Main.Spigot.BungeeGroupManager;
+import de.pas123.bungeegroupmanager.groups.Group;
+import de.pas123.bungeegroupmanager.spigot.BungeeGroupManager;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
 import org.bukkit.World;
