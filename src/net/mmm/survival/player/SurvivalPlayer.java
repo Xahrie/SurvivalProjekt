@@ -25,7 +25,7 @@ public class SurvivalPlayer {
   private final PlayerStats stats;
   private final LevelPlayer levelPlayer;
   private final List<SurvivalLicence> licences;
-  private boolean tamed, teleport, zonenedit, zonensearch, existsScoreboard;
+  private boolean tamed, teleport, zonenedit, zonensearch, scoreboard;
   //<editor-fold desc="mysql parameter">
   private double money;
   private int maxzone;
@@ -54,7 +54,6 @@ public class SurvivalPlayer {
     this.votes = votes;
     this.maxzone = maxzone;
     this.home = home;
-
     this.levelPlayer = levelPlayer;
 
     final Date lastComplaint = new Date(); // Setze Datum der letzten Beschwerde
@@ -71,14 +70,6 @@ public class SurvivalPlayer {
    */
   public static SurvivalPlayer findSurvivalPlayer(final Player player) {
     return findSurvivalPlayer(player, player.getName());
-  }
-
-  public static SurvivalPlayer findSurvivalPlayer(final UUID uuid) {
-    final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
-    if (players.containsKey(uuid)) {
-      return players.get(uuid);
-    }
-    return null;
   }
 
   /**
@@ -109,34 +100,15 @@ public class SurvivalPlayer {
     return null;
   }
 
-  public Player getPlayer() {
-    return UUIDUtils.getPlayer(this.uuid);
-  }
-
-  public void addComplaint(final Complaint complaint) {
-    complaints.add(complaint);
-    outputComplaint(complaint, getPlayer());
-  }
-
-  public void addOrTakeMoney(final double amount) {
-    money += amount;
-  }
-
-  public void outputComplaint(final Complaint complaint, final Player player) {
+  public static SurvivalPlayer findSurvivalPlayer(final UUID uuid) {
     final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
-    final Player complaintExecutor = players.get(complaint.getExecutor()).getPlayer();
-    if (player != null) { //online ?
-      if (getUuid().equals(player.getUniqueId())) {
-        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
-            "§c hat sich am §e" + complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
-      } else {
-        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
-            "§c hat sich am §e" + complaint.outputDate() + "§c über " + UUIDUtils.getName(getUuid()) + " beschwert: §e" + complaint.getReason());
-      }
+    if (players.containsKey(uuid)) {
+      return players.get(uuid);
     }
+    return null;
   }
-  //<editor-fold desc="getter and setter">
 
+  //<editor-fold desc="getter and setter">
   public List<Complaint> getComplaints() {
     return complaints;
   }
@@ -151,6 +123,10 @@ public class SurvivalPlayer {
 
   public Date getLastComplaint() {
     return lastComplaint;
+  }
+
+  public LevelPlayer getLevelPlayer() {
+    return this.levelPlayer;
   }
 
   public List<SurvivalLicence> getLicences() {
@@ -169,24 +145,16 @@ public class SurvivalPlayer {
     return money;
   }
 
+  public UUID getUuid() {
+    return uuid;
+  }
+
   public void setMoney(final double money) {
     this.money = money;
   }
 
   public PlayerStats getStats() {
     return stats;
-  }
-
-  public UUID getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(final UUID uuid) {
-    this.uuid = uuid;
-  }
-
-  public LevelPlayer getLevelPlayer() {
-    return this.levelPlayer;
   }
 
   public short getVotes() {
@@ -197,12 +165,12 @@ public class SurvivalPlayer {
     this.votes = votes;
   }
 
-  boolean isExistsScoreboard() {
-    return existsScoreboard;
+  boolean isScoreboard() {
+    return scoreboard;
   }
 
-  public void setExistsScoreboard(final boolean existsScoreboard) {
-    this.existsScoreboard = existsScoreboard;
+  public void setScoreboard(final boolean scoreboard) {
+    this.scoreboard = scoreboard;
   }
 
   public boolean isTamed() {
@@ -221,6 +189,10 @@ public class SurvivalPlayer {
     this.teleport = teleport;
   }
 
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
+  }
+
   public boolean isZonenedit() {
     return zonenedit;
   }
@@ -236,10 +208,36 @@ public class SurvivalPlayer {
   public void setZonensearch(final boolean zonensearch) {
     this.zonensearch = zonensearch;
   }
+  //</editor-fold>
+
+  public void addComplaint(final Complaint complaint) {
+    complaints.add(complaint);
+    outputComplaint(complaint, getPlayer());
+  }
+
+  public void outputComplaint(final Complaint complaint, final Player player) {
+    final Map<UUID, SurvivalPlayer> players = SurvivalData.getInstance().getPlayers();
+    final Player complaintExecutor = players.get(complaint.getExecutor()).getPlayer();
+    if (player != null) { //online ?
+      if (getUuid().equals(player.getUniqueId())) {
+        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
+            "§c hat sich am §e" + complaint.outputDate() + "§c über dich beschwert: §e" + complaint.getReason());
+      } else {
+        player.sendMessage(Messages.PREFIX + "§c Der Spieler §e" + complaintExecutor.getDisplayName() +
+            "§c hat sich am §e" + complaint.outputDate() + "§c über " + UUIDUtils.getName(getUuid()) + " beschwert: §e" + complaint.getReason());
+      }
+    }
+  }
+
+  public Player getPlayer() {
+    return UUIDUtils.getPlayer(this.uuid);
+  }
+
+  public void addOrTakeMoney(final double amount) {
+    money += amount;
+  }
 
   public boolean hasLicence(final SurvivalLicence licence) {
     return licences.contains(licence);
   }
-
-  //</editor-fold>
 }

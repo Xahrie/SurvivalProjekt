@@ -28,29 +28,6 @@ public class Logger implements Exitable {
         File.separator + "log_" + new SimpleDateFormat("YYYY_MM_dd").format(new Date()) + ".log"));
   }
 
-  @Override
-  public void exit() {
-    this.logManager.exit();
-  }
-
-  private void toLog(final Level level, final String msg) {
-    final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date()) + " " + name + "\n" + msg;
-    logManager.log(logMessage);
-    if (level.equals(Level.SEVERE)) {
-      System.err.println(logMessage);
-    } else {
-      System.out.println(logMessage);
-    }
-  }
-
-  private void severe(final String msg) {
-    toLog(Level.SEVERE, "SEVERE: " + msg);
-  }
-
-  private void warning(final String msg) {
-    toLog(Level.WARNING, "WARN: " + msg);
-  }
-
   private void createLogManager(final File logFile) {
     final File logDirectory = new File("plugins" + File.separator + "Survival" + File.separator + "log");
 
@@ -80,13 +57,36 @@ public class Logger implements Exitable {
     }
   }
 
+  @Override
+  public void exit() {
+    this.logManager.exit();
+  }
+
   public void warn(final Throwable t) {
     final String msg = t.toString();
     warning(msg);
   }
 
+  private void warning(final String msg) {
+    toLog(Level.WARNING, "WARN: " + msg);
+  }
+
+  private void toLog(final Level level, final String msg) {
+    final String logMessage = new SimpleDateFormat("dd.MM.YYYY HH:mm:ss:SSS").format(new Date()) + " " + name + "\n" + msg;
+    logManager.log(logMessage);
+    if (level.equals(Level.SEVERE)) {
+      System.err.println(logMessage);
+    } else {
+      System.out.println(logMessage);
+    }
+  }
+
   public void error(final String message) {
     severe(message);
+  }
+
+  private void severe(final String msg) {
+    toLog(Level.SEVERE, "SEVERE: " + msg);
   }
 
   public void error(final String message, final Throwable t) {
@@ -98,6 +98,4 @@ public class Logger implements Exitable {
     final String msg = t.toString();
     severe(msg);
   }
-  //</editor-fold>
-
 }

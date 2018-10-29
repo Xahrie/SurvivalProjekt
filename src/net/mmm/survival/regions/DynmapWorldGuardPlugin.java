@@ -573,6 +573,15 @@ public class DynmapWorldGuardPlugin {
     private final String fillcolor, strokecolor, unownedstrokecolor;
     private String label;
 
+    AreaStyle(final FileConfiguration cfg) {
+      strokecolor = cfg.getString("regionstyle.strokeColor", "#FF0000");
+      unownedstrokecolor = cfg.getString("regionstyle.unownedStrokeColor", "#00FF00");
+      strokeopacity = cfg.getDouble("regionstyle.strokeOpacity", 0.8);
+      strokeweight = cfg.getInt("regionstyle.strokeWeight", 3);
+      fillcolor = cfg.getString("regionstyle.fillColor", "#FF0000");
+      fillopacity = cfg.getDouble("regionstyle.fillOpacity", 0.35);
+    }
+
     AreaStyle(final FileConfiguration cfg, final String path, final DynmapWorldGuardPlugin.AreaStyle def) {
       strokecolor = cfg.getString(path + ".strokeColor", def.getStrokecolor());
       unownedstrokecolor = cfg.getString(path + ".unownedStrokeColor", def.getUnownedstrokecolor());
@@ -583,17 +592,12 @@ public class DynmapWorldGuardPlugin {
       setLabel(cfg.getString(path + ".label", null));
     }
 
-    AreaStyle(final FileConfiguration cfg) {
-      strokecolor = cfg.getString("regionstyle.strokeColor", "#FF0000");
-      unownedstrokecolor = cfg.getString("regionstyle.unownedStrokeColor", "#00FF00");
-      strokeopacity = cfg.getDouble("regionstyle.strokeOpacity", 0.8);
-      strokeweight = cfg.getInt("regionstyle.strokeWeight", 3);
-      fillcolor = cfg.getString("regionstyle.fillColor", "#FF0000");
-      fillopacity = cfg.getDouble("regionstyle.fillOpacity", 0.35);
+    private String getStrokecolor() {
+      return strokecolor;
     }
 
-    private double getFillopacity() {
-      return fillopacity;
+    private String getUnownedstrokecolor() {
+      return unownedstrokecolor;
     }
 
     private double getStrokeopacity() {
@@ -608,12 +612,8 @@ public class DynmapWorldGuardPlugin {
       return fillcolor;
     }
 
-    private String getStrokecolor() {
-      return strokecolor;
-    }
-
-    private String getUnownedstrokecolor() {
-      return unownedstrokecolor;
+    private double getFillopacity() {
+      return fillopacity;
     }
 
     private String getLabel() {

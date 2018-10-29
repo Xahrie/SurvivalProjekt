@@ -34,6 +34,12 @@ public class FarmingEvents implements Listener {
     saveStatistic(handler, Type.ONLINE_TIME);
   }
 
+  private void saveStatistic(final SurvivalPlayer teleported, final Type walkLengthCm) {
+    final PlayerStats teleportedStats = teleported.getStats();
+    final Statistic teleportedStaticstic = teleportedStats.getStatistic(walkLengthCm);
+    teleportedStaticstic.update(teleported); // Speichere Statistik
+  }
+
   /**
    * @param event PlayerTeleportEvent => Wemm ein Spieler teleportiert wird
    * @see org.bukkit.event.player.PlayerTeleportEvent
@@ -49,11 +55,5 @@ public class FarmingEvents implements Listener {
     if (startWorld.equals(SurvivalWorld.FARMWELT.get()) && !destinationWorld.equals(SurvivalWorld.FARMWELT.get())) {
       saveStatistic(teleported, Type.WALK_LENGTH_CM);
     }
-  }
-
-  private void saveStatistic(final SurvivalPlayer teleported, final Type walkLengthCm) {
-    final PlayerStats teleportedStats = teleported.getStats();
-    final Statistic teleportedStaticstic = teleportedStats.getStatistic(walkLengthCm);
-    teleportedStaticstic.update(teleported); // Speichere Statistik
   }
 }

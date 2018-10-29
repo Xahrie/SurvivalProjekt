@@ -30,6 +30,7 @@ import net.mmm.survival.events.LocationChangeEvents;
 import net.mmm.survival.events.PlayerConnectionEvents;
 import net.mmm.survival.farming.StatsManager;
 import net.mmm.survival.mysql.AsyncMySQL;
+import net.mmm.survival.mysql.MySQL;
 import net.mmm.survival.player.Scoreboards;
 import net.mmm.survival.regions.DynmapWorldGuardPlugin;
 import net.mmm.survival.util.Messages;
@@ -52,48 +53,11 @@ public class Survival extends JavaPlugin {
   private static Survival server;
 
   /**
-   * @return Instanz des Plugins
-   */
-  public static Survival getInstance() {
-    return server;
-  }
-
-  /**
    * Wird bei der Aktivierung des Servers durchgefuehrt
    */
   public void onEnable() {
     final SurvivalData survivalData = createInstanceAndData();
     setupPlugin(survivalData);
-  }
-
-  /**
-   * Wird bei der Deaktivierung des Servers durchgefuehrt
-   */
-  public void onDisable() {
-    for (final Player player : Bukkit.getOnlinePlayers()) {
-      player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet.");
-    }
-
-    //Alle Werte in Datenbank speichern
-    save();
-
-    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
-    final AsyncMySQL.MySQL mySQL = asyncMySQL.getMySQL();
-    mySQL.closeConnection(); /* Datenbankverbindung schliessen */
-    final DynmapWorldGuardPlugin dynmap = SurvivalData.getInstance().getDynmap();
-    if (dynmap != null) {
-      dynmap.onDisable(); /* Disable von Dynmap */
-    }
-  }
-
-  public void save() {
-    // Statistiken der Spieler speichern bzw. in Geld umwandeln
-    StatsManager.saveStats();
-
-    //Spielerdaten speichern
-    System.out.println("Saving to Database");
-    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
-    asyncMySQL.storePlayers();
   }
 
   private SurvivalData createInstanceAndData() {
@@ -103,7 +67,7 @@ public class Survival extends JavaPlugin {
 
   private void setupPlugin(final SurvivalData survivalData) {
     final AsyncMySQL asyncMySQL = survivalData.getAsyncMySQL();
-    final AsyncMySQL.MySQL mySQL = asyncMySQL.getMySQL();
+    final MySQL mySQL = asyncMySQL.getMySQL();
     mySQL.createTables(); // Tabellen erzeugen
 
     registerEvents();
@@ -163,5 +127,42 @@ public class Survival extends JavaPlugin {
       }
       counter.getAndIncrement();
     }, 20L, 20L);
+  }
+
+  /**
+   * @return Instanz des Plugins
+   */
+  public static Survival getInstance() {
+    return server;
+  }
+
+  public void save() {
+    // Statistiken der Spieler speichern bzw. in Geld umwandeln
+    StatsManager.saveStats();
+
+    //Spielerdaten speichern
+    System.out.println("Saving to Database");
+    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
+    asyncMySQL.storePlayers();
+  }
+
+  /**
+   * Wird bei der Deaktivierung des Servers durchgefuehrt
+   */
+  public void onDisable() {
+    for (final Player player : Bukkit.getOnlinePlayers()) {
+      player.kickPlayer(Messages.PREFIX + "Der Server wird neugestartet.");
+    }
+
+    //Alle Werte in Datenbank speichern
+    save();
+
+    final AsyncMySQL asyncMySQL = SurvivalData.getInstance().getAsyncMySQL();
+    final MySQL mySQL = asyncMySQL.getMySQL();
+    mySQL.closeConnection(); /* Datenbankverbindung schliessen */
+    final DynmapWorldGuardPlugin dynmap = SurvivalData.getInstance().getDynmap();
+    if (dynmap != null) {
+      dynmap.onDisable(); /* Disable von Dynmap */
+    }
   }
 }

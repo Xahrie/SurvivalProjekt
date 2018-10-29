@@ -42,11 +42,10 @@ public class PlayerConnectionEvents implements Listener {
    */
   @EventHandler
   public void onJoin(final PlayerJoinEvent event) {
-    final Player player = event.getPlayer();
-    final SurvivalPlayer joinedPlayer = updatePlayer(player);
-
     event.setJoinMessage(null);
 
+    final Player player = event.getPlayer();
+    final SurvivalPlayer joinedPlayer = updatePlayer(player);
     evaluateFirstJoin(joinedPlayer, event);
 
     //Scoreboard initialisieren
@@ -72,31 +71,18 @@ public class PlayerConnectionEvents implements Listener {
     return SurvivalPlayer.findSurvivalPlayer(player);
   }
 
-  private void evaluateComplaints(final SurvivalPlayer joined) {
-    final Player joinedPlayer = joined.getPlayer();
+  private void evaluateFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
+    if (joined == null) { // First-Join
+      final Player eventPlayer = event.getPlayer();
+      final World world = SurvivalWorld.BAUWELT.get();
+      joined = new SurvivalPlayer(eventPlayer.getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
+          (short) 0, Konst.ZONE_SIZE_DEFAULT, world.getSpawnLocation(), new LevelPlayer());
 
-    //Offene Beschwerden ueber den eingeloggten Player
-    if (!joined.getComplaints().isEmpty()) {
-      joinedPlayer.sendMessage(Messages.COMPLAINT_INFO);
-      for (final Complaint complaint : joined.getComplaints()) {
-        joined.outputComplaint(complaint, joinedPlayer);
-      }
-    }
+      final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
+      mySQL.createPlayer(joined);
 
-    //Generell offene Beschwerden
-    if (CommandUtils.isOperator(joinedPlayer, false)) {
-      joinedPlayer.sendMessage(Messages.PREFIX + "Offene Beschwerden (Details koennen uber /complain list <Spieler> aufgelistet werden):");
-      boolean bFound = false;
-      for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
-        if (!survivalPlayer.getComplaints().isEmpty()) {
-          final int amoutComplaints = survivalPlayer.getComplaints().size();
-          joinedPlayer.sendMessage(Messages.PREFIX + "Spieler " + UUIDUtils.getName(survivalPlayer.getUuid()) + ": " + amoutComplaints);
-          bFound = true;
-        }
-      }
-      if (!bFound) {
-        joinedPlayer.sendMessage(Messages.PREFIX + "Keine offenen Beschwerden");
-      }
+      final Map<UUID, SurvivalPlayer> survivalPlayers = SurvivalData.getInstance().getPlayers();
+      survivalPlayers.put(joined.getUuid(), joined);
     }
   }
 
@@ -119,18 +105,31 @@ public class PlayerConnectionEvents implements Listener {
     }
   }
 
-  private void evaluateFirstJoin(SurvivalPlayer joined, final PlayerJoinEvent event) {
-    if (joined == null) { // First-Join
-      final Player eventPlayer = event.getPlayer();
-      final World world = SurvivalWorld.BAUWELT.get();
-      joined = new SurvivalPlayer(eventPlayer.getUniqueId(), 0, new ArrayList<>(), new ArrayList<>(),
-          (short) 0, Konst.ZONE_SIZE_DEFAULT, world.getSpawnLocation(), new LevelPlayer());
+  private void evaluateComplaints(final SurvivalPlayer joined) {
+    final Player joinedPlayer = joined.getPlayer();
 
-      final AsyncMySQL mySQL = SurvivalData.getInstance().getAsyncMySQL();
-      mySQL.createPlayer(joined);
+    //Offene Beschwerden ueber den eingeloggten Player
+    if (!joined.getComplaints().isEmpty()) {
+      joinedPlayer.sendMessage(Messages.COMPLAINT_INFO);
+      for (final Complaint complaint : joined.getComplaints()) {
+        joined.outputComplaint(complaint, joinedPlayer);
+      }
+    }
 
-      final Map<UUID, SurvivalPlayer> survivalPlayers = SurvivalData.getInstance().getPlayers();
-      survivalPlayers.put(joined.getUuid(), joined);
+    //Generell offene Beschwerden
+    if (CommandUtils.isOperator(joinedPlayer, false)) {
+      joinedPlayer.sendMessage(Messages.PREFIX + "Offene Beschwerden (Details koennen uber /complain list <Spieler> aufgelistet werden):");
+      boolean complaintFound = false;
+      for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {
+        if (!survivalPlayer.getComplaints().isEmpty()) {
+          final int amoutComplaints = survivalPlayer.getComplaints().size();
+          joinedPlayer.sendMessage(Messages.PREFIX + "Spieler " + UUIDUtils.getName(survivalPlayer.getUuid()) + ": " + amoutComplaints);
+          complaintFound = true;
+        }
+      }
+      if (!complaintFound) {
+        joinedPlayer.sendMessage(Messages.PREFIX + "Keine offenen Beschwerden");
+      }
     }
   }
 
@@ -144,7 +143,7 @@ public class PlayerConnectionEvents implements Listener {
   public void onQuit(final PlayerQuitEvent event) {
     final SurvivalPlayer quited = SurvivalPlayer.findSurvivalPlayer(event.getPlayer());
     quited.setZonensearch(false);
-    quited.setExistsScoreboard(false);
+    quited.setScoreboard(false);
     event.setQuitMessage(null);
   }
 

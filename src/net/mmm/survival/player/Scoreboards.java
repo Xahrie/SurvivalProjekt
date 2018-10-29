@@ -21,7 +21,7 @@ import org.bukkit.scoreboard.Scoreboard;
  */
 public final class Scoreboards {
   public static void setScoreboards(final Player player) {
-    if (SurvivalPlayer.findSurvivalPlayer(player).isExistsScoreboard()) {
+    if (SurvivalPlayer.findSurvivalPlayer(player).isScoreboard()) {
       updateScoreboard(player);
     } else {
       createScoreboard(player);
@@ -40,7 +40,7 @@ public final class Scoreboards {
 
     player.setScoreboard(scoreboard);
     evaluateObjectives(player, objective);
-    SurvivalPlayer.findSurvivalPlayer(player).setExistsScoreboard(true);
+    SurvivalPlayer.findSurvivalPlayer(player).setScoreboard(true);
   }
 
   private static void updateScoreboard(final Player player) {

@@ -41,17 +41,17 @@ public class EntityEvents implements Listener {
     }
   }
 
-  private void evaluateSpawnMonster(final CreatureSpawnEvent event) {
-    final CreatureSpawnEvent.SpawnReason spawnReason = event.getSpawnReason();
-    if (!spawnReason.equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
-      event.setCancelled(true);
-    }
-  }
-
   private void evaluateSpawnWither(final CreatureSpawnEvent event) {
     final Location spawnLocation = event.getLocation();
     final World spawnWorld = spawnLocation.getWorld();
     if (!spawnWorld.equals(SurvivalWorld.NETHER.get())) {
+      event.setCancelled(true);
+    }
+  }
+
+  private void evaluateSpawnMonster(final CreatureSpawnEvent event) {
+    final CreatureSpawnEvent.SpawnReason spawnReason = event.getSpawnReason();
+    if (!spawnReason.equals(CreatureSpawnEvent.SpawnReason.SPAWNER)) {
       event.setCancelled(true);
     }
   }

@@ -27,6 +27,18 @@ public class CuboidIterator implements Iterator<Block> {
     this.world = world;
   }
 
+  private int getSizeX() {
+    return Math.abs(maximumPoint.getBlockX() - minimumPoint.getBlockX()) + 1;
+  }
+
+  private int getSizeY() {
+    return Math.abs(maximumPoint.getBlockY() - minimumPoint.getBlockY()) + 1;
+  }
+
+  private int getSizeZ() {
+    return Math.abs(maximumPoint.getBlockZ() - minimumPoint.getBlockZ()) + 1;
+  }
+
   @Override
   public boolean hasNext() {
     return this.x < getSizeX() && this.y < getSizeY() && this.z < getSizeZ();
@@ -44,17 +56,5 @@ public class CuboidIterator implements Iterator<Block> {
       }
     }
     return blockAt;
-  }
-
-  private int getSizeX() {
-    return Math.abs(maximumPoint.getBlockX() - minimumPoint.getBlockX()) + 1;
-  }
-
-  private int getSizeY() {
-    return Math.abs(maximumPoint.getBlockY() - minimumPoint.getBlockY()) + 1;
-  }
-
-  private int getSizeZ() {
-    return Math.abs(maximumPoint.getBlockZ() - minimumPoint.getBlockZ()) + 1;
   }
 }

@@ -17,7 +17,6 @@ import org.bukkit.entity.Player;
  * @since JDK 8
  */
 public final class WalkLength extends Statistic {
-  private int oldLength;
   private final List<org.bukkit.Statistic> statistics = Arrays.asList(org.bukkit.Statistic.WALK_ON_WATER_ONE_CM,
       org.bukkit.Statistic.WALK_ONE_CM, org.bukkit.Statistic.WALK_UNDER_WATER_ONE_CM,
       org.bukkit.Statistic.SPRINT_ONE_CM, org.bukkit.Statistic.CROUCH_ONE_CM,
@@ -25,6 +24,7 @@ public final class WalkLength extends Statistic {
       org.bukkit.Statistic.BOAT_ONE_CM, org.bukkit.Statistic.CLIMB_ONE_CM,
       org.bukkit.Statistic.FLY_ONE_CM, org.bukkit.Statistic.MINECART_ONE_CM,
       org.bukkit.Statistic.PIG_ONE_CM, org.bukkit.Statistic.SWIM_ONE_CM);
+  private int oldLength;
 
   /**
    * Konstruktor

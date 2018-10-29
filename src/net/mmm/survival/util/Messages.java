@@ -6,9 +6,6 @@ import net.mmm.survival.player.SurvivalLicence;
  * Speicherort wesentlicher Nachrichten
  */
 public final class Messages {
-  /*
-  Allgemein
-   */
   public static final String PREFIX = "§8┃ §eSurvival §7» ";
   public static final String HOME_SET = "§8┃ §eSurvival §7» Du hast deinen Home-Punkt gesetzt.";
   public static final String LOG_CREATED = "§8┃ §eSurvival §7» Log successful created.";
@@ -18,27 +15,23 @@ public final class Messages {
   public static final String TAME_DISABLE = "§8┃ §eSurvival §7» Du kannst nun wieder normal mit den Tieren interagieren.";
   public static final String TAME_ENABLE = "§8┃ §eSurvival §7» Klicke auf das Tier, dass du freilassen möchtest.\nZum Abbrechen gebe erneut §e/tame §7ein.";
 
-  /*
-  Beschwerden
-   */
+  //<editor-fold desc="Complaints">
   public static final String COMPLAINT_TOO_FAST = "§8┃ §eSurvival §7» §4┃ Du kannst dich nur alle 30 Minuten über Spieler beschweren.";
   public static final String COMPLAINT_TOO_FAST_PLAYER = "§8┃ §eSurvival §7» §4┃ Du kannst dich über diesen Spieler nur einmal pro Tag beschweren.";
   public static final String COMPLAINT_TOOSHORT = "§8┃ §eSurvival §7» §4┃ Eine Beschwerde muss mindestens 10 Zeichen lang sein.";
   public static final String COMPLAINT_INFO = "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
   public static final String NO_COMPLAINTS = "§8┃ §eSurvival §7» §c┃ Es liegen keine Beschwerden über dich vor.";
+  //</editor-fold>
 
-  /*
-  Economy-System
-   */
+  //<editor-fold desc="Economy">
   static final String NOT_ENOUGH_MONEY = "§8┃ §eSurvival §7» §cDu hast nicht genuegend Geld auf deinem Konto.";
   public static final String USAGE_ECONOMY_COMMAND = "§8┃ §eSurvival §7» §c/eco [<set|reset|add|take>] <Spieler>";
   public static final String USAGE_MONEY_COMMAND = "§8┃ §eSurvival §7» §c/money";
   public static final String USAGE_MONEY_COMMAND_ADMIN = "§8┃ §eSurvival §7» §c/money <Spieler>";
   public static final String USAGE_PAY_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/pay <Spieler> <Amount>";
+  //</editor-fold>
 
-  /*
-  Gamemode
-   */
+  //<editor-fold desc="Gamemode">
   public static final String GAMEMODE_SURVIVAL = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eÜberlebensmodus §7§o(Survival) §7gesetzt.";
   public static final String GAMEMODE_ADVENTURE = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eAbenteuermodus §7§o(Adventure) §7gesetzt.";
   public static final String GAMEMODE_CREATIVE = "§8┃ §eSurvival §7» Du wurdest in den Spielmodus§8: §eKreativmodus §7§o(Creative) §7gesetzt.";
@@ -49,16 +42,37 @@ public final class Messages {
   public static final String TELEPORT_CANCELED = "§8┃ §eSurvival §7» §cDie Teleportation wurde abgebrochen.. §7§o» Du hast dich bewegt.";
   public static final String TELEPORT_DONT_MOVE = "§8┃ §eSurvival §7» Du wirst teleportiert.. §e§o» Bewege dich nicht..";
   public static final String TELEPORT_FARMWELT = "§8┃ §eSurvival §7» §7Du wurdest zum §eFarmwelt-Spawn §7teleportiert.";
+  //</editor-fold>
 
-  /*
-  Vote-System
-   */
+  //<editor-fold desc="Lizenzen">
+  public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
+  public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz für §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
+  public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz für §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
+  public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
+  public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
+  //</editor-fold>
+
+  //<editor-fold desc="Tame">
+  public static final String ENTITY_TAMED_NOTMORE = "§8┃ §eSurvival §7» §7Du hast das Tier freigelassen.";
+  public static final String ENTITY_NOT_TAMED = "§8┃ §eSurvival §7» Du hast dieses Tier nicht gezähmt.";
+  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
+  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
+  //</editor-fold>
+
+  //<editor-fold desc="Teleport">
+  public static final String ALREADY_ON_THIS_WORLD = "§8┃ §eSurvival §7» Du befindest dich bereits in dieser Welt.";
+  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
+  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
+  public static final String TELEPORT_NOT_ALLOWED = "§8┃ §eSurvival §7» §c┃ Du hast die benötigte Lizenz noch nicht erworben.";
+  public static final String USAGE_TELEPORTWORLD_COMMAND = "§8┃ §eSurvival §7» §cBenutze /teleportworld [<bauwelt|end|farmwelt|nether>]";
+  //</editor-fold>
+
+  //<editor-fold desc="Vote">
   public static final String VOTE_PAGES = "§8┃ §eSurvival §7» Unsere Vote-Seiten:";
   public static final String VOTE_REWARD = "§7§oDu kannst diese Münzen beim Markt eintauschen.";
+  //</editor-fold>
 
-  /*
-  Zone-System
-   */
+  //<editor-fold desc="Zone">
   public static final String NO_DUPLICATE_ZONE = "§8┃ §eSurvival §7» Du kannst keine Zone in einer bereits bestehenden Zone erstellen.";
   public static final String SPAWNZONE_FOUND = "§8┃ §eSurvival §7» Es wurde die Zone §eSpawnzone §7gefunden.";
   public static final String USAGE_NAVI_COMMAND = "§8┃ §eSurvival §7» §cBenutze §c/navi <Spieler>";
@@ -72,29 +86,7 @@ public final class Messages {
   public static final String ZONE_SEARCH_ENABLE = "§8┃ §eSurvival §7» Zonen-Suchmodus§a betreten§7, klicke mit einem Stock auf den Boden um nach Zonen zu suchen.";
   public static final String ZONE_SEARCH_DISABLE = "§88┃ §eSurvival §7» Du hast den Zonen-Suchmodus §cverlassen§7.";
   public static final String ZONE_UNGUELTIG = "§8┃ §eSurvival §7» §4┃ Zu dem eingegebenen Spieler wurde keine Zone gefunden.";
-  /*
-  Lizenz System
-   */
-  public static final String ALREADY_BOUGHT_LICENCE = "§8┃ §eSurvival §7» Diese Lizenz hast du bereits erworben.";
-  public static final String LICENCE_BUYING_NETHER = "§8┃ §eSurvival §7» Du hast die §cNETHER §7Lizenz für §e" + SurvivalLicence.NETHERLIZENZ.getPrice() + " §7erfolgreich erworben.";
-  public static final String LICENCE_BUYING_END = "§8┃ §eSurvival §7» Du hast die §5END §7Lizenz für §e " + SurvivalLicence.ENDLIZENZ.getPrice() + " §7erfolgreich erworben.";
-  public static final String LICENCE_SYNTAX = "§8┃ §eSurvival §7» §c/licence buy <NETHER|END>";
-  public static final String LICENCE_SYNTAX_ERROR = "§8┃ §eSurvival §7» §cSyntax Error. Benutze: /licence buy <NETHER|END>";
-  /*
-  Tame
-   */
-  public static final String ENTITY_TAMED_NOTMORE = "§8┃ §eSurvival §7» §7Du hast das Tier freigelassen.";
-  public static final String ENTITY_NOT_TAMED = "§8┃ §eSurvival §7» Du hast dieses Tier nicht gezähmt.";
-  static final String NOT_A_PLAYER = "Du musst ein Spieler sein.";
-  static final String NOT_ENOUGH_PERMISSIONS = "§8┃ §eSurvival §7» §cDu hast nicht die benötigten Rechte dafür.";
-  /*
-  Teleport
-   */
-  public static final String ALREADY_ON_THIS_WORLD = "§8┃ §eSurvival §7» Du befindest dich bereits in dieser Welt.";
-  static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
-  static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
-  public static final String TELEPORT_NOT_ALLOWED = "§8┃ §eSurvival §7» §c┃ Du hast die benötigte Lizenz noch nicht erworben.";
-  public static final String USAGE_TELEPORTWORLD_COMMAND = "§8┃ §eSurvival §7» §cBenutze /teleportworld [<bauwelt|end|farmwelt|nether>]";
+  //</editor-fold>
 
   /**
    * Instanz

@@ -15,30 +15,19 @@ public abstract class Statistic {
   private final Type type;
   private int value;
 
-  /**
-   * Konstruktor
-   *
-   * @param type Typ der Statistik
-   */
   Statistic(final Type type) {
     this.type = type;
   }
 
-  /**
-   * Erhoeht den Wert der Statistik um dem Faktor {@code amount}
-   *
-   * @param amount Faktor der Erhöhung
-   */
-  void incrementValue(final int amount) {
-    this.value += amount;
+  //<editor-fold desc="getter and setter">
+  public Type getType() {
+    return this.type;
   }
 
-  /**
-   * Setzt den Wert der Statistik zurueck
-   */
-  public void resetValue() {
-    setValue();
+  int getValue() {
+    return this.value;
   }
+  //</editor-fold>
 
   /**
    * Setzt die Statistik zurueck und zahlt das Geld auf ein Konto ein
@@ -52,19 +41,15 @@ public abstract class Statistic {
    */
   public abstract float getMoney();
 
-  //<editor-fold desc="getter and setter">
-
-  public Type getType() {
-    return this.type;
+  void incrementValue(final int amount) {
+    this.value += amount;
   }
 
-  int getValue() {
-    return this.value;
-  }
-
-  private void setValue() {
+  /**
+   * Setzt den Wert der Statistik zurueck
+   */
+  public void resetValue() {
     this.value = 0;
   }
 
-  //</editor-fold>
 }

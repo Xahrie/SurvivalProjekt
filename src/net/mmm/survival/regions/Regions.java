@@ -18,24 +18,6 @@ public final class Regions {
   private static final String GLOBAL_REGION = "__global__";   // Rueckgabe, wenn keine Region in Selektion definiert
   private static final Logger logger = new Logger(Regions.class.getName());
 
-  private static void evaluateRegionId(final String id, final boolean allowGlobal) throws CommandException {
-    evaluateValid(id); // Ueberpruefe, ob Name erlaubt ist
-    evaluateGlobal(id, allowGlobal); // Ueberpruefe ob Region global ist
-  }
-
-  private static void evaluateValid(final String id) throws CommandException {
-    if (!ProtectedRegion.isValidId(id)) {
-      throw new CommandException("The region name of '" + id +
-          "' contains characters that are not allowed.");
-    }
-  }
-
-  private static void evaluateGlobal(final String id, final boolean allowGlobal) throws CommandException {
-    if ((!allowGlobal) && (id.equalsIgnoreCase(GLOBAL_REGION))) {
-      throw new CommandException("Sorry, you can't use __global__ here.");
-    }
-  }
-
   /**
    * Prueft ob eine Region existiert
    *
@@ -54,12 +36,30 @@ public final class Regions {
     return determineRegion(regionManager, id);
   }
 
+  private static void evaluateRegionId(final String id, final boolean allowGlobal) throws CommandException {
+    evaluateValid(id); // Ueberpruefe, ob Name erlaubt ist
+    evaluateGlobal(id, allowGlobal); // Ueberpruefe ob Region global ist
+  }
+
   private static ProtectedRegion determineRegion(final RegionManager regionManager, final String id) {
     final ProtectedRegion region = regionManager.getRegion(id);
     if (region == null) {
       return noRegionFound(regionManager, id);
     }
     return region;
+  }
+
+  private static void evaluateValid(final String id) throws CommandException {
+    if (!ProtectedRegion.isValidId(id)) {
+      throw new CommandException("The region name of '" + id +
+          "' contains characters that are not allowed.");
+    }
+  }
+
+  private static void evaluateGlobal(final String id, final boolean allowGlobal) throws CommandException {
+    if ((!allowGlobal) && (id.equalsIgnoreCase(GLOBAL_REGION))) {
+      throw new CommandException("Sorry, you can't use __global__ here.");
+    }
   }
 
   private static ProtectedRegion noRegionFound(final RegionManager regionManager, final String id) {

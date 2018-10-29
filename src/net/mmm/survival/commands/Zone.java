@@ -82,6 +82,31 @@ public class Zone implements CommandExecutor {
     }
   }
 
+  private void evaluateInvalidUsage(final Player executor) {
+    executor.sendMessage(executor.isOp() ? Messages.ZONE_HELP_ADMIN : Messages.ZONE_HELP);
+  }
+
+  private void evaluateCreateZone(final SurvivalPlayer creator) {
+    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
+    final RegionManager regionManager = dynmapPlugin.getRegionManager();
+    if (Regions.evaluateExistingRegion(regionManager, creator.getUuid().toString(), false) != null) {
+      final Player creatorPlayer = creator.getPlayer();
+      creatorPlayer.sendMessage(Messages.ZONE_ALREADY_EXIST);
+    } else {
+      allowCreateZone(creator);
+    }
+  }
+
+  private void evaluateSearchZone(final SurvivalPlayer finder) {
+    final Player finderPlayer = finder.getPlayer();
+    if (finder.isZonensearch()) {
+      finderPlayer.sendMessage(Messages.ZONE_SEARCH_DISABLE);
+    } else {
+      finderPlayer.sendMessage(Messages.ZONE_SEARCH_ENABLE);
+    }
+    finder.setZonensearch(!finder.isZonensearch());
+  }
+
   private void evaluateDeleteZone(final Player executor) {
     final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
     final RegionManager regionManager = dynmapPlugin.getRegionManager();
@@ -92,20 +117,12 @@ public class Zone implements CommandExecutor {
     }
   }
 
-  private void performDeleteZone(final Player executor, final ProtectedRegion deletedRegion) {
-    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
-    final RegionManager regionManager = dynmapPlugin.getRegionManager();
-
-    regionManager.removeRegion(deletedRegion.getId());
-    executor.sendMessage(Messages.ZONE_REMOVED);
-  }
-
   private void evaluateInfoZone(final Player executor) {
     final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
     final RegionManager regionManager = dynmapPlugin.getRegionManager();
     final ProtectedRegion selectedRegion = Regions.
         evaluateRegionOnCurrentLocation(regionManager, executor.getLocation());
-    executor.sendMessage(performInfoAboutZone(selectedRegion));
+    executor.sendMessage(selectedRegion != null ? sendZoneInfo(selectedRegion) : Messages.ZONE_NOT_FOUND);
   }
 
   private void tryAddPlayerToZone(final Player executor, final String[] args) {
@@ -118,21 +135,6 @@ public class Zone implements CommandExecutor {
       performAddPlayerToZone(executor, args[1], existingRegion);
     } else {
       executor.sendMessage(Messages.ZONE_NOT_SET);
-    }
-  }
-
-  private void performAddPlayerToZone(final Player executor, final String playerToadd, final ProtectedRegion region) {
-    if (region != null) {
-      final UUID uuidOfPlayerToAdd = UUIDUtils.getUUID(playerToadd);
-      if (uuidOfPlayerToAdd != null) {
-        final DefaultDomain membersOfSelectedRegion = region.getMembers();
-        if (!membersOfSelectedRegion.toPlayersString().contains(uuidOfPlayerToAdd.toString())) {
-          membersOfSelectedRegion.addPlayer(uuidOfPlayerToAdd);
-          executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + playerToadd + " §7zu deiner Zone hinzugefügt.");
-        } else {
-          executor.sendMessage(Messages.PREFIX + playerToadd + " §7ist bereits Mitglied deiner Zone.");
-        }
-      }
     }
   }
 
@@ -171,6 +173,55 @@ public class Zone implements CommandExecutor {
     }
   }
 
+  private void evaluateUpdateLength(final Player executor, final String[] args) {
+    try {
+      tryUpdateLength(executor, args[1], Integer.valueOf(args[2]));
+    } catch (final NumberFormatException ignored) {
+      executor.sendMessage(Messages.NOT_A_NUMBER);
+    }
+  }
+
+  private void allowCreateZone(final SurvivalPlayer creator) {
+    if (!creator.isZonenedit()) {
+      final Player creatorPlayer = creator.getPlayer();
+      creatorPlayer.sendMessage(Messages.ZONE_EXPLAINATION);
+    }
+    creator.setZonenedit(true);
+  }
+
+  private boolean checkDeleteZone(final Player deleter, final ProtectedRegion region) {
+    if (region != null) {
+      return true;
+    } else {
+      deleter.sendMessage(Messages.ZONE_NOT_SET);
+    }
+
+    return false;
+  }
+
+  private void performDeleteZone(final Player executor, final ProtectedRegion deletedRegion) {
+    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
+    final RegionManager regionManager = dynmapPlugin.getRegionManager();
+
+    regionManager.removeRegion(deletedRegion.getId());
+    executor.sendMessage(Messages.ZONE_REMOVED);
+  }
+
+  private void performAddPlayerToZone(final Player executor, final String playerToadd, final ProtectedRegion region) {
+    if (region != null) {
+      final UUID uuidOfPlayerToAdd = UUIDUtils.getUUID(playerToadd);
+      if (uuidOfPlayerToAdd != null) {
+        final DefaultDomain membersOfSelectedRegion = region.getMembers();
+        if (!membersOfSelectedRegion.toPlayersString().contains(uuidOfPlayerToAdd.toString())) {
+          membersOfSelectedRegion.addPlayer(uuidOfPlayerToAdd);
+          executor.sendMessage(Messages.PREFIX + "§7Du hast §e" + playerToadd + " §7zu deiner Zone hinzugefügt.");
+        } else {
+          executor.sendMessage(Messages.PREFIX + playerToadd + " §7ist bereits Mitglied deiner Zone.");
+        }
+      }
+    }
+  }
+
   private void determinePlayerInfo(final Player executor, final String arg) {
     final UUID uuid = UUIDUtils.getUUID(arg);
     final OfflinePlayer targetPlayer = Bukkit.getOfflinePlayer(uuid);
@@ -179,19 +230,6 @@ public class Zone implements CommandExecutor {
     final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
     sendPlayerInfo(executor, dateFormat.format(new Date(lastPlayed)), dateFormat.format(new Date(firstPlayed)));
-  }
-
-  private void sendPlayerInfo(final Player executor, final String lastonline, final String firstonline) {
-    executor.sendMessage("\n" + Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
-    executor.sendMessage(Messages.PREFIX + " §7Zuerst online§8: §c" + firstonline + "\n");
-  }
-
-  private void evaluateUpdateLength(final Player executor, final String[] args) {
-    try {
-      tryUpdateLength(executor, args[1], Integer.valueOf(args[2]));
-    } catch (final NumberFormatException ignored) {
-      executor.sendMessage(Messages.NOT_A_NUMBER);
-    }
   }
 
   private void tryUpdateLength(final Player executor, final String arg, final int max) {
@@ -206,10 +244,19 @@ public class Zone implements CommandExecutor {
     }
   }
 
-  private void performUpdateLength(final Player executor, final int max, final UUID uuid, final SurvivalPlayer ownerOfTargetZone) {
-    ownerOfTargetZone.setMaxzone(max);
-    executor.sendMessage(Messages.PREFIX + " §e" + UUIDUtils.getName(uuid) +
-        " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen.");
+  private String sendZoneInfo(final ProtectedRegion region) {
+    final String owername = UUIDUtils.getName(UUID.fromString(region.getId()));
+    String message = Messages.PREFIX + " §7Besitzer§8: " + owername + "\n";
+    if (!getZoneInfo(region).isEmpty()) {
+      message += Messages.PREFIX + " §7Mitglieder§8: " + getZoneInfo(region) + "\n";
+    }
+
+    return message;
+  }
+
+  private void sendPlayerInfo(final Player executor, final String lastonline, final String firstonline) {
+    executor.sendMessage("\n" + Messages.PREFIX + " §7Zuletzt online§8: §c" + lastonline);
+    executor.sendMessage(Messages.PREFIX + " §7Zuerst online§8: §c" + firstonline + "\n");
   }
 
   private boolean checkPlayerFound(final Player executor, final SurvivalPlayer targetZoneOwner) {
@@ -222,61 +269,10 @@ public class Zone implements CommandExecutor {
     return false;
   }
 
-  private void evaluateInvalidUsage(final Player executor) {
-    executor.sendMessage(executor.isOp() ? Messages.ZONE_HELP_ADMIN : Messages.ZONE_HELP);
-  }
-
-  private void evaluateCreateZone(final SurvivalPlayer creator) {
-    final DynmapWorldGuardPlugin dynmapPlugin = SurvivalData.getInstance().getDynmap();
-    final RegionManager regionManager = dynmapPlugin.getRegionManager();
-    if (Regions.evaluateExistingRegion(regionManager, creator.getUuid().toString(), false) != null) {
-      final Player creatorPlayer = creator.getPlayer();
-      creatorPlayer.sendMessage(Messages.ZONE_ALREADY_EXIST);
-    } else {
-      allowCreateZone(creator);
-    }
-  }
-
-  private void allowCreateZone(final SurvivalPlayer creator) {
-    if (!creator.isZonenedit()) {
-      final Player creatorPlayer = creator.getPlayer();
-      creatorPlayer.sendMessage(Messages.ZONE_EXPLAINATION);
-    }
-    creator.setZonenedit(true);
-  }
-
-  private void evaluateSearchZone(final SurvivalPlayer finder) {
-    final Player finderPlayer = finder.getPlayer();
-    if (finder.isZonensearch()) {
-      finderPlayer.sendMessage(Messages.ZONE_SEARCH_DISABLE);
-    } else {
-      finderPlayer.sendMessage(Messages.ZONE_SEARCH_ENABLE);
-    }
-    finder.setZonensearch(!finder.isZonensearch());
-  }
-
-  private boolean checkDeleteZone(final Player deleter, final ProtectedRegion region) {
-    if (region != null) {
-      return true;
-    } else {
-      deleter.sendMessage(Messages.ZONE_NOT_SET);
-    }
-
-    return false;
-  }
-
-  private String performInfoAboutZone(final ProtectedRegion region) {
-    return region != null ? sendZoneInfo(region) : Messages.ZONE_NOT_FOUND;
-  }
-
-  private String sendZoneInfo(final ProtectedRegion region) {
-    final String owername = UUIDUtils.getName(UUID.fromString(region.getId()));
-    String message = Messages.PREFIX + " §7Besitzer§8: " + owername + "\n";
-    if (!getZoneInfo(region).isEmpty()) {
-      message += Messages.PREFIX + " §7Mitglieder§8: " + getZoneInfo(region) + "\n";
-    }
-
-    return message;
+  private void performUpdateLength(final Player executor, final int max, final UUID uuid, final SurvivalPlayer ownerOfTargetZone) {
+    ownerOfTargetZone.setMaxzone(max);
+    executor.sendMessage(Messages.PREFIX + " §e" + UUIDUtils.getName(uuid) +
+        " §7kann nun eine Zone mit der Länge §c" + max + " §7erstellen.");
   }
 
   private String getZoneInfo(final ProtectedRegion region) {
