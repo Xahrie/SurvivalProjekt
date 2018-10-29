@@ -25,6 +25,7 @@ public final class Messages {
   public static final String COMPLAINT_TOO_FAST_PLAYER = "§8┃ §eSurvival §7» §4┃ Du kannst dich über diesen Spieler nur einmal pro Tag beschweren.";
   public static final String COMPLAINT_TOOSHORT = "§8┃ §eSurvival §7» §4┃ Eine Beschwerde muss mindestens 10 Zeichen lang sein.";
   public static final String COMPLAINT_INFO = "§8┃ §eSurvival §7» §c┃ Es liegen über dich Beschwerden vor:";
+  public static final String NO_COMPLAINTS = "§8┃ §eSurvival §7» §c┃ Es liegen keine Beschwerden über dich vor.";
 
   /*
   Economy-System
@@ -89,8 +90,11 @@ public final class Messages {
   /*
   Teleport
    */
+  public static final String ALREADY_ON_THIS_WORLD = "§8┃ §eSurvival §7» Du befindest dich bereits in dieser Welt.";
   static final String ALREADY_TELEPORTED = "§8┃ §eSurvival §7» Du wirst bereits teleportiert.";
   static final String NO_VALID_WORLD = "§8┃ §eSurvival §7» Du musst in die Hauptwelt kommen, um diesen Command nutzen zu können.";
+  public static final String TELEPORT_NOT_ALLOWED = "§8┃ §eSurvival §7» §c┃ Du hast die benötigte Lizenz noch nicht erworben.";
+  public static final String USAGE_TELEPORTWORLD_COMMAND = "§8┃ §eSurvival §7» §cBenutze /teleportworld [<bauwelt|end|farmwelt|nether>]";
 
   /**
    * Instanz

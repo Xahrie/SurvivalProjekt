@@ -1,5 +1,5 @@
 name: Survival
-version: 2.4
+version: 2.5
 author: PAS123, BlueIronGirl and Abgie
 api-version: 1.13
 
@@ -24,7 +24,7 @@ commands:
   spawn:
   tame:
   teleportworld:
-    aliases: [tpworld]
+    aliases: [tpworld, warp]
   vote:
   zone:
 

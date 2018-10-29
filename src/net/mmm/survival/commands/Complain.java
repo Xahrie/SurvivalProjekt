@@ -64,11 +64,13 @@ public class Complain implements CommandExecutor {
   private void list(final Player sender, final String[] args) {
     if (args.length == 1 || !CommandUtils.isOperator(sender)) {
       final SurvivalPlayer executor = SurvivalPlayer.findSurvivalPlayer(sender);
-      sender.sendMessage(Messages.COMPLAINT_INFO);
       if (!executor.getComplaints().isEmpty()) {
+        sender.sendMessage(Messages.COMPLAINT_INFO);
         for (final Complaint complaint : executor.getComplaints()) {
           executor.outputComplaint(complaint, sender);
         }
+      } else {
+        sender.sendMessage(Messages.NO_COMPLAINTS);
       }
     } else if (args[1].equals("all") && CommandUtils.isOperator(sender)) {
       for (final SurvivalPlayer survivalPlayer : SurvivalData.getInstance().getPlayers().values()) {

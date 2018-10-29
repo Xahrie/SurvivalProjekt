@@ -33,6 +33,9 @@ public class Economy implements CommandExecutor {
   private void evaluateCommandLength(final String[] strings, final Player executor) {
     if (strings.length == 1) {
       evaluateOneArgument(strings[0], executor);
+
+    } else if (strings.length == 2) {
+      evaluateTwoArguments(strings, executor);
     } else if (strings.length == 3) {
       evaluateThreeArguments(strings, executor);
     } else {
@@ -40,12 +43,24 @@ public class Economy implements CommandExecutor {
     }
   }
 
+  private void evaluateTwoArguments(String[] strings, Player executor) {
+    if (strings[0].equalsIgnoreCase("reset")) {
+      final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, strings[1]);
+      if (survivalPlayer != null) {
+        survivalPlayer.setMoney(0);
+        final Player playerOfSurvivalPlayer = survivalPlayer.getPlayer();
+        executor.sendMessage(Messages.PREFIX + "Das Geld von §e" + playerOfSurvivalPlayer.getDisplayName() +
+            " §7wurde auf §e0" + Konst.CURRENCY + " §7zurückgesetzt.");
+      }
+    }
+  }
+
   private void evaluateOneArgument(final String targetPlayerName, final Player executor) {
     final SurvivalPlayer survivalPlayer = SurvivalPlayer.findSurvivalPlayer(executor, targetPlayerName);
     if (survivalPlayer != null) {
-      final double money = survivalPlayer.getMoney();
+      final double moneyWithTwoDigits = Math.round(survivalPlayer.getMoney() * 100) / 100.0;
       executor.sendMessage(Messages.PREFIX + "Der Spieler§e " + targetPlayerName + "§7 hat §e" +
-          money + Konst.CURRENCY + "§7 auf dem Konto.");
+          moneyWithTwoDigits + Konst.CURRENCY + "§7 auf dem Konto.");
     } else {
       executor.sendMessage(Messages.PLAYER_NOT_FOUND);
     }

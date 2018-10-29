@@ -4,6 +4,7 @@ import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.util.CommandUtils;
 import net.mmm.survival.util.Konst;
 import net.mmm.survival.util.Messages;
+import net.mmm.survival.util.UUIDUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,11 +40,16 @@ public class Pay implements CommandExecutor {
   private void evaluatePay(final SurvivalPlayer executor, final SurvivalPlayer target, final int amount) {
     target.addOrTakeMoney(amount);
     executor.addOrTakeMoney(amount * -1);
+
     final Player executorPlayer = executor.getPlayer();
+    final String targetPlayerName = UUIDUtils.getName(target.getUuid());
+    executorPlayer.sendMessage(Messages.PREFIX + "Du hast §e" + targetPlayerName + " " + amount +
+        Konst.CURRENCY + "§7 gezahlt.");
+
     final Player targetPlayer = target.getPlayer();
-    executorPlayer.sendMessage(Messages.PREFIX + "Du hast " + targetPlayer.getDisplayName() +
-        amount + Konst.CURRENCY + " gezahlt.");
-    targetPlayer.sendMessage(Messages.PREFIX + "Du hast von " + executorPlayer.getDisplayName() +
-        amount + Konst.CURRENCY + " erhalten.");
+    if (targetPlayer != null) {
+      targetPlayer.sendMessage(Messages.PREFIX + "Du hast von " + executorPlayer.getDisplayName() +
+          amount + Konst.CURRENCY + " erhalten.");
+    }
   }
 }

@@ -5,6 +5,7 @@ import java.util.Objects;
 import net.mmm.survival.player.SurvivalLicence;
 import net.mmm.survival.player.SurvivalPlayer;
 import net.mmm.survival.regions.SurvivalWorld;
+import net.mmm.survival.util.Messages;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -79,6 +80,7 @@ public class LocationChangeEvents implements Listener {
     final SurvivalLicence needed = SurvivalLicence.getLicence(Objects.requireNonNull(SurvivalWorld.getWorld(destinationWorld.getName())));
     if (needed != null && !traveler.hasLicence(needed)) {
       event.setCancelled(true);
+      event.getPlayer().sendMessage(Messages.TELEPORT_NOT_ALLOWED);
     }
   }
 }

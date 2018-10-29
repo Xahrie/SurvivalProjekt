@@ -132,7 +132,7 @@ public class Gamemode implements CommandExecutor {
   }
 
   private void updateGamemode() {
-    final GameMode gamemode = GameMode.values()[this.gamemode];
+    final GameMode gamemode = GameMode.getByValue(this.gamemode);
     target.setGameMode(gamemode);
   }
 
