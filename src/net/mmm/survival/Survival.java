@@ -46,7 +46,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author PAS123
  * @author BlueIronGirl
  * @author Abgie
- * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch
+ * Ersteller des Projekts ist PAS123. Zu den Autor*innen gehoeren auch noch_
  * BlueIronGirl und Abgie
  */
 public class Survival extends JavaPlugin {
